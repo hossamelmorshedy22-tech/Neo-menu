@@ -1,0 +1,86 @@
+<!-- checkout.html -->
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>إتمام الطلب — Neo Café</title>
+<style>
+body{margin:0;font-family:system-ui,'Noto Sans Arabic',sans-serif;background:#E9DCC9;color:#111}
+.container{max-width:720px;margin:24px auto;padding:16px}
+.card{background:#fff;padding:16px;border-radius:12px;border:1px solid rgba(0,0,0,0.04)}
+.field{margin-bottom:12px}
+label{display:block;font-weight:800;color:#0D615B;margin-bottom:6px}
+input[type="text"],input[type="date"],select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd}
+.btn{display:inline-block;padding:12px 14px;border-radius:10px;background:#0D615B;color:#fff;text-decoration:none;font-weight:800;border:none;cursor:pointer}
+.summary{margin-top:12px;background:#f8f8f8;padding:12px;border-radius:8px}
+.small{font-size:13px;color:#666}
+</style>
+</head>
+<body>
+<div class="container">
+  <h2 style="color:#0D615B">إتمام الطلب</h2>
+  <div id="no-cart" class="card" style="display:none">لم يتم العثور على عناصر في السلة. <a href="index.html">عودة للمنيو</a></div>
+  <div id="checkout-card" class="card" style="display:none">
+    <div class="field"><label for="name">الاسم</label><input id="name" type="text" placeholder="اكتب اسمك"></div>
+    <div class="field"><label for="dob">تاريخ الميلاد</label><input id="dob" type="date"></div>
+    <div class="field"><label for="table">رقم الطاولة</label>
+      <select id="table"><option value=''>اختر رقم الطاولة</option>
+        <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+        <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+      </select>
+    </div>
+    <div class="field"><label for="notes">ملاحظات إضافية (اختياري)</label><textarea id="notes" rows="3" placeholder="مثال: بدون سكر / زيادة حليب"></textarea></div>
+
+    <div id="order-summary" class="summary"></div>
+
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button id="send" class="btn">إرسال الطلب</button>
+      <a href="index.html" class="btn" style="background:#fff;color:#0D615B;border:2px solid #0D615B;text-decoration:none;padding:10px 12px">تعديل السلة</a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const CART_KEY = 'neo_cart_v3';
+  let cart = [];
+  try{ cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]'); }catch(e){ cart = []; }
+  function renderSummary(){
+    if(!cart || cart.length===0){
+      document.getElementById('no-cart').style.display='block';
+      document.getElementById('checkout-card').style.display='none';
+      return;
+    }
+    document.getElementById('no-cart').style.display='none';
+    document.getElementById('checkout-card').style.display='block';
+    let html = '<div style="font-weight:800">الطلبات:</div><ul>';
+    let total = 0;
+    cart.forEach(i=>{ html += `<li>${i.name} × ${i.qty} = ${i.price * i.qty} ج</li>`; total += i.price * i.qty; });
+    html += `</ul><div style="font-weight:900;color:#0D615B">المجموع: ${total} ج</div>`;
+    document.getElementById('order-summary').innerHTML = html;
+  }
+
+  document.getElementById('send').addEventListener('click', function(){
+    const name = document.getElementById('name').value.trim();
+    const dob = document.getElementById('dob').value;
+    const table = document.getElementById('table').value;
+    const notes = document.getElementById('notes').value.trim();
+    if(!name){ alert('من فضلك اكتب الاسم'); return; }
+    if(!dob){ alert('من فضلك اختر تاريخ الميلاد'); return; }
+    if(!table){ alert('من فضلك اختار رقم الطاولة'); return; }
+    if(!cart || cart.length===0){ alert('السلة فارغة'); return; }
+    let total=0; let itemsText='';
+    cart.forEach(i=>{ itemsText += `- ${i.name} × ${i.qty} = ${i.price * i.qty} ج\\n`; total += i.price * i.qty; });
+    let msg = `طلب من Neo Café\\nالاسم: ${name}\\nتاريخ الميلاد: ${dob}\\nرقم الطاولة: ${table}\\n\\nالطلب:\\n${itemsText}\\nالمجموع: ${total} ج`;
+    if(notes) msg += `\\nملاحظات: ${notes}`;
+    const wa = 'https://wa.me/201055554856?text=' + encodeURIComponent(msg);
+    try{ localStorage.removeItem(CART_KEY); }catch(e){}
+    window.location.href = wa;
+  });
+
+  renderSummary();
+})();
+</script>
+</body>
+</html>
