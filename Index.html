@@ -1,0 +1,192 @@
+<!-- index.html -->
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Neo Café — المنيو</title>
+<style>
+:root{--bg:#F5F2EE;--primary1:#0D615B;--primary2:#2A8F85;--card:#fff;--muted:#6B6B6B}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,'Noto Sans Arabic',sans-serif;background:linear-gradient(180deg,var(--bg),#fff);color:#111}
+.header{position:sticky;top:0;backdrop-filter:blur(6px);background:linear-gradient(90deg,rgba(255,255,255,0.8),rgba(255,255,255,0.65));border-bottom:1px solid rgba(0,0,0,0.05);z-index:50}
+.container{max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--primary1),var(--primary2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+.brand-title{font-weight:800;font-size:18px;color:var(--primary1)}
+.cart-btn{display:flex;gap:10px;align-items:center;margin-left:auto}
+.cart-count{background:var(--primary1);color:#fff;padding:8px 12px;border-radius:999px;font-weight:800;min-width:44px;text-align:center}
+.tabs{display:flex;gap:8px;margin:16px auto;max-width:1200px;padding:0 20px}
+.tab{padding:8px 14px;border-radius:999px;background:linear-gradient(90deg,rgba(13,97,91,0.06),rgba(42,143,133,0.03));border:1px solid rgba(13,97,91,0.06);cursor:pointer;transition:all .18s;user-select:none}
+.tab.active{background:linear-gradient(90deg,var(--primary2),var(--primary1));color:#fff;box-shadow:0 8px 20px rgba(13,97,91,0.12);transform:translateY(-2px)}
+.grid-wrap{max-width:1200px;margin:6px auto 100px;padding:0 20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
+.card{background:var(--card);border-radius:14px;overflow:hidden;border:1px solid rgba(13,97,91,0.06);box-shadow:0 6px 18px rgba(37,78,72,0.06);transition:transform .22s,box-shadow .22s;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(37,78,72,0.12)}
+.photo-wrap{height:160px;overflow:hidden;background:linear-gradient(180deg,#f6f4f2,#fff)}
+.photo{width:100%;height:160px;object-fit:cover;display:block;transition:transform .6s}
+.card:hover .photo{transform:scale(1.06)}
+.card-body{padding:12px;display:flex;flex-direction:column;gap:8px;flex:1}
+.title{font-weight:800;font-size:16px}
+.desc{color:var(--muted);font-size:13px}
+.bottom-row{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.price{font-weight:900;color:var(--primary1)}
+.btn{background:linear-gradient(90deg,var(--primary1),var(--primary2));color:#fff;padding:8px 12px;border-radius:10px;border:none;font-weight:800;cursor:pointer;transition:transform .12s}
+.btn:active{transform:scale(.98)}
+.cart-popup{position:fixed;right:20px;bottom:20px;width:380px;max-width:calc(100% - 40px);background:linear-gradient(180deg,#fff,#fbfbfb);border-radius:14px;box-shadow:0 20px 50px rgba(12,63,58,0.16);z-index:120;overflow:hidden;transform:translateY(0);display:none}
+.cart-header{padding:14px;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;align-items:center;gap:8px}
+.cart-items{max-height:360px;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:12px}
+.cart-item{display:flex;gap:10px;align-items:center;border-radius:12px;padding:8px;background:linear-gradient(180deg,#fff,#fbfbfb);border:1px solid rgba(0,0,0,0.03)}
+.cart-item .mini-photo{width:64px;height:48px;border-radius:8px;object-fit:cover}
+.qty{display:flex;gap:6px;align-items:center}
+.clear{background:transparent;color:var(--primary1);border:1px dashed rgba(13,97,91,0.12);padding:8px;border-radius:10px;cursor:pointer}
+.footer-bar{position:fixed;left:0;right:0;bottom:0;background:linear-gradient(90deg,rgba(13,97,91,0.95),rgba(42,143,133,0.95));color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:center;gap:12px;font-weight:700;z-index:200}
+.footer-bar .phone{background:rgba(255,255,255,0.12);padding:6px 10px;border-radius:8px}
+.small{font-size:13px;color:#666}
+.hidden{display:none}
+@media (max-width:700px){ .grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))} .cart-popup{right:12px;left:12px;bottom:12px;width:auto} }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container">
+    <div class="brand">
+      <div class="logo">NE</div>
+      <div class="brand-title">نيو كافيه</div>
+    </div>
+    <div class="cart-btn">
+      <button id="open-cart" class="btn" style="background:#fff;color:var(--primary1);border:2px solid rgba(13,97,91,0.08)">السلة</button>
+      <div id="cart-count" class="cart-count">0</div>
+    </div>
+  </div>
+</header>
+
+<div class="tabs" id="tabs">
+  <div class="tab active" data-cat="all">الكل</div>
+  <div class="tab" data-cat="مشروبات ساخنة">مشروبات ساخنة</div>
+  <div class="tab" data-cat="مشروبات باردة">مشروبات باردة</div>
+  <div class="tab" data-cat="مخبوزات">مخبوزات</div>
+  <div class="tab" data-cat="حلويات">حلويات</div>
+</div>
+
+<div class="grid-wrap">
+  <section class="grid" id="menu-grid">
+    <!-- JS سيضيف الكروت هنا -->
+  </section>
+</div>
+
+<div id="cart-popup" class="cart-popup" role="dialog" aria-label="سلة الطلب">
+  <div class="cart-header"><div style="font-weight:900">سلة طلبك</div><div style="margin-left:auto"><button id="close-cart" class="clear">اغلاق</button></div></div>
+  <div id="cart-items" class="cart-items"></div>
+  <div style="padding:12px;border-top:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;justify-content:space-between;gap:8px">
+    <div><div class="small">المجموع</div><div id="cart-total" style="font-weight:900;color:var(--primary1);">0 ج</div></div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button id="clear-cart" class="clear">افرغ السلة</button>
+      <button id="checkout" class="btn">اطلب دلوقتي</button>
+    </div>
+  </div>
+</div>
+
+<div class="footer-bar">
+  <div>قهوة مميزة، أجواء هادية — تعال جرب بنفسك</div>
+  <div class="phone">٠١٠٣٤٣١١١١٩</div>
+</div>
+
+<script>
+// بيانات الأصناف (بالعربية)
+const items = [
+  {name:'اسبريسو', price:45, category:'مشروبات ساخنة'},
+  {name:'كابتشينو', price:55, category:'مشروبات ساخنة'},
+  {name:'لاتيه كاراميل', price:60, category:'مشروبات ساخنة'},
+  {name:'قهوة تركي', price:50, category:'مشروبات ساخنة'},
+  {name:'ايس لاتيه', price:55, category:'مشروبات باردة'},
+  {name:'ايس موكا', price:65, category:'مشروبات باردة'},
+  {name:'ايس كراميل ماكياتو', price:68, category:'مشروبات باردة'},
+  {name:'وافل', price:65, category:'مخبوزات'},
+  {name:'كرواسون', price:45, category:'مخبوزات'},
+  {name:'سينابون', price:58, category:'مخبوزات'},
+  {name:'براوني بالشوكولاتة', price:55, category:'حلويات'},
+  {name:'تشيز كيك قطعة', price:75, category:'حلويات'},
+  {name:'تيراميسو كوب', price:70, category:'حلويات'}
+];
+
+// helper: small SVG placeholder dataURI (شغال جداً على الويب)
+function makeSVGDataURI(text){
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 500'><defs><linearGradient id='g' x1='0' x2='1'><stop offset='0' stop-color='#f6f4f2'/><stop offset='1' stop-color='#fff'/></linearGradient></defs><rect width='100%' height='100%' fill='url(#g)'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='36' fill='#22332b' font-family='sans-serif'>${text}</text></svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+
+// render grid
+const grid = document.getElementById('menu-grid');
+items.forEach(it=>{
+  const art = document.createElement('article');
+  art.className = 'card';
+  art.setAttribute('data-category', it.category);
+  art.setAttribute('data-name', it.name);
+  art.setAttribute('data-price', it.price);
+  art.innerHTML = `
+    <div class="photo-wrap"><img class="photo" src="${makeSVGDataURI(it.name)}" alt="${it.name}"></div>
+    <div class="card-body">
+      <div class="title">${it.name}</div>
+      <div class="desc">وصف قصير شهي</div>
+      <div class="bottom-row"><div class="price">${it.price} ج</div><button class="btn add-to-cart" data-name="${it.name}" data-price="${it.price}">أضف للسلة</button></div>
+    </div>`;
+  grid.appendChild(art);
+});
+
+// Cart logic
+const CART_KEY = 'neo_cart_v3';
+let cart = [];
+try{ const saved = JSON.parse(localStorage.getItem(CART_KEY) || '[]'); if(Array.isArray(saved) && saved.length) cart = saved; }catch(e){ cart = []; }
+
+function findIndex(name){ return cart.findIndex(i=>i.name===name); }
+function saveCart(){ try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); }catch(e){} }
+function updateCount(){ document.getElementById('cart-count').innerText = cart.reduce((s,i)=>s+i.qty,0); }
+function renderCartPopup(){
+  const wrap = document.getElementById('cart-items'); wrap.innerHTML = '';
+  if(cart.length===0){ wrap.innerHTML = '<div style="padding:12px;color:#666">السلة فارغة</div>'; document.getElementById('cart-total').innerText='0 ج'; updateCount(); return; }
+  let total=0;
+  cart.forEach(item=>{
+    total += item.price * item.qty;
+    const div = document.createElement('div'); div.className = 'cart-item';
+    div.innerHTML = `<img class="mini-photo" src="${makeSVGDataURI(item.name)}" alt="${item.name}"><div style="flex:1"><div style="font-weight:800">${item.name}</div><div style="color:#666">${item.price} ج</div></div><div class="qty"><button class="clear dec" data-name="${item.name}" type="button">-</button><div style="padding:6px 10px">${item.qty}</div><button class="clear inc" data-name="${item.name}" type="button">+</button></div><div><button class="clear remove" data-name="${item.name}" type="button">حذف</button></div>`;
+    wrap.appendChild(div);
+  });
+  document.getElementById('cart-total').innerText = total + ' ج';
+  updateCount();
+}
+
+// events (delegation)
+document.addEventListener('click', function(e){
+  const add = e.target.closest('.add-to-cart');
+  if(add){
+    const name = add.getAttribute('data-name');
+    const price = parseInt(add.getAttribute('data-price')||'0',10);
+    const idx = findIndex(name);
+    if(idx>-1){ cart[idx].qty += 1; } else { cart.push({name:name, price:price, qty:1}); }
+    saveCart(); renderCartPopup(); document.getElementById('cart-popup').style.display = 'block';
+    return;
+  }
+  if(e.target && e.target.id === 'open-cart'){ document.getElementById('cart-popup').style.display = 'block'; renderCartPopup(); return; }
+  if(e.target && e.target.id === 'close-cart'){ document.getElementById('cart-popup').style.display = 'none'; return; }
+  if(e.target && e.target.id === 'clear-cart'){ cart.length=0; saveCart(); renderCartPopup(); return; }
+  const inc = e.target.closest('.inc'); if(inc){ const name=inc.getAttribute('data-name'); const i=findIndex(name); if(i>-1){ cart[i].qty++; saveCart(); renderCartPopup(); } return; }
+  const dec = e.target.closest('.dec'); if(dec){ const name=dec.getAttribute('data-name'); const i=findIndex(name); if(i>-1){ cart[i].qty = Math.max(1, cart[i].qty-1); saveCart(); renderCartPopup(); } return; }
+  const rem = e.target.closest('.remove'); if(rem){ const name=rem.getAttribute('data-name'); const i=findIndex(name); if(i>-1){ cart.splice(i,1); saveCart(); renderCartPopup(); } return; }
+  if(e.target && e.target.id === 'checkout'){ if(cart.length===0){ alert('السلة فارغة'); return; } try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); }catch(e){} window.location.href = 'checkout.html'; return; }
+});
+
+// tabs
+document.getElementById('tabs').addEventListener('click', function(e){
+  const tab = e.target.closest('.tab'); if(!tab) return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active');
+  const cat = tab.getAttribute('data-cat');
+  document.querySelectorAll('.grid .card').forEach(card=>{ card.style.display = (cat === 'all' || card.getAttribute('data-category') === cat) ? '' : 'none'; });
+});
+
+// init
+renderCartPopup(); updateCount();
+</script>
+</body>
+</html>
