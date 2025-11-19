@@ -71,12 +71,23 @@ input[type="text"],input[type="date"],select,textarea{width:100%;padding:10px;bo
     if(!cart || cart.length===0){ alert('السلة فارغة'); return; }
     let total=0; let itemsText='';
     cart.forEach(i=>{ itemsText += `- ${i.name} × ${i.qty} = ${i.price * i.qty} ج\\n`; total += i.price * i.qty; });
-    let msg = `طلب من Neo Café\\nالاسم: ${name}\\nتاريخ الميلاد: ${dob}\\nرقم الطاولة: ${table}\\n\\nالطلب:\\n${itemsText}\\nالمجموع: ${total} ج`;
-    if(notes) msg += `\\nملاحظات: ${notes}`;
-    // WhatsApp link changed to new number (01034311119 -> 20 1034311119)
-    const wa = 'https://wa.me/201034311119?text=' + encodeURIComponent(msg);
-    try{ localStorage.removeItem(CART_KEY); }catch(e){}
-    window.location.href = wa;
+    let msg =
+  `طلب من: Neo Café\n` +
+  `الاسم: ${name}\n` +
+  `تاريخ الميلاد: ${dob}\n` +
+  `رقم الطاولة: ${table}\n\n` +
+  `الطلبات:\n`;
+
+cart.forEach(i => {
+  msg += `- ${i.name} × ${i.qty} = ${i.price * i.qty} ج\n`;
+});
+
+msg += `\nالمجموع: ${total} ج\n`;
+
+if (notes) {
+  msg += `\nملاحظات:\n${notes}`;
+}
+
   });
 
   renderSummary();
