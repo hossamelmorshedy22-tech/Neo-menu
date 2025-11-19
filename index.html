@@ -99,6 +99,94 @@ body{margin:0;font-family:system-ui,'Noto Sans Arabic',sans-serif;background:lin
   <div>قهوة مميزة، أجواء هادية — تعال جرب بنفسك</div>
   <div class="phone">٠١٠٣٤٣١١١٩</div>
 </div>
+<!-- ========== Social links — start ========== -->
+<style>
+  .neo-social-wrap{
+    max-width:1200px;
+    margin:18px auto 40px;
+    padding:0 20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+  .neo-social-list{
+    display:inline-flex;
+    gap:12px;
+    align-items:center;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .neo-social-item{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 12px;
+    border-radius:12px;
+    text-decoration:none;
+    background:linear-gradient(90deg, rgba(13,97,91,0.06), rgba(42,143,133,0.04));
+    color:#0D615B;
+    font-weight:800;
+    box-shadow:0 6px 18px rgba(13,97,91,0.04);
+    transition:transform .12s;
+  }
+  .neo-social-item:hover{
+    transform:translateY(-4px);
+  }
+  .neo-social-svg{
+    width:20px;
+    height:20px;
+    display:block;
+  }
+  @media(max-width:520px){
+    .neo-social-item{padding:8px 10px;font-size:14px}
+  }
+</style>
+
+<div class="neo-social-wrap" aria-label="روابط السوشيال">
+  <div class="neo-social-list">
+
+    <!-- Facebook -->
+    <a class="neo-social-item" 
+       href="https://facebook.com/neo.cafe.eg" 
+       target="_blank" rel="noopener noreferrer">
+      <svg class="neo-social-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 12.07C22 6.48 17.52 2 12 2S2 6.48 2 12.07C2 17.09 5.66 21.19 10.44 21.95v-7.01H7.9v-2.94h2.54V9.79c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.45H15.9c-1.25 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.94h-2.34V21.95C18.34 21.19 22 17.09 22 12.07z" fill="#1877F2"/>
+      </svg>
+      فيسبوك
+    </a>
+
+    <!-- Instagram -->
+    <a class="neo-social-item" 
+       href="https://instagram.com/neocafe.eg" 
+       target="_blank" rel="noopener noreferrer">
+      <svg class="neo-social-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="igG" x1="0" x2="1">
+            <stop offset="0" stop-color="#f58529"/>
+            <stop offset="0.5" stop-color="#dd2a7b"/>
+            <stop offset="1" stop-color="#8134af"/>
+          </linearGradient>
+        </defs>
+        <rect x="2" y="2" width="20" height="20" rx="5" fill="url(#igG)"/>
+        <circle cx="12" cy="12" r="3.2" fill="#fff"/>
+        <circle cx="16.5" cy="7.5" r="0.9" fill="#fff"/>
+      </svg>
+      انستجرام
+    </a>
+
+    <!-- TikTok -->
+    <a class="neo-social-item" 
+       href="https://tiktok.com/@neo.cafe.eg" 
+       target="_blank" rel="noopener noreferrer">
+      <svg class="neo-social-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 8v8.5A3.5 3.5 0 1014.5 20V9h3V6h-3V4.5a6 6 0 11-5.5 3.5z" fill="#010101"/>
+      </svg>
+      تيك توك
+    </a>
+
+  </div>
+</div>
+<!-- ========== Social links — end ========== -->
 
 <script>
 // items data
