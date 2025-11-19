@@ -74,7 +74,7 @@ input[type="text"],input[type="date"],select,textarea{width:100%;padding:10px;bo
     cart.forEach(i=>{ itemsText += `- ${i.name} × ${i.qty} = ${i.price * i.qty} ج\\n`; total += i.price * i.qty; });
     let msg = `طلب من Neo Café\\nالاسم: ${name}\\nتاريخ الميلاد: ${dob}\\nرقم الطاولة: ${table}\\n\\nالطلب:\\n${itemsText}\\nالمجموع: ${total} ج`;
     if(notes) msg += `\\nملاحظات: ${notes}`;
-    const wa = 'https://wa.me/201055554856?text=' + encodeURIComponent(msg);
+    const wa = 'https://wa.me/201034311119?text=' + encodeURIComponent(msg);
     try{ localStorage.removeItem(CART_KEY); }catch(e){}
     window.location.href = wa;
   });
