@@ -188,5 +188,29 @@ document.getElementById('tabs').addEventListener('click', function(e){
 // init
 renderCartPopup(); updateCount();
 </script>
+  <script>
+// Footer show only when scrolled to bottom
+(function(){
+  const footer = document.querySelector('.footer-bar');
+  if(!footer) return;
+  // hide initially (if you prefer)
+  footer.style.display = 'none';
+
+  function checkBottom(){
+    // small offset to allow for small differences
+    const offset = 20;
+    const scrolledToBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - offset);
+    footer.style.display = scrolledToBottom ? 'flex' : 'none';
+  }
+
+  // run on load & scroll & resize
+  window.addEventListener('scroll', checkBottom, {passive:true});
+  window.addEventListener('resize', checkBottom);
+  window.addEventListener('load', checkBottom);
+  // also check after small delay (page render)
+  setTimeout(checkBottom, 500);
+})();
+</script>
+
 </body>
 </html>
