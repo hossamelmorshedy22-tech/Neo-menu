@@ -11,7 +11,8 @@ body{margin:0;font-family:system-ui,'Noto Sans Arabic',sans-serif;background:lin
 .header{position:sticky;top:0;backdrop-filter:blur(6px);background:linear-gradient(90deg,rgba(255,255,255,0.9),rgba(255,255,255,0.8));border-bottom:1px solid rgba(0,0,0,0.05);z-index:60}
 .container{max-width:1200px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px}
 .brand{display:flex;align-items:center;gap:12px}
-.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--primary1),var(--primary2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+.logo{width:72px;height:72px;display:flex;align-items:center;justify-content:center}
+#site-logo{max-width:100%;max-height:100%;height:72px;width:auto;object-fit:contain;display:block;border-radius:8px}
 .brand-title{font-weight:800;font-size:18px;color:var(--primary1)}
 .cart-btn{display:flex;gap:10px;align-items:center;margin-left:auto}
 .cart-count{background:var(--primary1);color:#fff;padding:8px 12px;border-radius:999px;font-weight:800;min-width:44px;text-align:center}
@@ -52,7 +53,7 @@ body{margin:0;font-family:system-ui,'Noto Sans Arabic',sans-serif;background:lin
 .hidden{display:none}
 @media (max-width:700px){ .grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))} .cart-popup{right:12px;left:12px;bottom:12px;width:auto} }
 
-/* social small styles (will be injected later too, but keep base here if needed) */
+/* social small styles */
 .neo-social-wrap{max-width:1200px;margin:18px auto 40px;padding:0 20px;display:flex;justify-content:center;align-items:center}
 .neo-social-list{display:inline-flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center}
 .neo-social-item{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:12px;text-decoration:none;background:linear-gradient(90deg, rgba(13,97,91,0.06), rgba(42,143,133,0.04));color:var(--primary1);font-weight:800;box-shadow:0 6px 18px rgba(13,97,91,0.04);transition:transform .12s}
@@ -62,11 +63,18 @@ body{margin:0;font-family:system-ui,'Noto Sans Arabic',sans-serif;background:lin
 </head>
 <body>
 
+<!-- header with real logo image -->
 <header class="header">
   <div class="container">
     <div class="brand">
-      <div class="logo">NE</div>
-      <div class="brand-title"> Neo Cafe - نيو كافيه</div>
+      <!-- Note: current src uses the local uploaded path you provided.
+           AFTER you upload logo to GitHub repo, change the src to: assets/images/logo.png
+           Example: <img id="site-logo" src="assets/images/logo.png" alt="Neo Café" />
+      -->
+      <div class="logo">
+        <img id="site-logo" src="/mnt/data/اللوجو.png" alt="Neo Café" />
+      </div>
+      <div class="brand-title">نيو كافيه</div>
     </div>
     <div class="cart-btn">
       <button id="open-cart" class="btn" style="background:#fff;color:var(--primary1);border:2px solid rgba(13,97,91,0.08)">السلة</button>
@@ -101,41 +109,30 @@ body{margin:0;font-family:system-ui,'Noto Sans Arabic',sans-serif;background:lin
   </div>
 </div>
 
-<!-- footer (appears only when at bottom) -->
 <div class="footer-bar">
   <div>قهوة مميزة، أجواء هادية — تعال جرب بنفسك</div>
   <div class="phone">٠١٠٣٤٣١١١٩</div>
 </div>
 
 <!-- Social links -->
-<!-- ========== Social links — start ========== -->
 <div class="neo-social-wrap" aria-label="روابط السوشيال">
   <div class="neo-social-list">
-
-    <!-- Facebook -->
     <a class="neo-social-item" href="https://facebook.com/neo.cafe.eg" target="_blank" rel="noopener noreferrer">
       <svg class="neo-social-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22 12.07C22 6.48 17.52 2 12 2S2 6.48 2 12.07C2 17.09 5.66 21.19 10.44 21.95v-7.01H7.9v-2.94h2.54V9.79c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.45H15.9c-1.25 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.94h-2.34V21.95C18.34 21.19 22 17.09 22 12.07z" fill="#1877F2"/></svg>
       فيسبوك
     </a>
-
-    <!-- Instagram -->
     <a class="neo-social-item" href="https://instagram.com/neocafe.eg" target="_blank" rel="noopener noreferrer">
       <svg class="neo-social-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="igG2" x1="0" x2="1"><stop offset="0" stop-color="#f58529"/><stop offset="0.5" stop-color="#dd2a7b"/><stop offset="1" stop-color="#8134af"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" fill="url(#igG2)"/><circle cx="12" cy="12" r="3.2" fill="#fff"/><circle cx="16.5" cy="7.5" r="0.9" fill="#fff"/></svg>
       انستجرام
     </a>
-
-    <!-- TikTok -->
     <a class="neo-social-item" href="https://tiktok.com/@neo.cafe.eg" target="_blank" rel="noopener noreferrer">
       <svg class="neo-social-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 8v8.5A3.5 3.5 0 1014.5 20V9h3V6h-3V4.5a6 6 0 11-5.5 3.5z" fill="#010101"/></svg>
       تيك توك
     </a>
-
   </div>
 </div>
-<!-- ========== Social links — end ========== -->
 
-<!-- Contact / map block (embed link set to the location you gave) -->
-<!-- ========== Contact Us — start ========== -->
+<!-- Contact / map block -->
 <div style="max-width:1200px;margin:40px auto;padding:20px;background:#ffffff;border-radius:14px;border:1px solid rgba(13,97,91,0.08);box-shadow:0 8px 25px rgba(13,97,91,0.08);">
   <div style="font-size:22px;font-weight:800;color:#0D615B;margin-bottom:12px;text-align:center">📍 اتصل بنا</div>
   <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;text-align:center;color:#333">
@@ -150,10 +147,9 @@ body{margin:0;font-family:system-ui,'Noto Sans Arabic',sans-serif;background:lin
       width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
   </div>
 </div>
-<!-- ========== Contact Us — end ========== -->
 
 <script>
-// ======= items data (add img filenames that you uploaded inside assets/images/) =======
+// ======= items data (make sure images you upload match the filenames) =======
 const items = [
   { name: 'اسبريسو', price: 45, category: 'مشروبات ساخنة', img: 'espresso.jpg' },
   { name: 'كابتشينو', price: 55, category: 'مشروبات ساخنة', img: 'cappuccino.jpg' },
@@ -165,7 +161,6 @@ const items = [
   { name: 'براوني بالشوكولاتة', price: 55, category: 'حلويات', img: 'brownie.jpg' }
 ];
 
-// helper: get image src (use uploaded asset if present, fallback to svg)
 function getImageSrc(name, filename){
   if(filename){
     return `assets/images/${filename}`;
@@ -222,12 +217,10 @@ document.addEventListener('click', function(e){
     const price = parseInt(add.getAttribute('data-price')||'0',10);
     const idx = findIndex(name);
     if(idx>-1){ cart[idx].qty += 1; } else {
-      // attach img lookup from items array
       const itemDef = items.find(x=>x.name===name) || {};
       cart.push({name:name, price:price, qty:1, img: itemDef.img || ''});
     }
     saveCart(); renderCartPopup(); document.getElementById('cart-popup').style.display = 'block';
-    // hide footer while cart open
     const footer = document.querySelector('.footer-bar');
     if(footer) footer.style.display = 'none';
     return;
@@ -249,7 +242,7 @@ document.getElementById('tabs').addEventListener('click', function(e){
   document.querySelectorAll('.grid .card').forEach(card=>{ card.style.display = (cat === 'all' || card.getAttribute('data-category') === cat) ? '' : 'none'; });
 });
 
-// FOOTER visibility control: show only at bottom and hide while cart open
+// FOOTER visibility control
 function checkFooterVisibility(){
   const footer = document.querySelector('.footer-bar');
   if(!footer) return;
