@@ -100,17 +100,31 @@
 /* -------------------------------
   Checkout page script (complete)
   - Shows cart (from localStorage key neo_cart_v3)
-  - Handles loyalty (localStorage neo_loyalty_v1)
+  - Handles loyalty (localStorage neo_loyalty_v1) with normalized phone
   - Formats WhatsApp message with each item on a new line
   - Sends to cafe WhatsApp number (change DEST_WHATSAPP below if needed)
 ----------------------------------*/
 
 // destination WhatsApp number (restaurant) -- put country code without + (e.g. 20...), here using earlier: 01034311119 -> Egypt => 201034311119
-const DEST_WHATSAPP = '201034311119'; // CHANGE HERE if needed
+const DEST_WHATSAPP = '201034311119'; // <-- عدّل هنا لو عايز تستقبل الرسائل برقم تاني
 
 // keys
 const CART_KEY = 'neo_cart_v3';
 const LOYAL_KEY = 'neo_loyalty_v1';
+
+// ===== sample items list (fallback if not present) =====
+if(!window.items) {
+  window.items = [
+    { name: 'اسبريسو', price:45, category:'مشروبات ساخنة', img:'espresso.jpg'},
+    { name: 'كابتشينو', price:55, category:'مشروبات ساخنة', img:'cappuccino.jpg'},
+    { name: 'لاتيه كاراميل', price:60, category:'مشروبات ساخنة', img:'latte-caramel.jpg'},
+    { name: 'قهوة تركي', price:50, category:'مشروبات ساخنة', img:'turkish-coffee.jpg'},
+    { name: 'ايس لاتيه', price:55, category:'مشروبات باردة', img:'iced-latte.jpg'},
+    { name: 'وافل', price:65, category:'مخبوزات', img:'waffle.jpg'},
+    { name: 'كرواسون', price:45, category:'مخبوزات', img:'croissant.jpg'},
+    { name: 'براوني بالشوكولاتة', price:55, category:'حلويات', img:'brownie.jpg'}
+  ];
+}
 
 // ----- utility helpers -----
 function loadCart(){
@@ -120,6 +134,29 @@ function saveCart(cart){ try{ localStorage.setItem(CART_KEY, JSON.stringify(cart
 function loadLoyalty(){ try{ return JSON.parse(localStorage.getItem(LOYAL_KEY) || '{}'); } catch(e){ return {}; } }
 function saveLoyalty(obj){ try{ localStorage.setItem(LOYAL_KEY, JSON.stringify(obj)); } catch(e){} }
 function fmtPrice(n){ return n + ' ج'; }
+
+// ----- phone normalization helpers -----
+// يحول أي مدخل لرقم موحد يبدأ بـ 0 لو كان رقم مصري
+function normalizePhoneRaw(v){
+  if(!v) return '';
+  const digits = (''+v).replace(/\D+/g,''); // remove non-digits
+  if(digits.length === 0) return '';
+  // if starts with country code 20 (e.g. 2010...) convert to 0...
+  if(digits.startsWith('20') && digits.length >= 11){
+    return '0' + digits.slice(2);
+  }
+  // if already starts with 0 (010...), keep it
+  if(digits.startsWith('0')) return digits;
+  // if 10-digit starting with 1 (like 10xxxxxxxx) add 0
+  if(digits.length === 10 && digits.startsWith('1')) return '0' + digits;
+  return digits;
+}
+
+function getPhoneVal(){
+  const el = document.getElementById('loyal-phone');
+  if(!el) return '';
+  return normalizePhoneRaw(el.value.trim());
+}
 
 // ----- render cart -----
 function renderCart(){
@@ -154,30 +191,32 @@ function renderCart(){
   document.getElementById('cart-total').innerText = fmtPrice(total);
 }
 
-// ----- loyalty UI functions -----
-function getPhoneVal(){
-  return (document.getElementById('loyal-phone').value || '').trim();
-}
+// ----- loyalty functions (with normalize and logs) -----
 function showLoyalStatus(phone){
   const wrap = document.getElementById('loyal-status');
   const msg = document.getElementById('loyal-msg');
   const progress = document.getElementById('loyal-progress');
   const redeemBtn = document.getElementById('redeem-free');
-  if(!phone){
+  const normalized = normalizePhoneRaw(phone || '');
+  if(!normalized){
     wrap.style.display = 'none';
     return;
   }
   const db = loadLoyalty();
-  const entry = db[phone] || {stamps:0, rewards:0};
+  const entry = db[normalized] || {stamps:0, rewards:0};
   wrap.style.display = 'block';
   msg.innerText = `نقاط الولاء: ${entry.stamps} / 5  — ${entry.rewards > 0 ? 'لديك مشروب مجاني متاح!' : 'لا توجد مشروبات مجانية حالياً'}`;
   progress.innerText = `التقدّم: ${'●'.repeat(entry.stamps)}${'○'.repeat(Math.max(0,5-entry.stamps))}`;
   redeemBtn.style.display = entry.rewards > 0 ? 'inline-block' : 'none';
+  console.log('[Loyalty] showLoyalStatus for', normalized, entry);
 }
+
 function addStampForPhone(phone){
-  if(!phone) return {ok:false, msg:'لا يوجد رقم'};
+  const normalized = normalizePhoneRaw(phone || '');
+  console.log('[Loyalty] addStampForPhone called with:', phone, '-> normalized:', normalized);
+  if(!normalized) { console.warn('[Loyalty] no phone to add stamp'); return {ok:false,msg:'no phone'}; }
   const db = loadLoyalty();
-  const entry = db[phone] || {stamps:0, rewards:0, last:0};
+  const entry = db[normalized] || {stamps:0, rewards:0, last:0};
   entry.stamps = (entry.stamps || 0) + 1;
   entry.last = Date.now();
   let rewardGranted = false;
@@ -186,32 +225,27 @@ function addStampForPhone(phone){
     entry.rewards = (entry.rewards || 0) + 1;
     rewardGranted = true;
   }
-  db[phone] = entry;
+  db[normalized] = entry;
   saveLoyalty(db);
+  console.log('[Loyalty] updated entry:', entry);
   return {ok:true, reward: rewardGranted, entry};
 }
-function redeemReward(phone, chosenIndex){
+
+function redeemReward(phone){
+  const normalized = normalizePhoneRaw(phone || '');
+  if(!normalized) return {ok:false, msg:'no phone'};
   const db = loadLoyalty();
-  const entry = db[phone];
+  const entry = db[normalized];
   if(!entry || (entry.rewards || 0) <= 0) return {ok:false, msg:'لا توجد جوائز'};
   entry.rewards = entry.rewards - 1;
   entry.last = Date.now();
-  db[phone] = entry;
+  db[normalized] = entry;
   saveLoyalty(db);
+  console.log('[Loyalty] redeemReward for', normalized, 'new entry:', entry);
   return {ok:true, entry};
 }
 
-// add free item to cart (name string or item object)
-function addFreeItemToCartByName(name){
-  const itemsList = window.items || [];
-  const found = itemsList.find(i => i.name === name);
-  const cart = loadCart();
-  cart.push({ name: found ? found.name + ' (مجاني)' : name + ' (مجاني)', price: 0, qty: 1, img: found ? (found.img||'') : '' , free:true });
-  saveCart(cart);
-  renderCart();
-}
-
-// ----- create whatsapp message (each item on new line) -----
+// ----- build message for whatsapp (each item in new line) -----
 function buildOrderMessage(name, dob, table, phone, notes){
   const cart = loadCart();
   let lines = [];
@@ -237,9 +271,8 @@ function buildOrderMessage(name, dob, table, phone, notes){
   }
   // loyalty quick info
   const db = loadLoyalty();
-  const entry = db[phone] || {stamps:0, rewards:0};
+  const entry = db[normalizePhoneRaw(phone)] || {stamps:0, rewards:0};
   lines.push(`حالة الولاء: ${entry.stamps}/5 ، جوائز متاحة: ${entry.rewards}`);
-  // friendly footer
   lines.push(`شكراً لاختيارك Neo Café — Make It NEO Time`);
   return lines.join('\n');
 }
@@ -249,7 +282,8 @@ document.getElementById('send-order').addEventListener('click', function(){
   const name = document.getElementById('cust-name').value.trim();
   const dob = document.getElementById('cust-dob').value || '';
   const table = document.getElementById('cust-table').value || '';
-  const phone = getPhoneVal();
+  const phoneRaw = document.getElementById('loyal-phone').value || '';
+  const phone = normalizePhoneRaw(phoneRaw);
   const notes = document.getElementById('notes').value || '';
 
   // validations
@@ -258,24 +292,23 @@ document.getElementById('send-order').addEventListener('click', function(){
     document.getElementById('loyal-phone').focus();
     return;
   }
-  // build message
-  const msg = buildOrderMessage(name, dob, table, phone, notes);
 
-  // process loyalty (add stamp) BEFORE open whatsapp (we assume order placed when user proceeds)
+  // process loyalty (add stamp) BEFORE opening whatsapp
   const loyaltyRes = addStampForPhone(phone);
   if(loyaltyRes.ok && loyaltyRes.reward){
+    // notify user they earned a reward
     setTimeout(()=> alert('مبروك! وصلت لنقاط كافية وتمت إضافة مشروب مجاني في حسابك. استخدم زر "استبدال المشروب المجاني" لاختيار مشروبك المجاني.'), 80);
   }
 
-  // open whatsapp with message
+  // build message and open WhatsApp
+  const msg = buildOrderMessage(name, dob, table, phone, notes);
   const waUrl = `https://api.whatsapp.com/send?phone=${encodeURIComponent(DEST_WHATSAPP)}&text=${encodeURIComponent(msg)}`;
-  // save cart state (already saved) then redirect
+  // open in new tab (user sends from هاتف أو واتساب ويب)
   window.open(waUrl, '_blank');
-
-  // optional: you may want to clear cart after sending or keep it. Here we keep it for safety.
+  // keep cart as-is (or optionally clear after sending)
 });
 
-// ----- redeem button handler: show menu pick and add free item -----
+// ----- redeem button handler: prompt choice and add free item to cart -----
 document.getElementById('redeem-free').addEventListener('click', function(){
   const phone = getPhoneVal();
   if(!phone){ alert('من فضلك اكتب رقم الهاتف أولاً'); return; }
@@ -283,7 +316,6 @@ document.getElementById('redeem-free').addEventListener('click', function(){
   const entry = db[phone] || {stamps:0, rewards:0};
   if(!entry || entry.rewards <= 0){ alert('معكش مشروب مجاني دلوقتي'); return; }
 
-  // present simple choices using prompt (can be replaced by modal)
   const menuItems = window.items || [];
   if(!menuItems.length){ alert('قائمة المنتجات غير متاحة الآن'); return; }
   let list = 'اختار رقم المشروب المجاني من القائمة:\n';
@@ -293,7 +325,6 @@ document.getElementById('redeem-free').addEventListener('click', function(){
   if(isNaN(idx) || idx < 0 || idx >= menuItems.length){ alert('اختيار غير صالح'); return; }
   const chosen = menuItems[idx];
 
-  // redeem and then add free item to cart
   const res = redeemReward(phone);
   if(!res.ok){ alert('خطأ في استبدال الجائزة'); return; }
   // add free product to cart
@@ -305,35 +336,23 @@ document.getElementById('redeem-free').addEventListener('click', function(){
   alert(`تم إضافة ${chosen.name} كسعر مجاني إلى السلة.`);
 });
 
-// ----- keep showing loyal status while typing -----
+// show loyalty status while typing
 document.getElementById('loyal-phone').addEventListener('input', function(){ showLoyalStatus(getPhoneVal()); });
 
 // back to menu
 document.getElementById('back-to-menu').addEventListener('click', function(){
-  // try to go back to index.html in same repo structure
   window.location.href = 'index.html';
 });
 
-// ----- init: render cart + set sample global items if not present -----
-/* NOTE:
-   The script expects a global `items` array (same as main page) to be present if user wants to redeem specific product names.
-   If your checkout.html is opened standalone, you can define a minimal items array here or include the same items list as in index.html.
-*/
-if(!window.items) {
-  window.items = [
-    { name: 'اسبريسو', price:45, category:'مشروبات ساخنة', img:'espresso.jpg'},
-    { name: 'كابتشينو', price:55, category:'مشروبات ساخنة', img:'cappuccino.jpg'},
-    { name: 'لاتيه كاراميل', price:60, category:'مشروبات ساخنة', img:'latte-caramel.jpg'},
-    { name: 'قهوة تركي', price:50, category:'مشروبات ساخنة', img:'turkish-coffee.jpg'},
-    { name: 'ايس لاتيه', price:55, category:'مشروبات باردة', img:'iced-latte.jpg'},
-    { name: 'وافل', price:65, category:'مخبوزات', img:'waffle.jpg'},
-    { name: 'كرواسون', price:45, category:'مخبوزات', img:'croissant.jpg'},
-    { name: 'براوني بالشوكولاتة', price:55, category:'حلويات', img:'brownie.jpg'}
-  ];
-}
-
+// init
 renderCart();
 showLoyalStatus(getPhoneVal());
+
+/* OPTIONAL: expose debug helper to console */
+window._neo_debug = {
+  showLoyal: () => console.log(loadLoyalty()),
+  showCart: () => console.log(loadCart())
+};
 </script>
 </body>
 </html>
