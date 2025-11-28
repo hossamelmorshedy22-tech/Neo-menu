@@ -284,6 +284,343 @@ loadCart();
 
 /* -------------- Loyalty UI binding & handlers -------------- */
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>إتمام الطلب — Neo Café</title>
+<style>
+  :root{--primary:#125433;--light:#f7f5f1}
+  body{font-family: "Cairo", sans-serif; background:var(--light); margin:0; padding:20px}
+  .container{max-width:760px;margin:20px auto;background:#fff;border-radius:16px;padding:22px;box-shadow:0 6px 30px rgba(0,0,0,0.08)}
+  h2{text-align:center;color:var(--primary);margin:0 0 18px}
+  label{display:block;margin-top:14px;font-weight:700;color:#333}
+  input, select, textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #e0e0e0;margin-top:6px;font-size:15px;box-sizing:border-box}
+  .row{display:flex;gap:10px}
+  .row .col{flex:1}
+  .cart-box{background:#fafafa;border-radius:12px;padding:14px;margin-bottom:14px;border:1px solid #eee}
+  #cart-items{min-height:60px}
+  .cart-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed #eee}
+  .small-btn{padding:8px 12px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer}
+  #send-order{width:100%;padding:14px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-size:18px;margin-top:16px;cursor:pointer}
+  #send-order:active{transform:translateY(1px)}
+  .loyal-wrap{display:none;background:#f6fffa;border:1px solid #d8f3e6;padding:10px;border-radius:10px;margin-top:12px;color:#0a6b3f}
+  .loyal-progress{font-weight:700;margin-top:6px}
+  .footer-note{text-align:center;color:#666;font-size:14px;margin-top:12px}
+  @media (max-width:520px){ .row{flex-direction:column} }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>إتمام الطلب</h2>
+
+  <div class="cart-box">
+    <h3 style="margin:0 0 8px">محتويات السلة:</h3>
+    <div id="cart-items"></div>
+    <p style="margin-top:12px"><strong>الإجمالي: </strong><span id="total">0</span> جنيه</p>
+  </div>
+
+  <label>الاسم:</label>
+  <input id="cust-name" placeholder="اكتب اسمك هنا">
+
+  <label>تاريخ الميلاد:</label>
+  <div class="row">
+    <div class="col">
+      <select id="dob-day"><option selected disabled>اليوم</option></select>
+    </div>
+    <div class="col">
+      <select id="dob-month"><option selected disabled>الشهر</option></select>
+    </div>
+    <div class="col">
+      <select id="dob-year"><option selected disabled>السنة</option></select>
+    </div>
+  </div>
+
+  <label>رقم الطاولة:</label>
+  <select id="cust-table">
+    <option selected disabled>اختار رقم الطاولة</option>
+  </select>
+
+  <label>رقم الموبايل:</label>
+  <input id="phone" placeholder="اكتب رقمك">
+
+  <!-- loyalty UI area -->
+  <div id="loyal-status" class="loyal-wrap" style="display:none">
+    <div id="loyal-msg">نقاط الولاء: 0 / 5</div>
+    <div id="loyal-progress" class="loyal-progress">التقدّم: ○○○○○</div>
+    <div style="margin-top:8px">
+      <button id="redeem-free" class="small-btn" style="display:none;background:var(--primary);color:#fff;border:none">استبدال مشروب مجّاني</button>
+    </div>
+    <div style="margin-top:8px;font-size:13px;color:#444">نظام الولاء: كل طلب = نجمة. عند الوصول لـ 5 نجوم تحصل على مشروب مجاني.</div>
+  </div>
+
+  <label>ملاحظات إضافية:</label>
+  <textarea id="notes" placeholder="لو عندك طلب معين اكتبه هنا"></textarea>
+
+  <button id="send-order">إرسال الطلب عبر واتساب</button>
+
+  <div class="footer-note">قهوة مميزة، أجواء هادية — تعال جرب بنفسك. ت: 01034311119</div>
+</div>
+
+<!-- ========================= -->
+<!-- Firebase + Firestore module (system is using doc id = normalized phone) -->
+<!-- ========================= -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+  import {
+    getFirestore,
+    doc,
+    getDoc,
+    setDoc,
+    runTransaction
+  } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBPMOhuvKn6mUNgHYMiN9F_6m0ikmriOA4",
+    authDomain: "neo-loyalty-b41c7.firebaseapp.com",
+    projectId: "neo-loyalty-b41c7",
+    storageBucket: "neo-loyalty-b41c7.firebasestorage.app",
+    messagingSenderId: "1024912015862",
+    appId: "1:1024912015862:web:8647e752c9ea2d2085c7d7",
+    measurementId: "G-BKZPWB7YS6"
+  };
+
+  // init firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
+
+  // helpers
+  function normalizePhoneRaw(v){
+    if(!v) return '';
+    const digits = (''+v).replace(/\D+/g,'');
+    if(digits.length === 0) return '';
+    // if starts with country code 20 => convert to 0...
+    if(digits.startsWith('20') && digits.length >= 11) return '0' + digits.slice(2);
+    if(digits.startsWith('0')) return digits;
+    if(digits.length === 10 && digits.startsWith('1')) return '0' + digits;
+    return digits;
+  }
+
+  // Firestore functions
+  async function incrementStampOnServer(rawPhone){
+    const phone = normalizePhoneRaw(rawPhone || '');
+    if(!phone) return {ok:false, msg:'invalid phone'};
+    const ref = doc(db, 'customers', phone);
+    try{
+      const result = await runTransaction(db, async (tx) => {
+        const snap = await tx.get(ref);
+        let data = { points:0, rewards:0, last: Date.now() };
+        if(snap.exists()){
+          data = snap.data();
+          data.points = Number(data.points || 0);
+          data.rewards = Number(data.rewards || 0);
+        }
+        data.points = (data.points || 0) + 1;
+        data.last = Date.now();
+        let rewardGranted = false;
+        if(data.points >= 5){
+          data.points = 0;
+          data.rewards = (data.rewards || 0) + 1;
+          rewardGranted = true;
+        }
+        tx.set(ref, data, { merge:true });
+        return { data, rewardGranted };
+      });
+      const { data, rewardGranted } = result;
+      if(rewardGranted){
+        const congratMsg = `🎉 انت من عملاء نيو كافيه المميزين\nكسبت مشروب مجاني من اختيارك 💚\nبنشكرك على ثقتك فينا وبنتمنى نكون دائماً عند حسن ظنك فينا.`;
+        return { ok:true, reward:true, entry:data, congratMsg };
+      }
+      return { ok:true, reward:false, entry:data };
+    }catch(err){
+      console.error(err);
+      return { ok:false, msg:err.message || 'tx failed' };
+    }
+  }
+
+  async function getLoyaltyStatus(rawPhone){
+    const phone = normalizePhoneRaw(rawPhone || '');
+    if(!phone) return {ok:false, msg:'invalid phone'};
+    try{
+      const snap = await getDoc(doc(db, 'customers', phone));
+      if(!snap.exists()) return { ok:true, entry: { points:0, rewards:0 } };
+      return { ok:true, entry: snap.data() };
+    }catch(err){
+      console.error(err);
+      return { ok:false, msg: err.message || 'get failed' };
+    }
+  }
+
+  async function redeemOnServer(rawPhone){
+    const phone = normalizePhoneRaw(rawPhone || '');
+    if(!phone) return {ok:false, msg:'invalid phone'};
+    const ref = doc(db, 'customers', phone);
+    try{
+      const out = await runTransaction(db, async (tx) => {
+        const snap = await tx.get(ref);
+        if(!snap.exists()) throw new Error('no entry');
+        const data = snap.data();
+        const rewards = Number(data.rewards || 0);
+        if(rewards <= 0) throw new Error('no rewards');
+        data.rewards = rewards - 1;
+        data.last = Date.now();
+        tx.set(ref, data, { merge: true });
+        return data;
+      });
+      return { ok:true, entry: out };
+    }catch(err){
+      console.error(err);
+      return { ok:false, msg: err.message || 'redeem failed' };
+    }
+  }
+
+  // expose minimal API to window
+  window._neoFirebase = {
+    incrementStampOnServer,
+    getLoyaltyStatus,
+    redeemOnServer,
+    normalizePhoneRaw
+  };
+
+</script>
+
+<!-- ========================= -->
+<!-- Scripts: cart handling, UI binding, send-order -->
+<!-- ========================= -->
+<script>
+/* -------------- init DOB & tables -------------- */
+(function initSelects(){
+  const day = document.getElementById('dob-day');
+  const month = document.getElementById('dob-month');
+  const year = document.getElementById('dob-year');
+  for(let i=1;i<=31;i++) day.appendChild(new Option(i,i));
+  for(let i=1;i<=12;i++) month.appendChild(new Option(i,i));
+  const yNow = new Date().getFullYear();
+  for(let y=yNow-10; y>= yNow-80; y--) year.appendChild(new Option(y,y));
+  const table = document.getElementById('cust-table');
+  for(let t=1;t<=10;t++) table.appendChild(new Option(t,t));
+})();
+
+/* -------------- cart functions (load, render, edit) -------------- */
+/* ======= تم تحديث هذه الدالة لتدعم مفاتيح تخزين متعددة وتعمل fallback ======= */
+function loadCart(){
+  const list = document.getElementById("cart-items");
+  const total = document.getElementById("total");
+  if(!list || !total) return;
+
+  // حاول نقرأ الكارت من أكتر من مكان (fallback keys)
+  const possibleKeys = ['cart','neo_cart','cartItems','cart_items'];
+  let raw = null;
+  for(const k of possibleKeys){
+    const v = localStorage.getItem(k);
+    if(v && v !== 'null'){
+      raw = v;
+      break;
+    }
+  }
+
+  // لو لسه null حاول sessionStorage كـ fallback
+  if(!raw){
+    for(const k of possibleKeys){
+      const v = sessionStorage.getItem(k);
+      if(v && v !== 'null'){
+        raw = v;
+        break;
+      }
+    }
+  }
+
+  // If still null -> fallback empty
+  let cart = [];
+  if(raw){
+    try{
+      cart = JSON.parse(raw);
+      // normalize: if object with keys -> try to map to array
+      if(!Array.isArray(cart) && typeof cart === 'object'){
+        if(cart.items && Array.isArray(cart.items)) cart = cart.items;
+        else {
+          cart = Object.keys(cart).map(k => cart[k]).filter(Boolean);
+        }
+      }
+    }catch(e){
+      console.warn('cart parse failed, fallback to []', e);
+      cart = [];
+    }
+  }
+
+  // render
+  list.innerHTML = "";
+  let sum = 0;
+  cart.forEach((item, index) => {
+    const qty = Number(item.qty || 1);
+    const price = Number(item.price || 0);
+    const row = document.createElement("div");
+    row.className = "cart-row";
+    row.innerHTML = `
+      <div style="flex:1">
+        <div style="font-weight:700">${item.name || 'بدون اسم'}</div>
+        <div style="font-size:13px;color:#666">${price} ج × ${qty}</div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button data-index="${index}" class="cart-minus small-btn">-</button>
+        <div style="min-width:26px;text-align:center">${qty}</div>
+        <button data-index="${index}" class="cart-plus small-btn">+</button>
+        <button data-index="${index}" class="cart-remove small-btn" style="color:#b00">حذف</button>
+      </div>
+    `;
+    list.appendChild(row);
+    sum += price * qty;
+  });
+
+  total.textContent = sum;
+
+  // إذا الكارت فاضي: نوّر رسالة بدل لا يوجد أصناف
+  if(cart.length === 0){
+    list.innerHTML = '<div style="color:#777;padding:10px">السلة فارغة — أضف منتجات من المنيو</div>';
+  }
+
+  // listeners (نفس اللي كان عندك)
+  document.querySelectorAll('.cart-plus').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = Number(btn.getAttribute('data-index'));
+      const cc = JSON.parse(localStorage.getItem('cart') || '[]');
+      if(!cc[i]) return;
+      cc[i].qty = Number(cc[i].qty||1) + 1;
+      localStorage.setItem("cart", JSON.stringify(cc));
+      loadCart();
+    };
+  });
+  document.querySelectorAll('.cart-minus').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = Number(btn.getAttribute('data-index'));
+      const cc = JSON.parse(localStorage.getItem('cart') || '[]');
+      if(!cc[i]) return;
+      cc[i].qty = Math.max(1, Number(cc[i].qty||1) - 1);
+      localStorage.setItem("cart", JSON.stringify(cc));
+      loadCart();
+    };
+  });
+  document.querySelectorAll('.cart-remove').forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = Number(btn.getAttribute('data-index'));
+      const cc = JSON.parse(localStorage.getItem('cart') || '[]');
+      if(!cc[i]) return;
+      cc.splice(i,1);
+      localStorage.setItem("cart", JSON.stringify(cc));
+      loadCart();
+    };
+  });
+}
+
+// initial load
+loadCart();
+
+/* -------------- Loyalty UI binding & handlers -------------- */
+
 const DEST_WHATSAPP = '201034311119'; // رقم النيو كافيه للواتساب (غيره لو عايز)
 
 async function showLoyalStatusUI(){
@@ -301,6 +638,159 @@ async function showLoyalStatusUI(){
       return;
     }
     const res = await window._neoFirebase.getLoyaltyStatus(norm);
+    if(!res || !res.ok){
+      if(wrap) wrap.style.display = 'none';
+      return;
+    }
+    const entry = res.entry || { points:0, rewards:0 };
+    if(wrap){
+      wrap.style.display = 'block';
+      if(msg) msg.innerText = `نقاط الولاء: ${entry.points} / 5  — ${entry.rewards > 0 ? 'لديك مشروب مجاني متاح!' : 'لا توجد مشروبات مجانية حالياً'}`;
+      if(progress) progress.innerText = `التقدّم: ${'●'.repeat(entry.points)}${'○'.repeat(Math.max(0,5-entry.points))}`;
+      if(redeemBtn) redeemBtn.style.display = entry.rewards > 0 ? 'inline-block' : 'none';
+    }
+  }catch(err){
+    console.warn('showLoyalStatusUI error', err);
+  }
+}
+
+(function attachPhoneListener(){
+  const phoneEl = document.getElementById('phone');
+  if(!phoneEl) return;
+  phoneEl.addEventListener('input', () => {
+    if(phoneEl._timer) clearTimeout(phoneEl._timer);
+    phoneEl._timer = setTimeout(()=> { showLoyalStatusUI(); }, 300);
+  });
+  showLoyalStatusUI();
+})();
+
+/* -------------- send-order handler (increment loyalty then open whatsapp) -------------- */
+
+(function attachSendHandler(){
+  const sendBtn = document.getElementById('send-order');
+  if(!sendBtn) return;
+  sendBtn.addEventListener('click', async function(e){
+    e.preventDefault();
+    const name = (document.getElementById('cust-name') || {value:''}).value.trim();
+    const phoneRaw = (document.getElementById('phone') || {value:''}).value.trim();
+    const phone = window._neoFirebase.normalizePhoneRaw(phoneRaw);
+    const table = (document.getElementById('cust-table') || {value:''}).value;
+    const notes = (document.getElementById('notes') || {value:''}).value.trim();
+    const d = document.getElementById('dob-day') ? document.getElementById('dob-day').value : '';
+    const m = document.getElementById('dob-month') ? document.getElementById('dob-month').value : '';
+    const y = document.getElementById('dob-year') ? document.getElementById('dob-year').value : '';
+    const dob = (d||m||y) ? `${d || '-'}-${m || '-'}-${y || '-'}` : '-';
+
+    if(!phone || phone.length < 8){
+      alert('من فضلك اكتب رقم هاتف صالح (مهم لنظام الولاء)');
+      document.getElementById('phone').focus();
+      return;
+    }
+
+    // 1) update loyalty atomically
+    const inc = await window._neoFirebase.incrementStampOnServer(phone);
+    if(inc && inc.ok && inc.reward){
+      alert(inc.congratMsg || '🎉 انت من عملاء نيو كافيه المميزين — كسبت مشروب مجاني 💚');
+    }
+
+    // 2) build message lines (each item on its own line)
+    // Try reading cart with fallback keys too, to be consistent with loadCart
+    const possibleKeys = ['cart','neo_cart','cartItems','cart_items'];
+    let raw = null;
+    for(const k of possibleKeys){
+      const v = localStorage.getItem(k);
+      if(v && v !== 'null'){ raw = v; break; }
+    }
+    if(!raw){
+      for(const k of possibleKeys){
+        const v = sessionStorage.getItem(k);
+        if(v && v !== 'null'){ raw = v; break; }
+      }
+    }
+    let cart = [];
+    if(raw){
+      try{
+        cart = JSON.parse(raw);
+        if(!Array.isArray(cart) && typeof cart === 'object'){
+          if(cart.items && Array.isArray(cart.items)) cart = cart.items;
+          else cart = Object.keys(cart).map(k => cart[k]).filter(Boolean);
+        }
+      }catch(e){ cart = []; }
+    }
+
+    let lines = [];
+    lines.push(`طلب جديد من Neo Café`);
+    lines.push(`------------------------`);
+    lines.push(`الاسم: ${name || '-'}`);
+    lines.push(`تاريخ الميلاد: ${dob}`);
+    lines.push(`رقم الطاولة: ${table || '-'}`);
+    lines.push(`رقم الموبايل: ${phone}`);
+    lines.push(`------------------------`);
+    lines.push(`الأصناف:`);
+    if(cart.length === 0){
+      lines.push('- لا يوجد أصناف');
+    } else {
+      cart.forEach(it => {
+        const qty = Number(it.qty || 1);
+        const price = Number(it.price || 0);
+        const priceText = price === 0 ? '0 ج (مجاني)' : `${price} ج`;
+        lines.push(`• ${it.name} × ${qty} = ${priceText}`);
+      });
+    }
+    lines.push(`------------------------`);
+    if(notes) lines.push(`ملاحظات: ${notes}`);
+    // loyalty snapshot
+    const st = await window._neoFirebase.getLoyaltyStatus(phone);
+    if(st && st.ok){
+      const e = st.entry || { points:0, rewards:0 };
+      lines.push(`------------------------`);
+      lines.push(`حالة الولاء: ${e.points}/5 ، جوائز متاحة: ${e.rewards}`);
+    }
+    lines.push('');
+    lines.push(`شكراً لاختيارك Neo Café — Make It NEO Time`);
+
+    const msg = encodeURIComponent(lines.join('\n'));
+    window.open(`https://api.whatsapp.com/send?phone=${DEST_WHATSAPP}&text=${msg}`, '_blank');
+
+    // refresh UI
+    setTimeout(()=>{ loadCart(); showLoyalStatusUI(); }, 500);
+  });
+})();
+
+/* -------------- redeem handler (استبدال المشروب المجاني) -------------- */
+(function attachRedeem(){
+  const redeemBtn = document.getElementById('redeem-free');
+  if(!redeemBtn) return;
+  redeemBtn.addEventListener('click', async function(){
+    const phone = (document.getElementById('phone')||{value:''}).value.trim();
+    const norm = window._neoFirebase.normalizePhoneRaw(phone);
+    if(!norm){ alert('من فضلك اكتب رقم الموبايل أولاً'); return; }
+    const s = await window._neoFirebase.getLoyaltyStatus(norm);
+    if(!s.ok){ alert('حصل خطأ حاول مرة تانية'); return; }
+    if((s.entry && s.entry.rewards || 0) <= 0){ alert('معندكش مشروب مجاني الآن'); return; }
+    // pick via prompt (simple) - needs window.items array (menu)
+    const menu = (window.items || []);
+    if(!menu.length){ alert('قائمة المنتجات غير متاحة حالياً'); return; }
+    const list = menu.map((m,i)=> `${i+1}. ${m.name}`).join('\n');
+    const pick = prompt(`اختار رقم المشروب المجاني:\n${list}\nاكتب رقم المنتج`);
+    const idx = parseInt(pick)-1;
+    if(isNaN(idx) || idx < 0 || idx >= menu.length){ alert('اختيار غير صالح'); return; }
+    const chosen = menu[idx];
+    // redeem on server
+    const res = await window._neoFirebase.redeemOnServer(norm);
+    if(!res.ok){ alert('فشل الاستبدال'); return; }
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    cart.push({ name: chosen.name + ' (مجاني)', price: 0, qty: 1, img: chosen.img || '', free:true });
+    localStorage.setItem('cart', JSON.stringify(cart));
+    loadCart();
+    showLoyalStatusUI();
+    alert(`تم إضافة ${chosen.name} مجانًا إلى السلة.`);
+  });
+})();
+
+</script>
+</body>
+</html>
     if(!res || !res.ok){
       if(wrap) wrap.style.display = 'none';
       return;
