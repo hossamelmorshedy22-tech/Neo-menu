@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>إتمام الطلب — Neo Café</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;800&display=swap" rel="stylesheet">
 <style>
   :root{--primary:#125433;--light:#f7f5f1}
   body{font-family: "Cairo", sans-serif; background:var(--light); margin:0; padding:20px}
@@ -22,8 +23,9 @@
   .loyal-wrap{display:none;background:#f6fffa;border:1px solid #d8f3e6;padding:10px;border-radius:10px;margin-top:12px;color:#0a6b3f}
   .loyal-progress{font-weight:700;margin-top:6px}
   .footer-note{text-align:center;color:#666;font-size:14px;margin-top:12px}
-  .sample-btn{display:block;margin:8px auto 18px;padding:10px 14px;border-radius:10px;background:#0b7a4a;color:#fff;border:0;cursor:pointer}
-  @media (max-width:520px){ .row{flex-direction:column} }
+  .empty-note{color:#777;padding:10px}
+  .cart-actions{display:flex;gap:8px;align-items:center}
+  @media (max-width:520px){ .row{flex-direction:column} .cart-row{flex-direction:column;align-items:flex-start} .cart-actions{margin-top:8px} }
 </style>
 </head>
 <body>
@@ -62,7 +64,7 @@
   <input id="phone" placeholder="اكتب رقمك">
 
   <!-- loyalty UI area -->
-  <div id="loyal-status" class="loyal-wrap" style="display:none">
+  <div id="loyal-status" class="loyal-wrap" aria-live="polite">
     <div id="loyal-msg">نقاط الولاء: 0 / 5</div>
     <div id="loyal-progress" class="loyal-progress">التقدّم: ○○○○○</div>
     <div style="margin-top:8px">
@@ -79,13 +81,8 @@
   <div class="footer-note">قهوة مميزة، أجواء هادية — تعال جرب بنفسك. ت: 01034311119</div>
 </div>
 
-<!-- زر تجريبي لإضافة سلة اختبارية (اختباري) -->
-<div style="max-width:760px;margin:6px auto 30px;text-align:center">
-  <button id="add-sample-cart" class="sample-btn">اضف سلة اختبارية (تجريبي)</button>
-</div>
-
 <!-- ========================= -->
-<!-- Firebase + Firestore module (system is using doc id = normalized phone) -->
+<!-- Firebase + Firestore module (system uses doc id = normalized phone) -->
 <!-- ========================= -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
@@ -226,66 +223,69 @@
 })();
 
 /* -------------- cart functions (load, render, edit) -------------- */
-/* ======= تم تحديث هذه الدالة لتدعم مفاتيح تخزين متعددة وتعمل fallback ======= */
-function loadCart(){
-  const list = document.getElementById("cart-items");
-  const total = document.getElementById("total");
-  if(!list || !total) return;
-
-  // حاول نقرأ الكارت من أكتر من مكان (fallback keys)
+/* robust load with multiple keys + fallback */
+function readCartFromStorage(){
   const possibleKeys = ['cart','neo_cart','cartItems','cart_items'];
   let raw = null;
   for(const k of possibleKeys){
     const v = localStorage.getItem(k);
-    if(v && v !== 'null'){
-      raw = v;
-      break;
-    }
+    if(v && v !== 'null'){ raw = v; break; }
   }
-
-  // لو لسه null حاول sessionStorage كـ fallback
   if(!raw){
     for(const k of possibleKeys){
       const v = sessionStorage.getItem(k);
-      if(v && v !== 'null'){
-        raw = v;
-        break;
-      }
+      if(v && v !== 'null'){ raw = v; break; }
     }
   }
-
-  // If still null -> fallback empty
-  let cart = [];
-  if(raw){
-    try{
-      cart = JSON.parse(raw);
-      // normalize: if object with keys -> try to map to array
-      if(!Array.isArray(cart) && typeof cart === 'object'){
-        if(cart.items && Array.isArray(cart.items)) cart = cart.items;
-        else {
-          cart = Object.keys(cart).map(k => cart[k]).filter(Boolean);
-        }
-      }
-    }catch(e){
-      console.warn('cart parse failed, fallback to []', e);
-      cart = [];
+  if(!raw) return [];
+  try{
+    let cart = JSON.parse(raw);
+    if(!Array.isArray(cart) && typeof cart === 'object'){
+      if(cart.items && Array.isArray(cart.items)) cart = cart.items;
+      else cart = Object.keys(cart).map(k => cart[k]).filter(Boolean);
     }
+    return cart;
+  }catch(e){
+    console.warn('cart parse failed', e);
+    return [];
   }
+}
 
-  // render
+function saveCartToStorage(cart){
+  try{
+    const json = JSON.stringify(cart || []);
+    // keep multiple keys updated for compatibility
+    localStorage.setItem('cart', json);
+    localStorage.setItem('neo_cart', json);
+    localStorage.setItem('cartItems', json);
+    localStorage.setItem('cart_items', json);
+  }catch(e){ console.warn('saveCart fail', e); }
+}
+
+function renderCart(){
+  const list = document.getElementById("cart-items");
+  const totalEl = document.getElementById("total");
+  if(!list || !totalEl) return;
+  const cart = readCartFromStorage();
   list.innerHTML = "";
+  if(!cart || cart.length === 0){
+    list.innerHTML = '<div class="empty-note">السلة فارغة — أضف منتجات من المنيو</div>';
+    totalEl.textContent = 0;
+    return;
+  }
   let sum = 0;
   cart.forEach((item, index) => {
     const qty = Number(item.qty || 1);
     const price = Number(item.price || 0);
     const row = document.createElement("div");
     row.className = "cart-row";
+    row.dataset.index = index;
     row.innerHTML = `
       <div style="flex:1">
         <div style="font-weight:700">${item.name || 'بدون اسم'}</div>
         <div style="font-size:13px;color:#666">${price} ج × ${qty}</div>
       </div>
-      <div style="display:flex;gap:6px;align-items:center">
+      <div class="cart-actions">
         <button data-index="${index}" class="cart-minus small-btn">-</button>
         <div style="min-width:26px;text-align:center">${qty}</div>
         <button data-index="${index}" class="cart-plus small-btn">+</button>
@@ -295,53 +295,40 @@ function loadCart(){
     list.appendChild(row);
     sum += price * qty;
   });
-
-  total.textContent = sum;
-
-  // إذا الكارت فاضي: نوّر رسالة بدل لا يوجد أصناف
-  if(cart.length === 0){
-    list.innerHTML = '<div style="color:#777;padding:10px">السلة فارغة — أضف منتجات من المنيو</div>';
-  }
-
-  // listeners (نفس اللي كان عندك)
-  document.querySelectorAll('.cart-plus').forEach(btn=>{
-    btn.onclick = ()=>{
-      const i = Number(btn.getAttribute('data-index'));
-      const cc = JSON.parse(localStorage.getItem('cart') || '[]');
-      if(!cc[i]) return;
-      cc[i].qty = Number(cc[i].qty||1) + 1;
-      localStorage.setItem("cart", JSON.stringify(cc));
-      loadCart();
-    };
-  });
-  document.querySelectorAll('.cart-minus').forEach(btn=>{
-    btn.onclick = ()=>{
-      const i = Number(btn.getAttribute('data-index'));
-      const cc = JSON.parse(localStorage.getItem('cart') || '[]');
-      if(!cc[i]) return;
-      cc[i].qty = Math.max(1, Number(cc[i].qty||1) - 1);
-      localStorage.setItem("cart", JSON.stringify(cc));
-      loadCart();
-    };
-  });
-  document.querySelectorAll('.cart-remove').forEach(btn=>{
-    btn.onclick = ()=>{
-      const i = Number(btn.getAttribute('data-index'));
-      const cc = JSON.parse(localStorage.getItem('cart') || '[]');
-      if(!cc[i]) return;
-      cc.splice(i,1);
-      localStorage.setItem("cart", JSON.stringify(cc));
-      loadCart();
-    };
-  });
+  totalEl.textContent = sum;
 }
 
-// initial load
-loadCart();
+/* delegate events for cart buttons */
+(function attachCartDelegation(){
+  const list = document.getElementById('cart-items');
+  if(!list) return;
+  list.addEventListener('click', function(ev){
+    const t = ev.target;
+    const idx = t.getAttribute && t.getAttribute('data-index');
+    if(idx === null) return;
+    const i = Number(idx);
+    const cart = readCartFromStorage();
+    if(!cart[i]) return;
+    if(t.classList.contains('cart-plus')){
+      cart[i].qty = Number(cart[i].qty || 1) + 1;
+    } else if(t.classList.contains('cart-minus')){
+      cart[i].qty = Math.max(1, Number(cart[i].qty || 1) - 1);
+    } else if(t.classList.contains('cart-remove')){
+      cart.splice(i,1);
+    } else return;
+    saveCartToStorage(cart);
+    renderCart();
+    // update loyalty status if needed
+    showLoyalStatusUI();
+  });
+})();
+
+// initial render
+renderCart();
 
 /* -------------- Loyalty UI binding & handlers -------------- */
 
-const DEST_WHATSAPP = '201034311119'; // رقم النيو كافيه للواتساب (غيره لو عايز)
+const DEST_WHATSAPP = '201034311119'; // رقم Neo Cafe لواتساب (بدّل لو عايز)
 
 async function showLoyalStatusUI(){
   try{
@@ -381,6 +368,7 @@ async function showLoyalStatusUI(){
     if(phoneEl._timer) clearTimeout(phoneEl._timer);
     phoneEl._timer = setTimeout(()=> { showLoyalStatusUI(); }, 300);
   });
+  // initial
   showLoyalStatusUI();
 })();
 
@@ -407,37 +395,15 @@ async function showLoyalStatusUI(){
       return;
     }
 
-    // 1) update loyalty atomically
+    // 1) update loyalty atomically on server
     const inc = await window._neoFirebase.incrementStampOnServer(phone);
     if(inc && inc.ok && inc.reward){
-      alert(inc.congratMsg || '🎉 انت من عملاء نيو كافيه المميزين — كسبت مشروب مجاني 💚');
+      // user got reward: show dialog
+      alert(inc.congratMsg || '🎉 لقد حصلت على مشروب مجاني — مبروك!');
     }
 
-    // 2) build message lines (each item on its own line)
-    // Try reading cart with fallback keys too, to be consistent with loadCart
-    const possibleKeys = ['cart','neo_cart','cartItems','cart_items'];
-    let raw = null;
-    for(const k of possibleKeys){
-      const v = localStorage.getItem(k);
-      if(v && v !== 'null'){ raw = v; break; }
-    }
-    if(!raw){
-      for(const k of possibleKeys){
-        const v = sessionStorage.getItem(k);
-        if(v && v !== 'null'){ raw = v; break; }
-      }
-    }
-    let cart = [];
-    if(raw){
-      try{
-        cart = JSON.parse(raw);
-        if(!Array.isArray(cart) && typeof cart === 'object'){
-          if(cart.items && Array.isArray(cart.items)) cart = cart.items;
-          else cart = Object.keys(cart).map(k => cart[k]).filter(Boolean);
-        }
-      }catch(e){ cart = []; }
-    }
-
+    // 2) prepare cart lines
+    const cart = readCartFromStorage();
     let lines = [];
     lines.push(`طلب جديد من Neo Café`);
     lines.push(`------------------------`);
@@ -447,7 +413,7 @@ async function showLoyalStatusUI(){
     lines.push(`رقم الموبايل: ${phone}`);
     lines.push(`------------------------`);
     lines.push(`الأصناف:`);
-    if(cart.length === 0){
+    if(!cart || cart.length === 0){
       lines.push('- لا يوجد أصناف');
     } else {
       cart.forEach(it => {
@@ -469,11 +435,12 @@ async function showLoyalStatusUI(){
     lines.push('');
     lines.push(`شكراً لاختيارك Neo Café — Make It NEO Time`);
 
+    // 3) open whatsapp with encoded message
     const msg = encodeURIComponent(lines.join('\n'));
     window.open(`https://api.whatsapp.com/send?phone=${DEST_WHATSAPP}&text=${msg}`, '_blank');
 
-    // refresh UI
-    setTimeout(()=>{ loadCart(); showLoyalStatusUI(); }, 500);
+    // 4) refresh UI (re-render cart & loyalty)
+    setTimeout(()=>{ renderCart(); showLoyalStatusUI(); }, 600);
   });
 })();
 
@@ -488,47 +455,27 @@ async function showLoyalStatusUI(){
     const s = await window._neoFirebase.getLoyaltyStatus(norm);
     if(!s.ok){ alert('حصل خطأ حاول مرة تانية'); return; }
     if((s.entry && s.entry.rewards || 0) <= 0){ alert('معندكش مشروب مجاني الآن'); return; }
-    // pick via prompt (simple) - needs window.items array (menu)
-    const menu = (window.items || []);
-    if(!menu.length){ alert('قائمة المنتجات غير متاحة حالياً'); return; }
-    const list = menu.map((m,i)=> `${i+1}. ${m.name}`).join('\n');
-    const pick = prompt(`اختار رقم المشروب المجاني:\n${list}\nاكتب رقم المنتج`);
-    const idx = parseInt(pick)-1;
-    if(isNaN(idx) || idx < 0 || idx >= menu.length){ alert('اختيار غير صالح'); return; }
-    const chosen = menu[idx];
-    // redeem on server
+    // simple redeem flow: ask for product name
+    const product = prompt('اكتب اسم المشروب اللي عايز تستبدله (مثال: اسبريسو)').trim();
+    if(!product){ alert('لم يتم اختيار مشروب'); return; }
+    // call redeem on server
     const res = await window._neoFirebase.redeemOnServer(norm);
     if(!res.ok){ alert('فشل الاستبدال'); return; }
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    cart.push({ name: chosen.name + ' (مجاني)', price: 0, qty: 1, img: chosen.img || '', free:true });
-    localStorage.setItem('cart', JSON.stringify(cart));
-    loadCart();
+    // add free item to cart
+    const cart = readCartFromStorage();
+    cart.push({ name: product + ' (مجاني)', price: 0, qty: 1, free:true });
+    saveCartToStorage(cart);
+    renderCart();
     showLoyalStatusUI();
-    alert(`تم إضافة ${chosen.name} مجانًا إلى السلة.`);
+    alert(`تم إضافة ${product} مجانًا إلى السلة.`);
   });
 })();
 
-/* -------------- sample cart button logic -------------- */
-(function attachSampleBtn(){
-  const btn = document.getElementById('add-sample-cart');
-  if(!btn) return;
-  btn.addEventListener('click', function(){
-    const sample = [
-      { name: 'اسبريسو', price: 45, qty: 1 },
-      { name: 'كابتشينو', price: 55, qty: 1 }
-    ];
-    const json = JSON.stringify(sample);
-    // اكتب تحت كل المفاتيح اللي ممكن نستخدمها
-    localStorage.setItem('cart', json);
-    localStorage.setItem('neo_cart', json);
-    localStorage.setItem('cartItems', json);
-    localStorage.setItem('cart_items', json);
-    // sessionStorage copy كمان
-    sessionStorage.setItem('cart', json);
-    alert('تم إضافة سلة اختبارية — الصفحة هتعيد تحميل نفسها لعرض المحتوى');
-    location.reload();
-  });
-})();
+/* -------------- ensure initial UI tied up -------------- */
+window.addEventListener('load', function(){
+  renderCart();
+  showLoyalStatusUI();
+});
 </script>
 </body>
 </html>
