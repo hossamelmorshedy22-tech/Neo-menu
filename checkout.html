@@ -167,6 +167,18 @@
         console.error('Send handler error:', err);
         alert('حصل خطأ أثناء إرسال الطلب — جرب مرة تانية.');
       }
+      <!-- loyalty input: ضيفه جنب حقل الاسم/تاريخ الميلاد -->
+<div style="margin:12px 0;">
+  <label for="loyal-phone" style="display:block;font-weight:700;color:#0D615B;margin-bottom:6px">رقم الهاتف (مهم لنظام الولاء)</label>
+  <input id="loyal-phone" placeholder="010xxxxxxxx" style="width:100%;padding:10px;border-radius:8px;border:1px solid #ddd" />
+</div>
+
+<!-- مساحة عرض حالة الولاء لو الرقم معروف -->
+<div id="loyal-status" style="display:none;background:#f1fff9;border:1px solid rgba(13,97,91,0.08);padding:10px;border-radius:8px;margin-bottom:10px;color:#0D615B">
+  <div id="loyal-msg" style="font-weight:800"></div>
+  <div id="loyal-progress" style="margin-top:8px;font-size:13px;color:#444"></div>
+  <button id="redeem-free" style="display:none;margin-top:8px;background:#0D615B;color:#fff;padding:8px 12px;border-radius:8px;border:none;cursor:pointer">استبدال المشروب المجاني</button>
+</div>
     });
 
   })();
