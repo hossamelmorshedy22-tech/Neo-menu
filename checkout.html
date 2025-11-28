@@ -1,358 +1,227 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>إنهاء الطلب — Neo Café</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إتمام الطلب – Neo Café</title>
 <style>
-  :root{ --primary:#0D615B; --muted:#6B6B6B; --card:#fff; --bg:#F5F2EE; }
-  body{font-family: "Noto Sans Arabic", system-ui, sans-serif;background:linear-gradient(180deg,#fff,#faf8f6);margin:0;color:#111;padding:18px;}
-  .wrap{max-width:900px;margin:18px auto;background:#fff;border-radius:12px;padding:18px;box-shadow:0 8px 30px rgba(13,97,91,0.06)}
-  h1{margin:0 0 12px;font-size:20px;color:var(--primary)}
-  label{display:block;margin:10px 0 6px;font-weight:700;color:#333}
-  input[type="text"], input[type="date"], select, textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e6e6;box-shadow:none;font-size:15px}
-  textarea{min-height:80px;resize:vertical}
-  .row{display:flex;gap:12px;align-items:center}
-  .col{flex:1}
-  .small{font-size:13px;color:var(--muted)}
-  .cart-box{margin-top:14px;padding:12px;border-radius:10px;background:linear-gradient(180deg,#fafafa,#fff);border:1px solid rgba(0,0,0,0.03)}
-  .cart-item{display:flex;align-items:center;gap:12px;padding:8px;border-radius:10px;border:1px solid rgba(0,0,0,0.03);margin-bottom:8px;background:#fff}
-  .mini{width:72px;height:56px;object-fit:cover;border-radius:8px;background:#f4f4f4}
-  .cart-item .title{font-weight:800}
-  .cart-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
-  .total{font-weight:900;color:var(--primary)}
-  .btn{background:var(--primary);color:#fff;padding:10px 14px;border-radius:10px;border:none;font-weight:800;cursor:pointer}
-  .btn.ghost{background:transparent;color:var(--primary);border:2px solid rgba(13,97,91,0.12)}
-  .loyal-wrap{margin-top:12px;padding:10px;border-radius:10px;background:#f6fffb;border:1px solid rgba(13,97,91,0.06);color:var(--primary)}
-  .loyal-progress{font-size:14px;margin-top:8px}
-  .hint{font-size:13px;color:#666;margin-top:8px}
-  .small-btn{padding:6px 10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:#fff;cursor:pointer}
-  .center{text-align:center}
-  @media (max-width:760px){ .row{flex-direction:column} .mini{width:64px;height:48px} }
+    body {
+        font-family: "Cairo", sans-serif;
+        background: #f8f8f8;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 600px;
+        background: white;
+        margin: auto;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 0 20px #0001;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #125433;
+    }
+
+    label {
+        font-weight: bold;
+        margin-top: 10px;
+        display: block;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+
+    textarea {
+        height: 100px;
+    }
+
+    #send-order {
+        width: 100%;
+        padding: 15px;
+        background: #125433;
+        color: white;
+        font-size: 18px;
+        border: none;
+        border-radius: 10px;
+        margin-top: 20px;
+        cursor: pointer;
+    }
+
+    #send-order:hover {
+        background: #0f472c;
+    }
+
+    .cart-box {
+        background: #f0f0f0;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
 </style>
 </head>
+
 <body>
-  <div class="wrap">
-    <h1>إتمام الطلب — Neo Café</h1>
 
-    <!-- Form -->
-    <div>
-      <label for="cust-name">الاسم</label>
-      <input id="cust-name" type="text" placeholder="اكتب اسمك" />
+<div class="container">
+    <h2>إتمام الطلب</h2>
 
-      <div class="row" style="margin-top:8px">
-        <div class="col">
-          <label for="cust-dob">تاريخ الميلاد</label>
-          <input id="cust-dob" type="date" />
-        </div>
-        <div class="col">
-          <label for="cust-table">رقم الطاولة</label>
-          <select id="cust-table">
-            <option value="">اختر رقم الطاولة</option>
-            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-            <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
-          </select>
-        </div>
-      </div>
-
-      <label for="loyal-phone">رقم الهاتف (مهم لنظام الولاء)</label>
-      <input id="loyal-phone" type="text" placeholder="010xxxxxxxx" />
-
-      <!-- loyalty status area -->
-      <div id="loyal-status" class="loyal-wrap" style="display:none">
-        <div id="loyal-msg" style="font-weight:800"></div>
-        <div id="loyal-progress" class="loyal-progress"></div>
-        <div style="margin-top:8px">
-          <button id="redeem-free" class="small-btn" style="display:none">استبدال المشروب المجاني</button>
-        </div>
-      </div>
-
-      <label for="notes">ملاحظات إضافية (اختياري)</label>
-      <textarea id="notes" placeholder="مثال: سكر خفيف، بدون لبن..."></textarea>
+    <div class="cart-box">
+        <h3>محتويات السلة:</h3>
+        <ul id="cart-items"></ul>
+        <p><strong>الإجمالي: </strong><span id="total">0</span> جنيه</p>
     </div>
 
-    <!-- Cart -->
-    <div class="cart-box" style="margin-top:16px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div style="font-weight:900">الطلبات:</div>
-        <div class="small">افحص الطلب قبل الإرسال</div>
-      </div>
+    <label>الاسم:</label>
+    <input id="cust-name" placeholder="اكتب اسمك هنا">
 
-      <div id="cart-items-area"></div>
+    <label>تاريخ الميلاد:</label>
+    <div style="display:flex; gap:10px;">
+        <select id="dob-day">
+            <option disabled selected>اليوم</option>
+            <script>
+                for (let i = 1; i <= 31; i++) {
+                    document.write(`<option value="${i}">${i}</option>`);
+                }
+            </script>
+        </select>
 
-      <div class="cart-bottom">
-        <div class="small">يمكنك تعديل الكميات من الصفحة الرئيسية</div>
-        <div style="display:flex;gap:10px;align-items:center">
-          <div class="total" id="cart-total">0 ج</div>
-        </div>
-      </div>
+        <select id="dob-month">
+            <option disabled selected>الشهر</option>
+            <script>
+                for (let i = 1; i <= 12; i++) {
+                    document.write(`<option value="${i}">${i}</option>`);
+                }
+            </script>
+        </select>
+
+        <select id="dob-year">
+            <option disabled selected>السنة</option>
+            <script>
+                let year = new Date().getFullYear();
+                for (let i = year - 80; i <= year - 10; i++) {
+                    document.write(`<option value="${i}">${i}</option>`);
+                }
+            </script>
+        </select>
     </div>
 
-    <div style="margin-top:14px;display:flex;gap:10px;justify-content:flex-end">
-      <button id="back-to-menu" class="btn ghost">العودة للمنيو</button>
-      <button id="send-order" class="btn">إرسال الطلب</button>
-    </div>
+    <label>رقم الطاولة:</label>
+    <select id="cust-table">
+        <option disabled selected>اختار رقم الطاولة</option>
+        <script>
+            for (let i = 1; i <= 10; i++) {
+                document.write(`<option value="${i}">${i}</option>`);
+            }
+        </script>
+    </select>
 
-    <p class="hint center" style="margin-top:12px">سيتم إعداد رسالة منظمة تفتح تطبيق واتساب لإرسال الطلب إلى Neo Café.</p>
-  </div>
+    <label>رقم الموبايل:</label>
+    <input id="phone" placeholder="اكتب رقمك">
+
+    <label>ملاحظات إضافية:</label>
+    <textarea id="notes" placeholder="لو عندك طلب معين اكتبه هنا"></textarea>
+
+    <button id="send-order">إرسال الطلب عبر واتساب</button>
+</div>
+
+<!-- ========================= -->
+<!-- 🔥 Firebase (زي ما بعته بالظبط) -->
+<!-- ========================= -->
+
+<script type="module">
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-analytics.js";
+  import { getFirestore, doc, getDoc, setDoc, updateDoc }
+  from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBPMOhuvKn6mUNgHYMiN9F_6m0ikmriOA4",
+    authDomain: "neo-loyalty-b41c7.firebaseapp.com",
+    projectId: "neo-loyalty-b41c7",
+    storageBucket: "neo-loyalty-b41c7.firebasestorage.app",
+    messagingSenderId: "1024912015862",
+    appId: "1:1024912015862:web:8647e752c9ea2d2085c7d7",
+    measurementId: "G-BKZPWB7YS6"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
+
+</script>
+
+<!-- ========================= -->
+<!-- 🔥 كود السلة وإرسال واتساب -->
+<!-- ========================= -->
 
 <script>
-/* -------------------------------
-  Checkout page script (complete)
-  - Shows cart (from localStorage key neo_cart_v3)
-  - Handles loyalty (localStorage neo_loyalty_v1) with normalized phone
-  - Formats WhatsApp message with each item on a new line
-  - Sends to cafe WhatsApp number (change DEST_WHATSAPP below if needed)
-----------------------------------*/
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-// destination WhatsApp number (restaurant) -- put country code without + (e.g. 20...), here using earlier: 01034311119 -> Egypt => 201034311119
-const DEST_WHATSAPP = '201034311119'; // <-- عدّل هنا لو عايز تستقبل الرسائل برقم تاني
+    function loadCart() {
+        const list = document.getElementById("cart-items");
+        const total = document.getElementById("total");
 
-// keys
-const CART_KEY = 'neo_cart_v3';
-const LOYAL_KEY = 'neo_loyalty_v1';
+        list.innerHTML = "";
+        let sum = 0;
 
-// ===== sample items list (fallback if not present) =====
-if(!window.items) {
-  window.items = [
-    { name: 'اسبريسو', price:45, category:'مشروبات ساخنة', img:'espresso.jpg'},
-    { name: 'كابتشينو', price:55, category:'مشروبات ساخنة', img:'cappuccino.jpg'},
-    { name: 'لاتيه كاراميل', price:60, category:'مشروبات ساخنة', img:'latte-caramel.jpg'},
-    { name: 'قهوة تركي', price:50, category:'مشروبات ساخنة', img:'turkish-coffee.jpg'},
-    { name: 'ايس لاتيه', price:55, category:'مشروبات باردة', img:'iced-latte.jpg'},
-    { name: 'وافل', price:65, category:'مخبوزات', img:'waffle.jpg'},
-    { name: 'كرواسون', price:45, category:'مخبوزات', img:'croissant.jpg'},
-    { name: 'براوني بالشوكولاتة', price:55, category:'حلويات', img:'brownie.jpg'}
-  ];
-}
+        cart.forEach(item => {
+            const li = document.createElement("li");
+            li.textContent = `${item.name} - ${item.price} جنيه`;
+            list.appendChild(li);
+            sum += item.price;
+        });
 
-// ----- utility helpers -----
-function loadCart(){
-  try{ return JSON.parse(localStorage.getItem(CART_KEY) || '[]'); } catch(e){ return []; }
-}
-function saveCart(cart){ try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch(e){} }
-function loadLoyalty(){ try{ return JSON.parse(localStorage.getItem(LOYAL_KEY) || '{}'); } catch(e){ return {}; } }
-function saveLoyalty(obj){ try{ localStorage.setItem(LOYAL_KEY, JSON.stringify(obj)); } catch(e){} }
-function fmtPrice(n){ return n + ' ج'; }
+        total.textContent = sum;
+    }
 
-// ----- phone normalization helpers -----
-// يحول أي مدخل لرقم موحد يبدأ بـ 0 لو كان رقم مصري
-function normalizePhoneRaw(v){
-  if(!v) return '';
-  const digits = (''+v).replace(/\D+/g,''); // remove non-digits
-  if(digits.length === 0) return '';
-  // if starts with country code 20 (e.g. 2010...) convert to 0...
-  if(digits.startsWith('20') && digits.length >= 11){
-    return '0' + digits.slice(2);
-  }
-  // if already starts with 0 (010...), keep it
-  if(digits.startsWith('0')) return digits;
-  // if 10-digit starting with 1 (like 10xxxxxxxx) add 0
-  if(digits.length === 10 && digits.startsWith('1')) return '0' + digits;
-  return digits;
-}
+    loadCart();
 
-function getPhoneVal(){
-  const el = document.getElementById('loyal-phone');
-  if(!el) return '';
-  return normalizePhoneRaw(el.value.trim());
-}
+    document.getElementById("send-order").onclick = function () {
+        const name = document.getElementById("cust-name").value;
+        const phone = document.getElementById("phone").value;
+        const table = document.getElementById("cust-table").value;
+        const notes = document.getElementById("notes").value;
 
-// ----- render cart -----
-function renderCart(){
-  const wrap = document.getElementById('cart-items-area');
-  const cart = loadCart();
-  wrap.innerHTML = '';
-  if(cart.length === 0){
-    wrap.innerHTML = '<div style="padding:10px;color:#666">السلة فارغة</div>';
-    document.getElementById('cart-total').innerText = '0 ج';
-    return;
-  }
-  let total = 0;
-  cart.forEach((it, idx) => {
-    const div = document.createElement('div');
-    div.className = 'cart-item';
-    const imgSrc = it.img ? `assets/images/${it.img}` : '';
-    const priceText = it.price === 0 ? 'مجاني' : fmtPrice(it.price);
-    total += (it.price || 0) * (it.qty || 1);
-    div.innerHTML = `
-      <img class="mini" src="${imgSrc}" alt="${it.name}" onerror="this.style.display='none'">
-      <div style="flex:1">
-        <div class="title">${it.name}</div>
-        <div class="small">${priceText} × ${it.qty || 1}</div>
-        ${it.free && it.price === 0 ? `<div style="color:var(--primary);font-weight:700;margin-top:6px">مقدم كهدية</div>` : ''}
-      </div>
-      <div style="text-align:center">
-        <div class="small">#${idx+1}</div>
-      </div>
-    `;
-    wrap.appendChild(div);
-  });
-  document.getElementById('cart-total').innerText = fmtPrice(total);
-}
+        const day = document.getElementById("dob-day").value;
+        const month = document.getElementById("dob-month").value;
+        const year = document.getElementById("dob-year").value;
 
-// ----- loyalty functions (with normalize and logs) -----
-function showLoyalStatus(phone){
-  const wrap = document.getElementById('loyal-status');
-  const msg = document.getElementById('loyal-msg');
-  const progress = document.getElementById('loyal-progress');
-  const redeemBtn = document.getElementById('redeem-free');
-  const normalized = normalizePhoneRaw(phone || '');
-  if(!normalized){
-    wrap.style.display = 'none';
-    return;
-  }
-  const db = loadLoyalty();
-  const entry = db[normalized] || {stamps:0, rewards:0};
-  wrap.style.display = 'block';
-  msg.innerText = `نقاط الولاء: ${entry.stamps} / 5  — ${entry.rewards > 0 ? 'لديك مشروب مجاني متاح!' : 'لا توجد مشروبات مجانية حالياً'}`;
-  progress.innerText = `التقدّم: ${'●'.repeat(entry.stamps)}${'○'.repeat(Math.max(0,5-entry.stamps))}`;
-  redeemBtn.style.display = entry.rewards > 0 ? 'inline-block' : 'none';
-  console.log('[Loyalty] showLoyalStatus for', normalized, entry);
-}
+        const dob = `${day}/${month}/${year}`;
 
-function addStampForPhone(phone){
-  const normalized = normalizePhoneRaw(phone || '');
-  console.log('[Loyalty] addStampForPhone called with:', phone, '-> normalized:', normalized);
-  if(!normalized) { console.warn('[Loyalty] no phone to add stamp'); return {ok:false,msg:'no phone'}; }
-  const db = loadLoyalty();
-  const entry = db[normalized] || {stamps:0, rewards:0, last:0};
-  entry.stamps = (entry.stamps || 0) + 1;
-  entry.last = Date.now();
-  let rewardGranted = false;
-  if(entry.stamps >= 5){
-    entry.stamps = 0;
-    entry.rewards = (entry.rewards || 0) + 1;
-    rewardGranted = true;
-  }
-  db[normalized] = entry;
-  saveLoyalty(db);
-  console.log('[Loyalty] updated entry:', entry);
-  return {ok:true, reward: rewardGranted, entry};
-}
+        let msg = `طلب جديد من Neo Café%0A`;
+        msg += `------------------------%0A`;
+        msg += `الاسم: ${name}%0A`;
+        msg += `تاريخ الميلاد: ${dob}%0A`;
+        msg += `رقم الطاولة: ${table}%0A`;
+        msg += `رقم الموبايل: ${phone}%0A`;
+        msg += `------------------------%0A`;
+        msg += `الطلبات:%0A`;
 
-function redeemReward(phone){
-  const normalized = normalizePhoneRaw(phone || '');
-  if(!normalized) return {ok:false, msg:'no phone'};
-  const db = loadLoyalty();
-  const entry = db[normalized];
-  if(!entry || (entry.rewards || 0) <= 0) return {ok:false, msg:'لا توجد جوائز'};
-  entry.rewards = entry.rewards - 1;
-  entry.last = Date.now();
-  db[normalized] = entry;
-  saveLoyalty(db);
-  console.log('[Loyalty] redeemReward for', normalized, 'new entry:', entry);
-  return {ok:true, entry};
-}
+        cart.forEach(i => {
+            msg += `- ${i.name} (${i.price} جنيه)%0A`;
+        });
 
-// ----- build message for whatsapp (each item in new line) -----
-function buildOrderMessage(name, dob, table, phone, notes){
-  const cart = loadCart();
-  let lines = [];
-  lines.push(`طلب من Neo Café`);
-  lines.push(`الاسم: ${name || '-'}`);
-  lines.push(`تاريخ الميلاد: ${dob || '-'}`);
-  lines.push(`رقم الطاولة: ${table || '-'}`);
-  lines.push(`هاتف العميل: ${phone || '-'}`);
-  lines.push(`---------------------`);
-  lines.push(`الأصناف:`);
-  if(cart.length === 0) {
-    lines.push('- لا يوجد أصناف');
-  } else {
-    cart.forEach(it => {
-      const qty = it.qty || 1;
-      const priceText = it.price === 0 ? '0 ج (مجاني)' : `${it.price} ج`;
-      lines.push(`• ${it.name} × ${qty} = ${priceText}`);
-    });
-  }
-  lines.push(`---------------------`);
-  if(notes && notes.trim()){
-    lines.push(`ملاحظات: ${notes.trim()}`);
-  }
-  // loyalty quick info
-  const db = loadLoyalty();
-  const entry = db[normalizePhoneRaw(phone)] || {stamps:0, rewards:0};
-  lines.push(`حالة الولاء: ${entry.stamps}/5 ، جوائز متاحة: ${entry.rewards}`);
-  lines.push(`شكراً لاختيارك Neo Café — Make It NEO Time`);
-  return lines.join('\n');
-}
+        msg += `------------------------%0A`;
+        msg += `ملاحظات: ${notes}%0A`;
 
-// ----- main send handler -----
-document.getElementById('send-order').addEventListener('click', function(){
-  const name = document.getElementById('cust-name').value.trim();
-  const dob = document.getElementById('cust-dob').value || '';
-  const table = document.getElementById('cust-table').value || '';
-  const phoneRaw = document.getElementById('loyal-phone').value || '';
-  const phone = normalizePhoneRaw(phoneRaw);
-  const notes = document.getElementById('notes').value || '';
-
-  // validations
-  if(!phone || phone.length < 8){
-    alert('من فضلك اكتب رقم هاتف صالح (مهم لنظام الولاء ولتأكيد الطلب)');
-    document.getElementById('loyal-phone').focus();
-    return;
-  }
-
-  // process loyalty (add stamp) BEFORE opening whatsapp
-  const loyaltyRes = addStampForPhone(phone);
-  if(loyaltyRes.ok && loyaltyRes.reward){
-    // notify user they earned a reward
-    setTimeout(()=> alert('مبروك! وصلت لنقاط كافية وتمت إضافة مشروب مجاني في حسابك. استخدم زر "استبدال المشروب المجاني" لاختيار مشروبك المجاني.'), 80);
-  }
-
-  // build message and open WhatsApp
-  const msg = buildOrderMessage(name, dob, table, phone, notes);
-  const waUrl = `https://api.whatsapp.com/send?phone=${encodeURIComponent(DEST_WHATSAPP)}&text=${encodeURIComponent(msg)}`;
-  // open in new tab (user sends from هاتف أو واتساب ويب)
-  window.open(waUrl, '_blank');
-  // keep cart as-is (or optionally clear after sending)
-});
-
-// ----- redeem button handler: prompt choice and add free item to cart -----
-document.getElementById('redeem-free').addEventListener('click', function(){
-  const phone = getPhoneVal();
-  if(!phone){ alert('من فضلك اكتب رقم الهاتف أولاً'); return; }
-  const db = loadLoyalty();
-  const entry = db[phone] || {stamps:0, rewards:0};
-  if(!entry || entry.rewards <= 0){ alert('معكش مشروب مجاني دلوقتي'); return; }
-
-  const menuItems = window.items || [];
-  if(!menuItems.length){ alert('قائمة المنتجات غير متاحة الآن'); return; }
-  let list = 'اختار رقم المشروب المجاني من القائمة:\n';
-  menuItems.forEach((m,i)=> list += `${i+1}. ${m.name}\n`);
-  const pick = prompt(list + '\nاكتب رقم المنتج');
-  const idx = parseInt(pick) - 1;
-  if(isNaN(idx) || idx < 0 || idx >= menuItems.length){ alert('اختيار غير صالح'); return; }
-  const chosen = menuItems[idx];
-
-  const res = redeemReward(phone);
-  if(!res.ok){ alert('خطأ في استبدال الجائزة'); return; }
-  // add free product to cart
-  const cart = loadCart();
-  cart.push({ name: chosen.name + ' (مجاني)', price: 0, qty: 1, img: chosen.img || '', free:true });
-  saveCart(cart);
-  renderCart();
-  showLoyalStatus(phone);
-  alert(`تم إضافة ${chosen.name} كسعر مجاني إلى السلة.`);
-});
-
-// show loyalty status while typing
-document.getElementById('loyal-phone').addEventListener('input', function(){ showLoyalStatus(getPhoneVal()); });
-
-// back to menu
-document.getElementById('back-to-menu').addEventListener('click', function(){
-  window.location.href = 'index.html';
-});
-
-// init
-renderCart();
-showLoyalStatus(getPhoneVal());
-
-/* OPTIONAL: expose debug helper to console */
-window._neo_debug = {
-  showLoyal: () => console.log(loadLoyalty()),
-  showCart: () => console.log(loadCart())
-};
+        window.open(
+            `https://api.whatsapp.com/send?phone=201034311119&text=${msg}`,
+            "_blank"
+        );
+    };
 </script>
+
 </body>
 </html>
