@@ -283,7 +283,164 @@
     redeemOnServer,
     normalizePhoneRaw
   };
+<script>
+// ====== UI binding for Firebase loyalty (step 2) ======
 
+// destination WhatsApp number (with country code, no +)
+const DEST_WHATSAPP = '201034311119';
+
+// show loyalty status under phone input (expects elements: #loyal-status, #loyal-msg, #loyal-progress, #redeem-free)
+async function showLoyalStatusUI(){
+  try{
+    const phoneEl = document.getElementById('phone') || document.getElementById('loyal-phone');
+    const wrap = document.getElementById('loyal-status');
+    const msg = document.getElementById('loyal-msg');
+    const progress = document.getElementById('loyal-progress');
+    const redeemBtn = document.getElementById('redeem-free');
+    if(!phoneEl) return;
+    const raw = phoneEl.value || '';
+    const norm = window._neoFirebase.normalizePhoneRaw(raw);
+    if(!norm){
+      if(wrap) wrap.style.display = 'none';
+      return;
+    }
+    const res = await window._neoFirebase.getLoyaltyStatus(norm);
+    if(!res || !res.ok){
+      if(wrap) wrap.style.display = 'none';
+      return;
+    }
+    const entry = res.entry || { points:0, rewards:0 };
+    if(wrap){
+      wrap.style.display = 'block';
+      if(msg) msg.innerText = `نقاط الولاء: ${entry.points} / 5  — ${entry.rewards > 0 ? 'لديك مشروب مجاني متاح!' : 'لا توجد مشروبات مجانية حالياً'}`;
+      if(progress) progress.innerText = `التقدّم: ${'●'.repeat(entry.points)}${'○'.repeat(Math.max(0,5-entry.points))}`;
+      if(redeemBtn) redeemBtn.style.display = entry.rewards > 0 ? 'inline-block' : 'none';
+    }
+  }catch(err){
+    console.warn('showLoyalStatusUI error', err);
+  }
+}
+
+// attach input listener to phone field
+(function attachPhoneListener(){
+  const phoneEl = document.getElementById('phone') || document.getElementById('loyal-phone');
+  if(!phoneEl) return;
+  phoneEl.addEventListener('input', () => {
+    // debounce small delay
+    if(phoneEl._timer) clearTimeout(phoneEl._timer);
+    phoneEl._timer = setTimeout(()=> { showLoyalStatusUI(); }, 300);
+  });
+  // initial call (if value present)
+  showLoyalStatusUI();
+})();
+
+
+// override / attach send-order behaviour
+(function attachSendHandler(){
+  const sendBtn = document.getElementById('send-order');
+  if(!sendBtn) return;
+  sendBtn.addEventListener('click', async function(e){
+    e.preventDefault();
+
+    // collect fields (adjust ids if مختلفة)
+    const name = (document.getElementById('cust-name') || {value:''}).value.trim();
+    const phoneRaw = (document.getElementById('phone') || document.getElementById('loyal-phone') || {value:''}).value.trim();
+    const phone = window._neoFirebase.normalizePhoneRaw(phoneRaw);
+    const table = (document.getElementById('cust-table') || {value:''}).value;
+    const notes = (document.getElementById('notes') || {value:''}).value;
+
+    // DOB fields if exist
+    const d = document.getElementById('dob-day') ? document.getElementById('dob-day').value : '';
+    const m = document.getElementById('dob-month') ? document.getElementById('dob-month').value : '';
+    const y = document.getElementById('dob-year') ? document.getElementById('dob-year').value : '';
+    const dob = (d||m||y) ? `${d || '-'}-${m || '-'}-${y || '-'}` : '-';
+
+    if(!phone || phone.length < 8){
+      alert('من فضلك اكتب رقم هاتف صالح (مهم لنظام الولاء)');
+      (document.getElementById('phone')||document.getElementById('loyal-phone')).focus();
+      return;
+    }
+
+    // 1) process loyalty on server (atomic)
+    const inc = await window._neoFirebase.incrementStampOnServer(phone);
+    if(inc && inc.ok && inc.reward){
+      // show congrat message exactly as requested
+      alert(inc.congratMsg || '🎉 انت من عملاء نيو كافيه المميزين — كسبت مشروب مجاني 💚');
+    }
+
+    // 2) build whatsapp message each item on new line
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    let lines = [];
+    lines.push(`طلب من Neo Café`);
+    lines.push(`الاسم: ${name || '-'}`);
+    lines.push(`تاريخ الميلاد: ${dob}`);
+    lines.push(`رقم الطاولة: ${table || '-'}`);
+    lines.push(`هاتف العميل: ${phone}`);
+    lines.push(`---------------------`);
+    lines.push(`الأصناف:`);
+    if(cart.length === 0) lines.push('- لا يوجد أصناف');
+    else cart.forEach(it => {
+      const qty = it.qty || 1;
+      const priceText = (it.price === 0) ? '0 ج (مجاني)' : `${it.price} ج`;
+      lines.push(`• ${it.name} × ${qty} = ${priceText}`);
+    });
+    if(notes && notes.trim()){
+      lines.push(`---------------------`);
+      lines.push(`ملاحظات: ${notes.trim()}`);
+    }
+    // add loyalty snapshot
+    const st = await window._neoFirebase.getLoyaltyStatus(phone);
+    if(st && st.ok){
+      const e = st.entry || { points:0, rewards:0 };
+      lines.push(`---------------------`);
+      lines.push(`حالة الولاء: ${e.points}/5 ، جوائز متاحة: ${e.rewards}`);
+    }
+    lines.push(``);
+    lines.push(`شكراً لاختيارك Neo Café — Make It NEO Time`);
+
+    const msg = encodeURIComponent(lines.join('\n'));
+    window.open(`https://api.whatsapp.com/send?phone=${DEST_WHATSAPP}&text=${msg}`, '_blank');
+  });
+})();
+
+
+// redeem button handler (if you have a button with id=redeem-free)
+(function attachRedeem(){
+  const redeemBtn = document.getElementById('redeem-free');
+  if(!redeemBtn) return;
+  redeemBtn.addEventListener('click', async function(){
+    const phoneRaw = (document.getElementById('phone') || document.getElementById('loyal-phone') || {value:''}).value.trim();
+    const phone = window._neoFirebase.normalizePhoneRaw(phoneRaw);
+    if(!phone){ alert('من فضلك اكتب رقم الموبايل أولاً'); return; }
+
+    const s = await window._neoFirebase.getLoyaltyStatus(phone);
+    if(!s.ok){ alert('حصل خطأ حاول تاني'); return; }
+    if((s.entry && s.entry.rewards || 0) <= 0){ alert('معندكش مشروب مجاني الآن'); return; }
+
+    // choose via prompt (simple)
+    const menu = (window.items || []);
+    if(!menu.length){ alert('قائمة المنتجات غير متاحة'); return; }
+    const list = menu.map((m,i)=> `${i+1}. ${m.name}`).join('\n');
+    const pick = prompt(`اختار رقم المشروب المجاني:\n${list}\nاكتب رقم المنتج`);
+    const idx = parseInt(pick)-1;
+    if(isNaN(idx) || idx < 0 || idx >= menu.length){ alert('اختيار غير صالح'); return; }
+    const chosen = menu[idx];
+
+    // redeem on server
+    const res = await window._neoFirebase.redeemOnServer(phone);
+    if(!res.ok){ alert('فشل الاستبدال'); return; }
+
+    // add free to cart
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    cart.push({ name: chosen.name + ' (مجاني)', price:0, qty:1, img: chosen.img || '', free:true });
+    localStorage.setItem('cart', JSON.stringify(cart));
+    if(typeof loadCart === 'function') loadCart();
+    showLoyalStatusUI();
+    alert(`تم إضافة ${chosen.name} مجانًا إلى السلة.`);
+  });
+})();
+
+</script>
 </script>
 <!-- ========================= -->
 <!-- 🔥 كود السلة وإرسال واتساب -->
