@@ -3,8 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>منيو نيو كافيه — منظم وجذاب</title>
-<link rel="preconnect" href="https://fonts.gstatic.com">
+<title>منيو نيو كافيه — شبكي وموبايل فريندلي</title>
 <style>
   :root{
     --bg:#f3f4f6;
@@ -12,136 +11,163 @@
     --accent:#125433;
     --muted:#6b7280;
     --shadow: 0 6px 20px rgba(0,0,0,0.06);
-    --radius:14px;
+    --radius:12px;
   }
   *{box-sizing:border-box}
   body{margin:0;font-family: "Segoe UI", Tahoma, Arial;direction:rtl;background:var(--bg);color:#111}
-  header{padding:28px 16px;text-align:center}
-  header h1{margin:0;font-size:28px;letter-spacing:0.6px}
+  
+  /* header with logo */
+  header{
+    position:relative;
+    padding:22px 20px 6px 20px;
+    text-align:center;
+  }
+  header h1{margin:0;font-size:22px}
+  header p{margin:6px 0 0;color:var(--muted);font-size:14px}
+
+  /* logo top-right */
+  .logo {
+    position:absolute;
+    top:12px;
+    left:16px; /* left because dir=rtl; visually it will be on the right side in LTR but we set left to keep consistent for rtl layout */
+    /* to ensure it shows visually on the right side we use transform in rtl */
+    transform: translateX(0);
+    right:16px;
+    left:auto;
+  }
+  .logo img{width:84px;height:84px;object-fit:contain;border-radius:8px;background:#fff;padding:6px;box-shadow:var(--shadow)}
+
   .container{max-width:1100px;margin:0 auto;padding:12px}
 
-  /* Tabs */
-  .tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0}
-  .tab {
-    padding:10px 14px;border-radius:999px;background:transparent;border:1px solid transparent;
-    cursor:pointer;font-weight:600;color:var(--muted)
+  /* grid: 2 columns on larger screens, 1 column on small screens */
+  .grid {
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+    margin-top:12px;
   }
-  .tab.active{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:var(--shadow)}
-
-  /* Grid */
-  .grid {display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:18px}
-  @media(max-width:880px){ .grid{grid-template-columns:1fr} }
+  @media (max-width:720px){
+    .grid{grid-template-columns:1fr}
+  }
 
   .card{
-    background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);
-    display:flex;gap:12px;align-items:center;position:relative;overflow:hidden;
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:12px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+    box-shadow:var(--shadow);
+    overflow:hidden;
   }
-  .card img{width:110px;height:80px;border-radius:10px;object-fit:cover;flex-shrink:0}
-  .card .meta{flex:1}
-  .card h3{margin:0;font-size:18px}
-  .card .desc{color:var(--muted);font-size:13px;margin-top:6px}
-  .card .price{font-weight:800;margin-top:8px}
-  .card .actions{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
-  .btn{padding:8px 12px;border-radius:8px;border:0;cursor:pointer}
+  .thumb{width:110px;height:84px;border-radius:8px;flex-shrink:0;object-fit:cover;background:#f0f0f0;display:inline-block}
+  .meta{flex:1;min-width:0}
+  .meta h3{margin:0;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .meta .desc{margin-top:6px;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .meta .price{margin-top:8px;font-weight:800}
+
+  .actions{display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+  .btn{padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600}
   .btn-primary{background:var(--accent);color:#fff}
   .btn-ghost{background:#fff;border:1px solid #e6e6e6;color:var(--muted)}
 
-  /* Floating cart summary */
+  /* floating cart bottom */
   .cart-bar{
     position:fixed;left:16px;right:16px;bottom:18px;background:#1f2937;color:#fff;padding:12px;border-radius:10px;
-    display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 12px 30px rgba(0,0,0,0.18)
+    display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 12px 30px rgba(0,0,0,0.18);
+    z-index:9999;
   }
   .cart-bar .left{font-weight:700}
   .cart-bar .right{display:flex;gap:8px;align-items:center}
 
-  /* Footer */
-  footer{margin-top:32px;padding:20px 12px;text-align:center;color:var(--muted)}
+  /* footer socials */
+  footer{margin-top:26px;padding:20px 12px;text-align:center;color:var(--muted)}
   .socials{display:flex;gap:12px;justify-content:center;margin-top:10px}
   .socials a{display:inline-block;padding:8px 10px;background:#fff;border-radius:8px;text-decoration:none;color:var(--muted);box-shadow:var(--shadow)}
 
-  /* Small helpers */
-  .empty-msg{text-align:center;padding:40px;color:var(--muted);background:linear-gradient(180deg,transparent,#fff);border-radius:12px}
-  .section-title{margin-top:18px;font-size:18px;font-weight:700;color:#222}
+  /* small helpers */
+  .section-title{font-size:18px;font-weight:800;margin:18px 0 8px}
+  .empty-msg{text-align:center;padding:24px;color:var(--muted);background:linear-gradient(180deg,transparent,#fff);border-radius:12px}
 </style>
 </head>
 <body>
 
 <header>
+  <!-- LOGO top-right -->
+  <div class="logo" aria-hidden="false">
+    <img src="logo.png" alt="Neo Café Logo">
+  </div>
+
   <h1>منيو نيو كافيه</h1>
-  <div style="margin-top:6px;color:var(--muted)">أختار القسم وشوف الأصناف — اضغط "أضف للسلة" واذهب للسلة لإتمام الطلب</div>
+  <p>منظم، سريع، ومناسب للموبايل — اضغط "أضف للسلة" عشان تحتفظ بالاختيارات</p>
 </header>
 
-<main class="container" id="app">
-  <!-- Tabs -->
-  <div class="tabs" role="tablist" aria-label="أقسام المنيو">
-    <button class="tab active" data-cat="hot" role="tab" aria-selected="true">مشروبات ساخنة</button>
-    <button class="tab" data-cat="cold" role="tab">مشروبات باردة</button>
-    <button class="tab" data-cat="bakery" role="tab">مخبوزات</button>
-    <button class="tab" data-cat="dessert" role="tab">حلويات</button>
-  </div>
+<main class="container">
+  <!-- sections titles (optional) -->
+  <div class="section-title">مشروبات ساخنة</div>
+  <div id="hotGrid" class="grid" aria-live="polite"></div>
 
-  <!-- Sections container -->
-  <div id="sections">
-    <!-- سيُملأ ديناميكياً -->
-  </div>
+  <div class="section-title">مشروبات باردة</div>
+  <div id="coldGrid" class="grid" aria-live="polite"></div>
 
-  <!-- Footer with socials + small info -->
+  <div class="section-title">مخبوزات</div>
+  <div id="bakeryGrid" class="grid" aria-live="polite"></div>
+
+  <div class="section-title">حلويات</div>
+  <div id="dessertGrid" class="grid" aria-live="polite"></div>
+
   <footer>
-    <div>تابعنا على السوشيال لتعرف أحدث العروض والخصومات</div>
-    <div class="socials" aria-hidden="false">
-      <a href="https://facebook.com" target="_blank" rel="noopener" title="فيسبوك">فيسبوك</a>
-      <a href="https://instagram.com" target="_blank" rel="noopener" title="انستجرام">انستجرام</a>
-      <a href="https://tiktok.com" target="_blank" rel="noopener" title="تيك توك">تيك توك</a>
+    <div>تابعنا على السوشيال لتعرف أحدث العروض</div>
+    <div class="socials">
+      <a href="https://facebook.com" target="_blank" rel="noopener">فيسبوك</a>
+      <a href="https://instagram.com" target="_blank" rel="noopener">انستجرام</a>
+      <a href="https://tiktok.com" target="_blank" rel="noopener">تيك توك</a>
     </div>
-    <div style="margin-top:10px;font-size:13px;color:var(--muted)">رقم للطلبات: 01034311119</div>
+    <div style="margin-top:10px;font-size:13px;color:var(--muted)">هاتف الطلبات: 01034311119</div>
   </footer>
 </main>
 
-<!-- Floating cart summary -->
+<!-- floating cart bar -->
 <div class="cart-bar" id="cartBar" style="display:none" aria-live="polite">
   <div class="left">السلة: <span id="cartCount">0</span> صنف — الإجمالي: <span id="cartTotal">0</span> ج</div>
   <div class="right">
     <button class="btn btn-ghost" onclick="clearCart()">افراغ السلة</button>
-    <a class="btn btn-primary" href="checkout.html" id="toCheckout">الانتقال للسلة</a>
+    <a class="btn btn-primary" href="checkout.html">الانتقال للسلة</a>
   </div>
 </div>
 
 <script>
-/* ===== CONFIG ===== */
+/* ======= CONFIG ======= */
 const CART_KEY = 'neoCafe_cart_v1';
 
-/* ===== بيانات افتراضية للأصناف (تقدر تعدّلها أو تجيبها من JSON لاحقاً) ===== */
+/* ======= MENU DATA ======= */
 const MENU = [
-  // hot
-  { id:'hot1', cat:'hot', name:'لاتيه كلاسيك', price:45, desc:'لاتيه بالكريمة ورغوة ناعمة', image:'https://via.placeholder.com/300x200?text=Latte' },
-  { id:'hot2', cat:'hot', name:'كابتشينو', price:50, desc:'قهوة اسبريسو بحجم متوسط مع رغوة', image:'https://via.placeholder.com/300x200?text=Cappuccino' },
-  { id:'hot3', cat:'hot', name:'موكا شوكولاتة', price:60, desc:'مزيج شوكولاتة مع قهوة اسبريسو', image:'https://via.placeholder.com/300x200?text=Mocha' },
+  { id:'hot1', cat:'hot', name:'لاتيه كلاسيك', price:45, desc:'لاتيه بكريمة ورغوة ناعمة', image:'https://via.placeholder.com/400x300?text=Latte' },
+  { id:'hot2', cat:'hot', name:'كابتشينو', price:50, desc:'اسبريسو مع رغوة مميزة', image:'https://via.placeholder.com/400x300?text=Cappuccino' },
+  { id:'hot3', cat:'hot', name:'موكا شوكولاتة', price:60, desc:'قهوة ومذاق شوكولاتة غني', image:'https://via.placeholder.com/400x300?text=Mocha' },
 
-  // cold
-  { id:'cold1', cat:'cold', name:'آيس لاتيه', price:55, desc:'قهوة لاتيه باردة مع ثلج', image:'https://via.placeholder.com/300x200?text=Iced+Latte' },
-  { id:'cold2', cat:'cold', name:'فرابتشينو فانيلا', price:65, desc:'مخفوق مثلّج بطعم الفانيلا', image:'https://via.placeholder.com/300x200?text=Frappe' },
-  { id:'cold3', cat:'cold', name:'ليمون نعناع بارد', price:40, desc:'مشروب منعش لموسم الصيف', image:'https://via.placeholder.com/300x200?text=Mint+Lemon' },
+  { id:'cold1', cat:'cold', name:'آيس لاتيه', price:55, desc:'لاتيه مثلج منعش', image:'https://via.placeholder.com/400x300?text=Iced+Latte' },
+  { id:'cold2', cat:'cold', name:'فرابتشينو فانيلا', price:65, desc:'مخفوق مثلّج بطعم الفانيلا', image:'https://via.placeholder.com/400x300?text=Frappe' },
+  { id:'cold3', cat:'cold', name:'ليمون بالنعناع', price:40, desc:'مشروب منعش للصيف', image:'https://via.placeholder.com/400x300?text=Mint+Lemon' },
 
-  // bakery
-  { id:'bak1', cat:'bakery', name:'كرواسون زبدة', price:25, desc:'كروسان هشي من الفرن', image:'https://via.placeholder.com/300x200?text=Croissant' },
-  { id:'bak2', cat:'bakery', name:'سندوتش جبنة بالزعتر', price:30, desc:'سندوتش جاهز وصحي', image:'https://via.placeholder.com/300x200?text=Sandwich' },
-  { id:'bak3', cat:'bakery', name:'بريوش بالعسل', price:35, desc:'بريوش ناعم مع لمسة عسل', image:'https://via.placeholder.com/300x200?text=Brioche' },
+  { id:'bak1', cat:'bakery', name:'كرواسون زبدة', price:25, desc:'كروسان هشي من الفرن', image:'https://via.placeholder.com/400x300?text=Croissant' },
+  { id:'bak2', cat:'bakery', name:'سندوتش جبنة', price:30, desc:'سندوتش جبنة طازجة', image:'https://via.placeholder.com/400x300?text=Sandwich' },
+  { id:'bak3', cat:'bakery', name:'بريوش بالعسل', price:35, desc:'بريوش ناعم مع لمسة عسل', image:'https://via.placeholder.com/400x300?text=Brioche' },
 
-  // dessert
-  { id:'des1', cat:'dessert', name:'تشيز كيك', price:55, desc:'تشيز كيك كريمي مع صوص توت', image:'https://via.placeholder.com/300x200?text=Cheesecake' },
-  { id:'des2', cat:'dessert', name:'براوني بالشوكولاتة', price:45, desc:'براوني ناشف مع شوكولاتة غنية', image:'https://via.placeholder.com/300x200?text=Brownie' },
-  { id:'des3', cat:'dessert', name:'بان كيك بالعسل', price:40, desc:'بان كيك سميك مع عسل طبيعي', image:'https://via.placeholder.com/300x200?text=Pancake' },
+  { id:'des1', cat:'dessert', name:'تشيز كيك', price:55, desc:'تشيز كيك كريمي مع صوص توت', image:'https://via.placeholder.com/400x300?text=Cheesecake' },
+  { id:'des2', cat:'dessert', name:'براوني بالشوكولاتة', price:45, desc:'براوني طري ورائع', image:'https://via.placeholder.com/400x300?text=Brownie' },
+  { id:'des3', cat:'dessert', name:'بان كيك بالعسل', price:40, desc:'بان كيك سميك مع عسل طبيعي', image:'https://via.placeholder.com/400x300?text=Pancake' },
 ];
 
-/* ===== Utilities للتخزين ===== */
+/* ======= Storage helpers ======= */
 function loadCart(){
-  try{
+  try {
     const raw = localStorage.getItem(CART_KEY);
     if(!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : [];
   } catch(e){
-    console.error('خطأ في قراءة السلة', e);
+    console.error('Error reading cart', e);
     return [];
   }
 }
@@ -149,8 +175,8 @@ function saveCart(cart){
   try {
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
     renderCartBar();
-  } catch(e) {
-    console.error('خطأ في حفظ السلة', e);
+  } catch(e){
+    console.error('Error saving cart', e);
   }
 }
 function clearCart(){
@@ -160,28 +186,27 @@ function clearCart(){
   alert('تم إفراغ السلة');
 }
 
-/* ===== إضافة للصنف ===== */
+/* ======= Cart actions ======= */
 function addToCart(item){
   const cart = loadCart();
-  const existing = cart.find(i=> i.id === item.id);
+  const existing = cart.find(i => i.id === item.id);
   if(existing){
     existing.qty = Number(existing.qty) + 1;
   } else {
     cart.push({...item, qty:1});
   }
   saveCart(cart);
-  // feedback سريع
   showToast(`${item.name} اتضاف للسلة ✔`);
 }
 
-/* ===== Rendering الأقسام والأصناف ===== */
+/* ======= Render products into grids ======= */
 function createCard(item){
-  const wrap = document.createElement('div');
-  wrap.className = 'card';
-  wrap.innerHTML = `
-    <img src="${item.image}" alt="${escapeHtml(item.name)}" loading="lazy">
+  const div = document.createElement('div');
+  div.className = 'card';
+  div.innerHTML = `
+    <img class="thumb" src="${item.image}" alt="${escapeHtml(item.name)}">
     <div class="meta">
-      <h3>${escapeHtml(item.name)}</h3>
+      <h3 title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</h3>
       <div class="desc">${escapeHtml(item.desc)}</div>
       <div class="price">${item.price} ج</div>
     </div>
@@ -190,55 +215,26 @@ function createCard(item){
       <button class="btn btn-primary" onclick='addToCart(${JSON.stringify(item).replaceAll("'", "\\'")})'>أضف للسلة</button>
     </div>
   `;
-  return wrap;
+  return div;
 }
 
-function renderSection(category){
-  const sect = document.createElement('section');
-  sect.className = 'section';
-  const titleMap = { hot:'مشروبات ساخنة', cold:'مشروبات باردة', bakery:'مخبوزات', dessert:'حلويات' };
-  const title = titleMap[category] || category;
-  sect.innerHTML = `<div class="section-title">${title}</div>`;
-
-  const grid = document.createElement('div');
-  grid.className = 'grid';
-  const items = MENU.filter(i=> i.cat === category);
-  if(items.length === 0){
-    const empty = document.createElement('div');
-    empty.className = 'empty-msg';
-    empty.textContent = 'لا توجد منتجات في هذا القسم حالياً';
-    sect.appendChild(empty);
-  } else {
-    items.forEach(it => grid.appendChild(createCard(it)));
-    sect.appendChild(grid);
-  }
-  return sect;
+function renderGrids(){
+  const maps = {
+    hot: document.getElementById('hotGrid'),
+    cold: document.getElementById('coldGrid'),
+    bakery: document.getElementById('bakeryGrid'),
+    dessert: document.getElementById('dessertGrid'),
+  };
+  // clear
+  Object.values(maps).forEach(el => el.innerHTML = '');
+  // append
+  MENU.forEach(item => {
+    const container = maps[item.cat];
+    if(container) container.appendChild(createCard(item));
+  });
 }
 
-/* render all sections (initial) */
-function renderAllSections(){
-  const wrapper = document.getElementById('sections');
-  wrapper.innerHTML = '';
-  // ترتيب العرض: hot, cold, bakery, dessert
-  ['hot','cold','bakery','dessert'].forEach(cat => wrapper.appendChild(renderSection(cat)));
-}
-
-/* Tab switching */
-document.addEventListener('click', (e) => {
-  const tab = e.target.closest('.tab');
-  if(!tab) return;
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  tab.classList.add('active');
-  const cat = tab.getAttribute('data-cat');
-  // Scroll to that section
-  const sections = Array.from(document.querySelectorAll('.section-title'));
-  const idxMap = { hot:0, cold:1, bakery:2, dessert:3 };
-  const idx = idxMap[cat] ?? 0;
-  const target = sections[idx];
-  if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
-});
-
-/* Cart bar render */
+/* ======= small helpers ======= */
 function calcTotals(cart){
   let total = 0, count = 0;
   for(const it of cart){ total += (Number(it.price)||0) * (Number(it.qty)||0); count += Number(it.qty)||0; }
@@ -247,44 +243,40 @@ function calcTotals(cart){
 function renderCartBar(){
   const cart = loadCart();
   const bar = document.getElementById('cartBar');
-  if(!cart || cart.length === 0) {
-    bar.style.display = 'none';
-    return;
-  }
+  if(!cart || cart.length === 0){ bar.style.display = 'none'; return; }
   const { total, count } = calcTotals(cart);
   document.getElementById('cartCount').textContent = count;
   document.getElementById('cartTotal').textContent = total;
   bar.style.display = 'flex';
 }
+function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
 
-/* Small product details (modal-light) */
+/* ======= product detail popup (new tab) ======= */
 function viewDetails(id){
   const item = MENU.find(i=> i.id === id);
-  if(!item) return alert('منتج مش موجود');
-  const w = window.open('','_blank','width=420,height=520,scrollbars=yes');
-  w.document.write(`<html dir="rtl"><head><title>${item.name}</title><meta charset="utf-8"></head><body style="font-family:Arial;padding:18px"><h2>${item.name}</h2><img src="${item.image}" style="width:100%;height:auto;border-radius:8px"><p style="color:#666;margin-top:10px">${item.desc}</p><p style="font-weight:800">${item.price} ج</p><button style="padding:10px 12px;background:${'`'}${'`'};border:0;color:#fff;border-radius:8px;cursor:pointer" onclick="window.opener.addToCart(${JSON.stringify(item)})">أضف للسلة</button></body></html>`);
+  if(!item) return alert('المنتج غير موجود');
+  const w = window.open('','_blank','width=420,height=620,scrollbars=yes');
+  w.document.write(`<html dir="rtl"><head><meta charset="utf-8"><title>${item.name}</title></head><body style="font-family:Arial;padding:18px"><h2>${item.name}</h2><img src="${item.image}" style="width:100%;height:auto;border-radius:8px"><p style="color:#666;margin-top:10px">${item.desc}</p><p style="font-weight:800">${item.price} ج</p><button style="padding:10px 12px;background:${'#125433'};border:0;color:#fff;border-radius:8px;cursor:pointer" onclick="window.opener.addToCart(${JSON.stringify(item)})">أضف للسلة</button></body></html>`);
 }
 
-/* Simple toast */
+/* ======= toast ======= */
 function showToast(msg){
   const t = document.createElement('div');
   t.textContent = msg;
-  Object.assign(t.style,{position:'fixed',left:'50%',transform:'translateX(-50%)',bottom:'90px',background:'#111',color:'#fff',padding:'8px 12px',borderRadius:'8px',zIndex:9999,opacity:0,transition:'all 300ms ease'});
+  Object.assign(t.style,{position:'fixed',left:'50%',transform:'translateX(-50%)',bottom:'100px',background:'#111',color:'#fff',padding:'8px 12px',borderRadius:'8px',zIndex:9999,opacity:0,transition:'all 300ms ease'});
   document.body.appendChild(t);
   requestAnimationFrame(()=> t.style.opacity = 1);
-  setTimeout(()=> { t.style.opacity = 0; setTimeout(()=> t.remove(),350); }, 1600);
+  setTimeout(()=> { t.style.opacity = 0; setTimeout(()=> t.remove(),350); }, 1400);
 }
 
-/* escape html */
-function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
-
-/* init */
-renderAllSections();
+/* ======= init ======= */
+renderGrids();
 renderCartBar();
 
-/* expose some helpers to window for popup */
+/* expose for popup */
 window.addToCart = addToCart;
 window.clearCart = clearCart;
 </script>
+
 </body>
 </html>
