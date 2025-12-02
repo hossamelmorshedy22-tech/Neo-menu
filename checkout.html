@@ -24,23 +24,18 @@
   }
   textarea{min-height:120px;resize:vertical}
   .row{display:flex;gap:12px;align-items:center}
-  /* date selects row: horizontal */
   .date-row{display:flex;gap:12px;align-items:center;margin-top:6px}
   .date-row .col{flex:1;min-width:0}
   .date-row select{width:100%}
-  /* make sure on very small screens they still fit - allow horizontal scroll if needed */
   @media(max-width:420px){
     .date-row{gap:8px}
     .date-row .col{min-width:90px}
   }
-
   .actions{display:flex;gap:12px;align-items:center;justify-content:flex-start;margin-top:16px;flex-wrap:wrap}
   .btn{background:var(--accent);color:#fff;border:0;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:700}
   .btn.ghost{background:#fff;border:1px solid #ddd;color:#333}
   .note{background:#fff6e8;border-left:4px solid #f3d5a6;padding:10px;border-radius:8px;margin-top:12px;color:#5a4b2a}
   .small{font-size:13px;color:var(--muted);margin-top:8px}
-
-  /* responsive tweaks */
   @media(max-width:600px){
     .row{flex-direction:column;align-items:stretch}
     .actions{justify-content:stretch}
@@ -54,7 +49,7 @@
 
       <!-- اسم الشهرة -->
       <label for="nickname">اسم الشهره</label>
-      <input id="nickname" class="input" type="text" placeholder="اكتب اسم الشهرة اللي تحب يظهر " autocomplete="nickname">
+      <input id="nickname" class="input" type="text" placeholder="اكتب اسم الشهرة اللي تحب يظهُر" autocomplete="nickname">
 
       <!-- تاريخ الميلاد -->
       <label for="birth">تاريخ الميلاد</label>
@@ -63,23 +58,18 @@
           <label class="sr-only" for="birth-day">اليوم</label>
           <select id="birth-day" aria-label="يوم الميلاد">
             <option value="">اليوم</option>
-            <!-- أيام تُملأ ديناميكياً -->
           </select>
         </div>
-
         <div class="col">
           <label class="sr-only" for="birth-month">الشهر</label>
           <select id="birth-month" aria-label="شهر الميلاد">
             <option value="">الشهر</option>
-            <!-- أشهر تُملأ ديناميكياً -->
           </select>
         </div>
-
         <div class="col">
           <label class="sr-only" for="birth-year">السنة</label>
           <select id="birth-year" aria-label="سنة الميلاد">
             <option value="">السنة</option>
-            <!-- سنوات تُملأ ديناميكياً -->
           </select>
         </div>
       </div>
@@ -97,7 +87,8 @@
       <input id="phone" class="input" type="tel" placeholder="010xxxxxxxx" inputmode="tel" pattern="[0-9]*">
 
       <div class="note" role="note">
-        <strong>نظام الولاء:</strong> كل مرة تطلب فيها من نيو كافية وتحط رقم موبايلك تسجّل نقطة (ختمة). بعد 5 نقاط ستحصل على مشروب مجاني من اختيارك. فقط استخدم نفس رقم الموبايل وسيُحتسب لك التقدّم — لا حاجة لاشتراك أو تسجيل إضافي.
+        <strong>نظام الولاء:</strong> اجمع الإنفاق، وكلما وصل مجموع إنفاقك إلى 1000 ج تحصل على مشروب مجاني.  
+        <br>وكمان: كل عميل في يوم ميلاده يحصل على هدية من المحل (مشروب مجاني). سيتم منح هدية واحدة لكل رقم مرة واحدة في كل سنة.
       </div>
 
       <!-- ملاحظات اضافية -->
@@ -115,115 +106,203 @@
   </div>
 
 <script>
-  // populate day/month/year selects
-  (function populateDateInputs(){
-    const daySel = document.getElementById('birth-day');
-    const monthSel = document.getElementById('birth-month');
-    const yearSel = document.getElementById('birth-year');
+/* ====== populate date selects (days, months, years from current down to 1960) ====== */
+(function populateDateInputs(){
+  const daySel = document.getElementById('birth-day');
+  const monthSel = document.getElementById('birth-month');
+  const yearSel = document.getElementById('birth-year');
 
-    // days 1..31
-    for(let d=1; d<=31; d++){
-      const opt = document.createElement('option');
-      opt.value = String(d).padStart(2,'0');
-      opt.textContent = d;
-      daySel.appendChild(opt);
+  for(let d=1; d<=31; d++){
+    const opt = document.createElement('option');
+    opt.value = String(d).padStart(2,'0');
+    opt.textContent = d;
+    daySel.appendChild(opt);
+  }
+
+  const months = [
+    {n:1, name:'يناير'},
+    {n:2, name:'فبراير'},
+    {n:3, name:'مارس'},
+    {n:4, name:'أبريل'},
+    {n:5, name:'مايو'},
+    {n:6, name:'يونيو'},
+    {n:7, name:'يوليو'},
+    {n:8, name:'أغسطس'},
+    {n:9, name:'سبتمبر'},
+    {n:10, name:'أكتوبر'},
+    {n:11, name:'نوفمبر'},
+    {n:12, name:'ديسمبر'},
+  ];
+  months.forEach(m=>{
+    const opt = document.createElement('option');
+    opt.value = String(m.n).padStart(2,'0');
+    opt.textContent = `${m.name} (${m.n})`;
+    monthSel.appendChild(opt);
+  });
+
+  const currentYear = new Date().getFullYear();
+  for(let y = currentYear; y >= 1960; y--){
+    const opt = document.createElement('option');
+    opt.value = String(y);
+    opt.textContent = y;
+    yearSel.appendChild(opt);
+  }
+})();
+
+/* ====== LOYALTY + BIRTHDAY GIFT + ORDER SUBMIT ====== */
+(function setupFormWithLoyaltyAndBirthday(){
+  const submitBtn = document.getElementById('submitBtn');
+  const clearBtn = document.getElementById('clearBtn');
+
+  // keys
+  const LOYAL_KEY = 'neoCafe_loyalty_v1'; // stores { phone: cumulativeSpentRemainder }
+  const BIRTH_KEY = 'neoCafe_birthday_v1'; // stores { phone: lastGiftYear }
+
+  // helpers load/save
+  function loadJson(key){ try{ const r = localStorage.getItem(key); return r ? JSON.parse(r) : {}; }catch(e){ return {}; } }
+  function saveJson(key,obj){ try{ localStorage.setItem(key, JSON.stringify(obj)); }catch(e){ console.error(e); } }
+
+  function loadCart(){
+    try{ const raw = localStorage.getItem('neoCafe_cart_v1'); return raw ? JSON.parse(raw) : []; }catch(e){ return []; }
+  }
+
+  submitBtn.addEventListener('click', function(){
+    // collect fields
+    const nickname = document.getElementById('nickname').value.trim() || '—';
+    const day = document.getElementById('birth-day').value;
+    const month = document.getElementById('birth-month').value;
+    const year = document.getElementById('birth-year').value;
+    const table = document.getElementById('table').value || '—';
+    let phone = (document.getElementById('phone').value || '').trim();
+    const notes = document.getElementById('notes').value.trim() || '—';
+
+    // normalize phone
+    const phoneDigits = phone.replace(/[^\d+]/g, '');
+    if(!phoneDigits){
+      alert('من فضلك اكتب رقم موبايل صالح ليتم احتساب الولاء وإرسال الطلب.');
+      return;
+    }
+    phone = phoneDigits;
+
+    // load cart & compute total
+    const cart = loadCart();
+    let total = 0;
+    const cartLines = [];
+    if(cart && cart.length){
+      cart.forEach((it, idx) => {
+        const qty = Number(it.qty) || 1;
+        const price = Number(it.price) || 0;
+        const lineTotal = price * qty;
+        total += lineTotal;
+        cartLines.push(`${idx+1}. ${it.name} × ${qty} = ${lineTotal} ج`);
+      });
     }
 
-    // months (Arabic names) mapped to numbers
-    const months = [
-      {n:1, name:'يناير'},
-      {n:2, name:'فبراير'},
-      {n:3, name:'مارس'},
-      {n:4, name:'أبريل'},
-      {n:5, name:'مايو'},
-      {n:6, name:'يونيو'},
-      {n:7, name:'يوليو'},
-      {n:8, name:'أغسطس'},
-      {n:9, name:'سبتمبر'},
-      {n:10, name:'أكتوبر'},
-      {n:11, name:'نوفمبر'},
-      {n:12, name:'ديسمبر'},
-    ];
-    months.forEach(m=>{
-      const opt = document.createElement('option');
-      opt.value = String(m.n).padStart(2,'0');
-      opt.textContent = `${m.name} (${m.n})`;
-      monthSel.appendChild(opt);
-    });
+    // ===== loyalty (cumulative spending) =====
+    const loyalMap = loadJson(LOYAL_KEY);
+    const beforeSpent = Number(loyalMap[phone] || 0); // remainder toward next reward
+    const newCumulative = beforeSpent + total;
 
-    // years: from current year down to 1960
-    const currentYear = new Date().getFullYear();
-    for(let y = currentYear; y >= 1960; y--){
-      const opt = document.createElement('option');
-      opt.value = String(y);
-      opt.textContent = y;
-      yearSel.appendChild(opt);
+    const rewardThreshold = 1000; // every 1000 ج => 1 free drink
+    const rewards = Math.floor(newCumulative / rewardThreshold); // number of free drinks earned now
+    const remaining = newCumulative % rewardThreshold; // remainder after awarding rewards
+
+    // update loyalty store: keep remaining value
+    loyalMap[phone] = remaining;
+    saveJson(LOYAL_KEY, loyalMap);
+
+    // ===== birthday gift logic =====
+    const birthMap = loadJson(BIRTH_KEY);
+    let birthdayGiftGranted = false;
+    let birthdayAlreadyThisYear = false;
+    const today = new Date();
+    const todayDay = String(today.getDate()).padStart(2,'0');
+    const todayMonth = String(today.getMonth() + 1).padStart(2,'0');
+    // check if user provided day & month
+    if(day && month){
+      if(day === todayDay && month === todayMonth){
+        const lastYear = Number(birthMap[phone] || 0);
+        const thisYear = today.getFullYear();
+        if(lastYear === thisYear){
+          birthdayAlreadyThisYear = true; // already claimed
+        } else {
+          // grant birthday gift now (one per year)
+          birthdayGiftGranted = true;
+          birthMap[phone] = thisYear;
+          saveJson(BIRTH_KEY, birthMap);
+        }
+      }
     }
-  })();
 
-  // basic form actions: build whatsapp message using form + cart from localStorage if exists
-  (function setupForm(){
-    const submitBtn = document.getElementById('submitBtn');
-    const clearBtn = document.getElementById('clearBtn');
+    // ===== build message =====
+    const lines = [];
+    lines.push('طلب من Neo Café');
+    lines.push(`اسم الشهرة: ${nickname}`);
+    if(day || month || year){
+      const dateText = `${day || '--'}/${month || '--'}/${year || '--'}`;
+      lines.push(`تاريخ الميلاد: ${dateText}`);
+    }
+    lines.push(`رقم الطاولة: ${table}`);
+    lines.push(`الهاتف: ${phone}`);
+    lines.push('----------------------');
 
-    submitBtn.addEventListener('click', function(){
-      // collect fields
-      const nickname = document.getElementById('nickname').value.trim();
-      const day = document.getElementById('birth-day').value;
-      const month = document.getElementById('birth-month').value;
-      const year = document.getElementById('birth-year').value;
-      const table = document.getElementById('table').value || '—';
-      const phone = document.getElementById('phone').value.trim() || '—';
-      const notes = document.getElementById('notes').value.trim() || '—';
-
-      // optional: pull cart from localStorage (if you use neoCafe_cart_v1)
-      let cart = [];
-      try{
-        const raw = localStorage.getItem('neoCafe_cart_v1');
-        cart = raw ? JSON.parse(raw) : [];
-      }catch(e){ cart = []; }
-
-      // build message
-      const lines = [];
-      lines.push('طلب من Neo Café');
-      if(nickname) lines.push(`اسم الشهرة: ${nickname}`);
-      if(day || month || year){
-        const dateText = `${day || '--'}/${month || '--'}/${year || '--'}`;
-        lines.push(`تاريخ الميلاد: ${dateText}`);
-      }
-      lines.push(`رقم الطاولة: ${table}`);
-      lines.push(`الهاتف: ${phone}`);
+    if(cartLines.length){
+      lines.push('السلة:');
+      cartLines.forEach(l => lines.push(l));
       lines.push('----------------------');
+      lines.push(`الإجمالي: ${total} ج`);
+    } else {
+      lines.push('السلة: فارغة');
+    }
 
-      if(cart && cart.length){
-        lines.push('السلة:');
-        cart.forEach((it, i) => {
-          const qty = it.qty || 1;
-          lines.push(`${i+1}. ${it.name} × ${qty} = ${ (Number(it.price)||0) * qty } ج`);
-        });
-      } else {
-        lines.push('السلة فارغة أو لم تُحفظ عناصر.');
-      }
+    lines.push('----------------------');
+    // loyalty summary
+    lines.push(`الرصيد المتبقي نحو الجائزة قبل الطلب: ${beforeSpent} ج`);
+    lines.push(`المبلغ المضاف من هذا الطلب: ${total} ج`);
+    lines.push(`الإجمالي التراكمي بعد الطلب: ${newCumulative} ج`);
 
+    if(rewards > 0){
+      lines.push(`🎉 حصلت على ${rewards} مشروب مجاني (بسبب اجمالي إنفاقك).`);
+      lines.push(`المتبقي لصالح الجائزة التالية: ${remaining} ج`);
+    } else {
+      const need = rewardThreshold - newCumulative;
+      lines.push(`تبقى ${need} ج لتحصل على مشروب مجاني (حسب نظام الإنفاق).`);
+      lines.push(`حالتك الآن بعد الطلب: ${remaining} ج نحو الجائزة التالية.`);
+    }
+
+    // birthday lines
+    if(birthdayGiftGranted){
       lines.push('----------------------');
-      lines.push(`ملاحظات: ${notes}`);
+      lines.push('🎂 هدية عيد ميلاد: مبروك! حصلت على مشروب مجاني بمناسبة عيد ميلادك. (مرة واحدة في السنة)');
+    } else if (birthdayAlreadyThisYear){
+      lines.push('----------------------');
+      lines.push('🎂 ملاحظة: لقد استلمت هدية عيد ميلادك بالفعل هذا العام.');
+    } else {
+      // nothing
+    }
 
-      const text = encodeURIComponent(lines.join('\n'));
-      const phoneTo = '201034311119'; // عدل الرقم لو تحتاجه
-      window.open(`https://wa.me/${phoneTo}?text=${text}`, '_blank');
-    });
+    lines.push('----------------------');
+    lines.push(`ملاحظات: ${notes}`);
 
-    clearBtn.addEventListener('click', function(){
-      if(!confirm('هل تريد فعلاً إفراغ الحقول؟')) return;
-      document.getElementById('nickname').value = '';
-      document.getElementById('birth-day').value = '';
-      document.getElementById('birth-month').value = '';
-      document.getElementById('birth-year').value = '';
-      document.getElementById('table').value = '';
-      document.getElementById('phone').value = '';
-      document.getElementById('notes').value = '';
-    });
-  })();
+    // open whatsapp
+    const text = encodeURIComponent(lines.join('\n'));
+    const businessPhone = '201034311119'; // عدّل لو محتاج رقم آخر
+    window.open(`https://wa.me/${businessPhone}?text=${text}`, '_blank');
+  });
+
+  // clear button handler
+  clearBtn.addEventListener('click', function(){
+    if(!confirm('هل تريد فعلاً إفراغ الحقول؟')) return;
+    document.getElementById('nickname').value = '';
+    document.getElementById('birth-day').value = '';
+    document.getElementById('birth-month').value = '';
+    document.getElementById('birth-year').value = '';
+    document.getElementById('table').value = '';
+    document.getElementById('phone').value = '';
+    document.getElementById('notes').value = '';
+  });
+
+})(); // end setup
 </script>
 </body>
 </html>
