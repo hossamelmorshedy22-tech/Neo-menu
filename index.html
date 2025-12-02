@@ -1,229 +1,361 @@
 <!doctype html>
 <html lang="ar">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>إتمام الطلب — Neo Café</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>نيو كافية منيو - NEO CAFE'</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
   :root{
-    --bg:#f7f7f7;
-    --card:#fff;
-    --accent:#125433;
-    --muted:#666;
-    --radius:12px;
-    --shadow: 0 8px 28px rgba(0,0,0,0.06);
+    --neo-beige:#f6efe6;
+    --neo-olive:#2f5d3a;
+    --neo-olive-2:#3f6f45;
+    --muted:#6b6b6b;
+    --card:#ffffff;
+    --shadow:0 10px 30px rgba(0,0,0,0.08);
+    --radius:14px;
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family: "Cairo", "Segoe UI", Tahoma, Arial;direction:rtl;background:var(--bg);color:#111;padding:18px}
-  .wrap{max-width:720px;margin:12px auto}
-  .card{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
-  h1{margin:0 0 8px;font-size:22px;color:var(--accent)}
-  label{display:block;font-weight:700;margin:12px 0 6px}
-  .input, select, textarea{
-    width:100%;padding:12px;border-radius:10px;border:1px solid #e6e6e6;font-size:15px;background:#fff;
+  html,body{
+    margin:0;
+    font-family:"Cairo","Poppins",sans-serif;
+    direction:rtl;
+    background:var(--neo-beige);
+    color:#111;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
   }
-  textarea{min-height:120px;resize:vertical}
-  .row{display:flex;gap:12px;align-items:center}
-  /* date selects row: horizontal */
-  .date-row{display:flex;gap:12px;align-items:center;margin-top:6px}
-  .date-row .col{flex:1;min-width:0}
-  .date-row select{width:100%}
-  /* make sure on very small screens they still fit - allow horizontal scroll if needed */
-  @media(max-width:420px){
-    .date-row{gap:8px}
-    .date-row .col{min-width:90px}
+  a{color:inherit;text-decoration:none}
+
+  /* ===== Header (with entrance animation) ===== */
+  .header{
+    position:relative;
+    padding:26px 16px 12px;
+    text-align:center;
+    opacity:0;
+    transform: translateY(8px);
+    animation: headerIn .5s ease forwards .12s;
+  }
+  @keyframes headerIn{
+    to{ opacity:1; transform: translateY(0); }
   }
 
-  .actions{display:flex;gap:12px;align-items:center;justify-content:flex-start;margin-top:16px;flex-wrap:wrap}
-  .btn{background:var(--accent);color:#fff;border:0;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:700}
-  .btn.ghost{background:#fff;border:1px solid #ddd;color:#333}
-  .note{background:#fff6e8;border-left:4px solid #f3d5a6;padding:10px;border-radius:8px;margin-top:12px;color:#5a4b2a}
-  .small{font-size:13px;color:var(--muted);margin-top:8px}
-
-  /* responsive tweaks */
-  @media(max-width:600px){
-    .row{flex-direction:column;align-items:stretch}
-    .actions{justify-content:stretch}
+  .logo{
+    position:absolute;
+    top:10px;
+    right:10px;
+    width:90px;
+    height:auto;
+    object-fit:contain;
+    background:transparent !important;
+    padding:0 !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+    transition:transform .25s ease;
   }
+  .logo:hover{ transform:translateY(-4px); }
+  @media(max-width:700px){ .logo{ width:64px; top:6px; right:6px } }
+
+  .title{ margin:0; font-size:24px; font-weight:700; color:var(--neo-olive); letter-spacing:0.3px; }
+  .neo-tag{ margin-top:6px; font-size:14px; color:var(--neo-olive-2); font-weight:600; font-family:"Poppins",sans-serif; }
+  .subtitle{ margin-top:6px; font-size:13px; color:var(--muted); }
+
+  /* ===== Tabs + underline ===== */
+  .tabs-wrap{ position:relative; display:flex; justify-content:center; margin:12px 0 20px }
+  .tabs{ display:flex; gap:10px; flex-wrap:wrap; z-index:2 }
+  .tab{
+    background:#fff; padding:8px 14px; border-radius:999px; border:1px solid #eee; font-weight:700; color:var(--muted);
+    cursor:pointer; transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .tab:hover{ transform: translateY(-6px) scale(1.02); box-shadow:0 10px 26px rgba(47,93,58,0.06); background: linear-gradient(180deg,#f8fbf8,#fff); }
+  .tab.active{ background:var(--neo-olive); color:#fff; box-shadow:0 14px 40px rgba(47,93,58,0.14); transform:none; }
+  /* underline element */
+  .tabs-underline{
+    position:absolute;
+    height:4px;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--neo-olive),var(--neo-olive-2));
+    bottom: -6px;
+    right: 50%;
+    transform: translateX(50%);
+    transition: all .28s cubic-bezier(.2,.9,.2,1);
+    z-index:1;
+    width:0;
+    opacity:0;
+  }
+
+  /* ===== Layout & Grid ===== */
+  .container{ max-width:1100px; margin:0 auto; padding:0 12px 110px; }
+  .section-title{ font-size:19px; font-weight:700; color:var(--neo-olive-2); margin-bottom:10px; }
+
+  .grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+  @media(max-width:820px){ .grid{ grid-template-columns:1fr } }
+
+  /* ===== Product Card + animation (fade/slide) ===== */
+  .card{
+    background:#ffffffcc; border-radius:var(--radius); padding:12px; display:flex; gap:12px; align-items:center; box-shadow:var(--shadow);
+    opacity:0; transform: translateY(12px) scale(.997);
+    animation: fadeUp .42s cubic-bezier(.2,.85,.25,1) forwards;
+  }
+  @keyframes fadeUp{
+    from{ opacity:0; transform: translateY(12px) scale(.997) }
+    to{ opacity:1; transform: translateY(0) scale(1) }
+  }
+
+  .thumb{ width:110px; height:82px; object-fit:cover; border-radius:10px; background:#eee; transition:transform .25s ease }
+  .card:hover .thumb{ transform:scale(1.03) }
+
+  .meta{ flex:1; min-width:0 }
+  .meta h3{ margin:0; font-size:16px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .meta p{ margin:6px 0 0; font-size:13px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .meta .price{ margin-top:8px; font-weight:800; color:var(--neo-olive); }
+
+  .actions{ display:flex; flex-direction:column; gap:8px; align-items:flex-end; min-width:92px }
+  .btn{ padding:8px 12px; border-radius:10px; border:0; cursor:pointer; font-weight:700; font-size:13px; }
+  .btn-outline{ background:#fff; border:1px solid #ddd; color:#444; }
+  .btn-primary{ background:var(--neo-olive); color:#fff; box-shadow:0 8px 20px rgba(47,93,58,0.12); }
+  .btn-primary:hover{ transform:translateY(-3px) }
+
+  /* ===== Cart icon (bottom-right) ===== */
+  .cart-float{ position:fixed; right:18px; bottom:18px; display:flex; align-items:center; gap:8px; z-index:9999; pointer-events:auto; }
+  .cart-btn{ width:60px; height:60px; border-radius:14px; background:var(--neo-olive); display:flex; align-items:center; justify-content:center; box-shadow:0 20px 46px rgba(47,93,58,0.18); cursor:pointer; transition:transform .18s ease }
+  .cart-btn:hover{ transform:translateY(-6px); box-shadow:0 28px 60px rgba(47,93,58,0.24); }
+  .cart-badge{ position:relative; right:8px; bottom:6px; min-width:22px; height:22px; line-height:22px; border-radius:999px; background:#ffeb3b; color:#111; font-weight:800; text-align:center; font-size:12px; box-shadow:0 6px 18px rgba(0,0,0,0.12); display:none; }
+
+  .cart-meta{ display:flex; flex-direction:column; align-items:flex-end; gap:2px; font-weight:700; color:var(--neo-olive-2); font-size:13px; margin-right:6px; display:none; }
+
+  /* ===== Footer ===== */
+  footer{ text-align:center; margin-top:40px; padding:20px 10px; color:var(--muted); }
+  .socials{ display:flex; justify-content:center; gap:10px; margin-top:12px; }
+  .socials a{ background:#fff; padding:8px 14px; border-radius:10px; box-shadow:var(--shadow); color:var(--neo-olive-2); font-weight:700; }
+
+  /* ===== Toast ===== */
+  .toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:95px; background:#111; color:#fff; padding:10px 14px; border-radius:10px; opacity:0; transition:opacity .18s ease; z-index:2000; }
+  .toast.show{ opacity:1 }
+
+  /* small accessibility helper */
+  .sr-only{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
 </style>
 </head>
+
 <body>
-  <div class="wrap">
-    <div class="card" role="form" aria-labelledby="formTitle">
-      <h1 id="formTitle">Neo Café — إتمام الطلب</h1>
 
-      <!-- اسم الشهرة -->
-      <label for="nickname">اسم الشهره</label>
-      <input id="nickname" class="input" type="text" placeholder="اكتب اسم الشهرة اللي تحب يظهُر" autocomplete="nickname">
+<header class="header" id="pageHeader">
+  <img src="assets/images/logo.png" class="logo" alt="NEO CAFE Logo" onerror="this.style.display='none'">
+  <h1 class="title">نيو كافية منيو - NEO CAFE'</h1>
+  <div class="neo-tag">Make It NEO Time</div>
+  <div class="subtitle">اختار القسم واضغط "أضف للسلة"</div>
+</header>
 
-      <!-- تاريخ الميلاد -->
-      <label for="birth">تاريخ الميلاد</label>
-      <div class="date-row" aria-labelledby="birth">
-        <div class="col">
-          <label class="sr-only" for="birth-day">اليوم</label>
-          <select id="birth-day" aria-label="يوم الميلاد">
-            <option value="">اليوم</option>
-            <!-- أيام تُملأ ديناميكياً -->
-          </select>
-        </div>
-
-        <div class="col">
-          <label class="sr-only" for="birth-month">الشهر</label>
-          <select id="birth-month" aria-label="شهر الميلاد">
-            <option value="">الشهر</option>
-            <!-- أشهر تُملأ ديناميكياً -->
-          </select>
-        </div>
-
-        <div class="col">
-          <label class="sr-only" for="birth-year">السنة</label>
-          <select id="birth-year" aria-label="سنة الميلاد">
-            <option value="">السنة</option>
-            <!-- سنوات تُملأ ديناميكياً -->
-          </select>
-        </div>
-      </div>
-
-      <!-- رقم الطاولة -->
-      <label for="table">رقم الطاولة</label>
-      <select id="table" class="input">
-        <option value="">اختر رقم الطاولة</option>
-        <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-        <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
-      </select>
-
-      <!-- رقم الهاتف -->
-      <label for="phone">رقم الهاتف (مهم لنظام الولاء)</label>
-      <input id="phone" class="input" type="tel" placeholder="010xxxxxxxx" inputmode="tel" pattern="[0-9]*">
-
-      <div class="note" role="note">
-        <strong>نظام الولاء:</strong> كل مرة تطلب فيها من نيو كافية وتحط رقم موبايلك تسجّل نقطة (ختمة). بعد 5 نقاط ستحصل على مشروب مجاني من اختيارك. فقط استخدم نفس رقم الموبايل وسيُحتسب لك التقدّم — لا حاجة لاشتراك أو تسجيل إضافي.
-      </div>
-
-      <!-- ملاحظات اضافية -->
-      <label for="notes">ملاحظات إضافية (اختياري)</label>
-      <textarea id="notes" placeholder="مثال: بدون سكر، زيادة حليب..."></textarea>
-
-      <!-- الأزرار -->
-      <div class="actions">
-        <button id="submitBtn" class="btn">ارسل الطلب عبر واتساب</button>
-        <button id="clearBtn" class="btn ghost" type="button">افراغ الحقول</button>
-      </div>
-
-      <div class="small">ملاحظة: تأكد من إدخال رقم الهاتف الصحيح لاستلام إشعارات الطلب ونظام الولاء.</div>
+<div class="container">
+  <div class="tabs-wrap">
+    <div class="tabs" id="tabs" role="tablist" aria-label="أقسام المنيو">
+      <button class="tab active" data-cat="hot" role="tab" aria-selected="true">مشروبات ساخنة</button>
+      <button class="tab" data-cat="cold" role="tab">مشروبات باردة</button>
+      <button class="tab" data-cat="bakery" role="tab">مخبوزات</button>
+      <button class="tab" data-cat="dessert" role="tab">حلويات</button>
     </div>
+    <div class="tabs-underline" id="tabsUnderline" aria-hidden="true"></div>
   </div>
 
+  <main id="content" aria-live="polite"></main>
+
+  <footer>
+    <div>تابعنا على السوشيال</div>
+    <div class="socials">
+      <a href="https://facebook.com/neo.cafe.eg" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://instagram.com/neocafe.eg" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://tiktok.com/@neo.cafe.eg" target="_blank" rel="noopener">TikTok</a>
+    </div>
+  </footer>
+</div>
+
+<!-- CART ICON FLOAT -->
+<div id="cartFloat" class="cart-float" aria-live="polite" aria-label="سلة الطلب">
+  <div id="cartMeta" class="cart-meta" aria-hidden="true">
+    <div id="cartCountText">السلة: 0</div>
+    <small id="cartTotalText">الإجمالي: 0 ج</small>
+  </div>
+
+  <button id="cartBtn" class="cart-btn" title="الانتقال للسلة" aria-label="الانتقال للسلة">
+    <!-- cart SVG -->
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 6H21L20 12H8L6 6Z" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M7 18C7.552 18 8 17.552 8 17C8 16.448 7.552 16 7 16C6.448 16 6 16.448 6 17C6 17.552 6.448 18 7 18Z" fill="#fff"/>
+      <path d="M18 18C18.552 18 19 17.552 19 17C19 16.448 18.552 16 18 16C17.448 16 17 16.448 17 17C17 17.552 17.448 18 18 18Z" fill="#fff"/>
+    </svg>
+    <div id="cartBadge" class="cart-badge" aria-hidden="true">0</div>
+  </button>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
 <script>
-  // populate day/month/year selects
-  (function populateDateInputs(){
-    const daySel = document.getElementById('birth-day');
-    const monthSel = document.getElementById('birth-month');
-    const yearSel = document.getElementById('birth-year');
+/* ========== DATA ========== */
+const MENU = [
+  {id:'hot1',cat:'hot',name:'لاتيه كلاسيك',price:45,desc:'رغوة ناعمة وقوام كريمي',image:'https://via.placeholder.com/400x300?text=Latte'},
+  {id:'hot2',cat:'hot',name:'كابتشينو',price:50,desc:'اسبريسو وقشدة خفيفة',image:'https://via.placeholder.com/400x300?text=Cappuccino'},
+  {id:'hot3',cat:'hot',name:'موكا شوكولاتة',price:60,desc:'قهوة ومزيج شوكولاتة غني',image:'https://via.placeholder.com/400x300?text=Mocha'},
+  {id:'cold1',cat:'cold',name:'آيس لاتيه',price:55,desc:'لاتيه بارد منعش',image:'https://via.placeholder.com/400x300?text=Iced+Latte'},
+  {id:'cold2',cat:'cold',name:'فرابتشينو فانيلا',price:65,desc:'مخفوق مثلّج كريم',image:'https://via.placeholder.com/400x300?text=Frappe'},
+  {id:'cold3',cat:'cold',name:'ليمون نعناع',price:40,desc:'انتعاش طبيعي',image:'https://via.placeholder.com/400x300?text=Mint+Lemon'},
+  {id:'bak1',cat:'bakery',name:'كرواسون زبدة',price:25,desc:'كرواسون طازج',image:'https://via.placeholder.com/400x300?text=Croissant'},
+  {id:'bak2',cat:'bakery',name:'سندوتش جبنة',price:30,desc:'سندوتش خفيف',image:'https://via.placeholder.com/400x300?text=Sandwich'},
+  {id:'bak3',cat:'bakery',name:'بريوش بالعسل',price:35,desc:'بريوش ناعم بالعسل',image:'https://via.placeholder.com/400x300?text=Brioche'},
+  {id:'des1',cat:'dessert',name:'تشيز كيك',price:55,desc:'تشيز كيك بصوص الفراولة',image:'https://via.placeholder.com/400x300?text=Cheesecake'},
+  {id:'des2',cat:'dessert',name:'براوني شوكولاتة',price:45,desc:'براوني طري ومركز',image:'https://via.placeholder.com/400x300?text=Brownie'},
+  {id:'des3',cat:'dessert',name:'بان كيك بالعسل',price:40,desc:'بان كيك سميك',image:'https://via.placeholder.com/400x300?text=Pancake'},
+];
 
-    // days 1..31
-    for(let d=1; d<=31; d++){
-      const opt = document.createElement('option');
-      opt.value = String(d).padStart(2,'0');
-      opt.textContent = d;
-      daySel.appendChild(opt);
-    }
+/* ========== STORAGE ========== */
+const CART_KEY = 'neoCafe_cart_v1';
+function loadCart(){ try{ const r = localStorage.getItem(CART_KEY); return r ? JSON.parse(r) : []; } catch(e){ return []; } }
+function saveCart(cart){ try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); renderCartIcon(); } catch(e){ console.error(e); } }
+function clearCart(){ if(!confirm('تفريغ السلة؟')) return; localStorage.removeItem(CART_KEY); renderCartIcon(); }
 
-    // months (Arabic names) mapped to numbers
-    const months = [
-      {n:1, name:'يناير'},
-      {n:2, name:'فبراير'},
-      {n:3, name:'مارس'},
-      {n:4, name:'أبريل'},
-      {n:5, name:'مايو'},
-      {n:6, name:'يونيو'},
-      {n:7, name:'يوليو'},
-      {n:8, name:'أغسطس'},
-      {n:9, name:'سبتمبر'},
-      {n:10, name:'أكتوبر'},
-      {n:11, name:'نوفمبر'},
-      {n:12, name:'ديسمبر'},
-    ];
-    months.forEach(m=>{
-      const opt = document.createElement('option');
-      opt.value = String(m.n).padStart(2,'0');
-      opt.textContent = `${m.name} (${m.n})`;
-      monthSel.appendChild(opt);
-    });
+/* ========== CART ACTIONS ========== */
+function addToCart(item){
+  const cart = loadCart();
+  const ex = cart.find(i => i.id === item.id);
+  if(ex) ex.qty = Number(ex.qty) + 1;
+  else cart.push({...item, qty:1});
+  saveCart(cart);
+  showToast(`${item.name} اتضاف للسلة ✔`);
+}
 
-    // years: from current year down to 1960
-    const currentYear = new Date().getFullYear();
-    for(let y = currentYear; y >= 1960; y--){
-      const opt = document.createElement('option');
-      opt.value = String(y);
-      opt.textContent = y;
-      yearSel.appendChild(opt);
-    }
-  })();
+/* ========== PRODUCT RENDER WITH STAGGER ========== */
+function createCard(item, idx){
+  const el = document.createElement('div');
+  el.className = 'card';
+  el.style.animationDelay = `${idx * 70}ms`;
+  el.innerHTML = `
+    <img class="thumb" src="${item.image}" alt="${escapeHtml(item.name)}">
+    <div class="meta">
+      <h3>${escapeHtml(item.name)}</h3>
+      <p>${escapeHtml(item.desc)}</p>
+      <div class="price">${item.price} ج</div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-outline" onclick='viewDetails("${item.id}")' aria-label="عرض ${escapeHtml(item.name)}">عرض</button>
+      <button class="btn btn-primary" onclick='addToCart(${JSON.stringify(item).replaceAll("'", "\\'")})' aria-label="أضف ${escapeHtml(item.name)} للسلة">أضف للسلة</button>
+    </div>
+  `;
+  return el;
+}
 
-  // basic form actions: build whatsapp message using form + cart from localStorage if exists
-  (function setupForm(){
-    const submitBtn = document.getElementById('submitBtn');
-    const clearBtn = document.getElementById('clearBtn');
+function renderCategory(cat){
+  const content = document.getElementById('content');
+  content.innerHTML = '';
+  const title = document.createElement('div');
+  title.className = 'section-title';
+  title.textContent = ({hot:'مشروبات ساخنة', cold:'مشروبات باردة', bakery:'مخبوزات', dessert:'حلويات'})[cat] || cat;
+  content.appendChild(title);
 
-    submitBtn.addEventListener('click', function(){
-      // collect fields
-      const nickname = document.getElementById('nickname').value.trim();
-      const day = document.getElementById('birth-day').value;
-      const month = document.getElementById('birth-month').value;
-      const year = document.getElementById('birth-year').value;
-      const table = document.getElementById('table').value || '—';
-      const phone = document.getElementById('phone').value.trim() || '—';
-      const notes = document.getElementById('notes').value.trim() || '—';
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  const items = MENU.filter(i => i.cat === cat);
+  items.forEach((it, idx) => grid.appendChild(createCard(it, idx)));
+  content.appendChild(grid);
 
-      // optional: pull cart from localStorage (if you use neoCafe_cart_v1)
-      let cart = [];
-      try{
-        const raw = localStorage.getItem('neoCafe_cart_v1');
-        cart = raw ? JSON.parse(raw) : [];
-      }catch(e){ cart = []; }
+  // after rendering, update underline to active tab location
+  requestAnimationFrame(() => moveUnderlineToActiveTab());
+}
 
-      // build message
-      const lines = [];
-      lines.push('طلب من Neo Café');
-      if(nickname) lines.push(`اسم الشهرة: ${nickname}`);
-      if(day || month || year){
-        const dateText = `${day || '--'}/${month || '--'}/${year || '--'}`;
-        lines.push(`تاريخ الميلاد: ${dateText}`);
-      }
-      lines.push(`رقم الطاولة: ${table}`);
-      lines.push(`الهاتف: ${phone}`);
-      lines.push('----------------------');
+/* ========== DETAILS ========== */
+function viewDetails(id){
+  const item = MENU.find(i=>i.id===id);
+  if(!item) return alert('المنتج غير موجود');
+  const w = window.open('','_blank','width=420,height=600,scrollbars=yes');
+  w.document.write(`<html dir="rtl"><head><meta charset="utf-8"><title>${item.name}</title></head><body style="font-family:Cairo;padding:18px;"><h2>${item.name}</h2><img src="${item.image}" style="width:100%;border-radius:8px"><p style="color:#666;margin-top:12px">${item.desc}</p><p style="font-weight:800">${item.price} ج</p><button style="padding:10px 12px;background:#2f5d3a;color:#fff;border:0;border-radius:8px;cursor:pointer" onclick="window.opener.addToCart(${JSON.stringify(item)})">أضف للسلة</button></body></html>`);
+}
 
-      if(cart && cart.length){
-        lines.push('السلة:');
-        cart.forEach((it, i) => {
-          const qty = it.qty || 1;
-          lines.push(`${i+1}. ${it.name} × ${qty} = ${ (Number(it.price)||0) * qty } ج`);
-        });
-      } else {
-        lines.push('السلة فارغة أو لم تُحفظ عناصر.');
-      }
+/* ========== CART ICON RENDER ========= */
+function calcTotals(cart){
+  let total=0, count=0;
+  for(const it of cart){ total += (Number(it.price)||0)*(Number(it.qty)||0); count += Number(it.qty)||0; }
+  return { total, count };
+}
+function renderCartIcon(){
+  const cart = loadCart();
+  const badge = document.getElementById('cartBadge');
+  const meta = document.getElementById('cartMeta');
+  const countText = document.getElementById('cartCountText');
+  const totalText = document.getElementById('cartTotalText');
 
-      lines.push('----------------------');
-      lines.push(`ملاحظات: ${notes}`);
+  if(!cart || cart.length === 0){
+    badge.style.display = 'none';
+    meta.style.display = 'none';
+    return;
+  }
+  const { total, count } = calcTotals(cart);
+  badge.textContent = count;
+  badge.style.display = 'block';
+  meta.style.display = 'flex';
+  countText.textContent = `السلة: ${count}`;
+  totalText.textContent = `الإجمالي: ${total} ج`;
+}
 
-      const text = encodeURIComponent(lines.join('\n'));
-      const phoneTo = '201034311119'; // عدل الرقم لو تحتاجه
-      window.open(`https://wa.me/${phoneTo}?text=${text}`, '_blank');
-    });
+/* ========== Tabs underline movement ========= */
+const tabsEl = document.getElementById('tabs');
+const underlineEl = document.getElementById('tabsUnderline');
 
-    clearBtn.addEventListener('click', function(){
-      if(!confirm('هل تريد فعلاً إفراغ الحقول؟')) return;
-      document.getElementById('nickname').value = '';
-      document.getElementById('birth-day').value = '';
-      document.getElementById('birth-month').value = '';
-      document.getElementById('birth-year').value = '';
-      document.getElementById('table').value = '';
-      document.getElementById('phone').value = '';
-      document.getElementById('notes').value = '';
-    });
-  })();
+function moveUnderlineToActiveTab(){
+  const active = tabsEl.querySelector('.tab.active');
+  if(!active || !underlineEl) return;
+  const tabsRect = tabsEl.getBoundingClientRect();
+  const rect = active.getBoundingClientRect();
+  const width = Math.max(40, rect.width * 0.9); // underline width
+  // calculate center relative to tabs container
+  const center = (rect.left + rect.right)/2 - tabsRect.left;
+  // set underline width & position (right anchored for rtl layout we compute left offset)
+  underlineEl.style.width = `${width}px`;
+  // place center: convert to percentage; we will set transform to center
+  underlineEl.style.right = `calc(50% - ${center}px)`;
+  underlineEl.style.opacity = '1';
+}
+
+/* ========== TOAST ========= */
+function showToast(text){
+  const t = document.getElementById('toast');
+  t.textContent = text;
+  t.classList.add('show');
+  setTimeout(()=> t.classList.remove('show'), 1200);
+}
+
+/* ========== helpers ========= */
+function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+/* ========== events & init ========= */
+/* Tabs click */
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    renderCategory(btn.dataset.cat);
+  });
+});
+
+/* cart button opens checkout */
+document.getElementById('cartBtn').addEventListener('click', ()=>{ window.location.href = 'checkout.html'; });
+
+/* initial render */
+renderCategory('hot');
+renderCartIcon();
+
+/* set underline after initial paint */
+window.addEventListener('load', () => {
+  moveUnderlineToActiveTab();
+  // recalc on resize
+  window.addEventListener('resize', () => moveUnderlineToActiveTab());
+});
+
+/* expose for popup */
+window.addToCart = addToCart;
+window.clearCart = clearCart;
+window.renderCartIcon = renderCartIcon;
 </script>
 </body>
 </html>
