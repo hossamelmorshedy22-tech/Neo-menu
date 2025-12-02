@@ -1,30 +1,30 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>إتمام الطلب — Neo Café</title>
-  <style>
-    :root{--primary:#125433;--light:#f7f5f1}
-    body{font-family:"Cairo",sans-serif;background:var(--light);margin:0;padding:20px}
-    .container{max-width:760px;margin:20px auto;background:#fff;border-radius:16px;padding:22px;box-shadow:0 6px 30px rgba(0,0,0,0.08)}
-    h2{text-align:center;color:var(--primary);margin:0 0 18px}
-    label{display:block;margin-top:14px;font-weight:700;color:#333}
-    input, select, textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #e0e0e0;margin-top:6px;font-size:15px;box-sizing:border-box}
-    .row{display:flex;gap:10px}
-    .row .col{flex:1}
-    .cart-box{background:#fafafa;border-radius:12px;padding:14px;margin-bottom:14px;border:1px solid #eee}
-    #cart-items{min-height:60px}
-    .cart-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed #eee}
-    .small-btn{padding:8px 12px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer}
-    #send-order{width:100%;padding:14px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-size:18px;margin-top:16px;cursor:pointer}
-    #send-order:active{transform:translateY(1px)}
-    .loyal-wrap{display:none;background:#f6fffa;border:1px solid #d8f3e6;padding:10px;border-radius:10px;margin-top:12px;color:#0a6b3f}
-    .loyal-progress{font-weight:700;margin-top:6px}
-    .footer-note{text-align:center;color:#666;font-size:14px;margin-top:12px}
-    .note-small{font-size:13px;color:#444;margin-top:8px}
-    @media (max-width:520px){ .row{flex-direction:column} }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>إتمام الطلب — Neo Café</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--primary:#125433;--light:#f7f5f1}
+  body{font-family: "Cairo", sans-serif; background:var(--light); margin:0; padding:20px}
+  .container{max-width:760px;margin:20px auto;background:#fff;border-radius:16px;padding:22px;box-shadow:0 6px 30px rgba(0,0,0,0.08)}
+  h2{text-align:center;color:var(--primary);margin:0 0 18px}
+  label{display:block;margin-top:14px;font-weight:700;color:#333}
+  input, select, textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #e0e0e0;margin-top:6px;font-size:15px;box-sizing:border-box}
+  .row{display:flex;gap:10px}
+  .row .col{flex:1}
+  .cart-box{background:#fafafa;border-radius:12px;padding:14px;margin-bottom:14px;border:1px solid #eee}
+  #cart-items{min-height:60px}
+  .cart-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed #eee}
+  .small-btn{padding:8px 12px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer}
+  #send-order{width:100%;padding:14px;border-radius:12px;border:none;background:var(--primary);color:#fff;font-size:18px;margin-top:16px;cursor:pointer}
+  #send-order:active{transform:translateY(1px)}
+  .loyal-wrap{display:none;background:#f6fffa;border:1px solid #d8f3e6;padding:10px;border-radius:10px;margin-top:12px;color:#0a6b3f}
+  .loyal-progress{font-weight:700;margin-top:6px}
+  .footer-note{text-align:center;color:#666;font-size:14px;margin-top:12px}
+  @media (max-width:520px){ .row{flex-direction:column} }
+</style>
 </head>
 <body>
 
@@ -39,6 +39,9 @@
 
   <label>الاسم:</label>
   <input id="cust-name" placeholder="اكتب اسمك هنا">
+
+  <label>اسم الشهرة (اختياري):</label>
+  <input id="cust-nick" placeholder="الاسم اللي تحب الناس تناديك بيه (اختياري)">
 
   <label>تاريخ الميلاد:</label>
   <div class="row">
@@ -68,7 +71,7 @@
     <div style="margin-top:8px">
       <button id="redeem-free" class="small-btn" style="display:none;background:var(--primary);color:#fff;border:none">استبدال مشروب مجّاني</button>
     </div>
-    <div class="note-small">نظام الولاء: كل طلب = نجمة. عند الوصول لـ 5 نجوم تحصل على مشروب مجاني.</div>
+    <div style="margin-top:8px;font-size:13px;color:#444">نظام الولاء: كل طلب = نجمة. عند الوصول لـ 5 نجوم تحصل على مشروب مجاني.</div>
   </div>
 
   <label>ملاحظات إضافية:</label>
@@ -80,7 +83,7 @@
 </div>
 
 <!-- ========================= -->
-<!-- Firebase module (load first) -->
+<!-- Firebase + Firestore module (system uses customers collection keyed by normalized phone) -->
 <!-- ========================= -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
@@ -89,7 +92,6 @@
     getFirestore,
     doc,
     getDoc,
-    setDoc,
     runTransaction
   } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
@@ -103,17 +105,16 @@
     measurementId: "G-BKZPWB7YS6"
   };
 
-  // Initialize Firebase
+  // init firebase
   const app = initializeApp(firebaseConfig);
   const analytics = getAnalytics(app);
   const db = getFirestore(app);
 
-  // Normalize phone helper
+  // helpers
   function normalizePhoneRaw(v){
     if(!v) return '';
     const digits = (''+v).replace(/\D+/g,'');
     if(digits.length === 0) return '';
-    // if starts with country code 20 => convert to 0...
     if(digits.startsWith('20') && digits.length >= 11) return '0' + digits.slice(2);
     if(digits.startsWith('0')) return digits;
     if(digits.length === 10 && digits.startsWith('1')) return '0' + digits;
@@ -195,17 +196,27 @@
 
   // expose minimal API to window
   window._neoFirebase = {
-    normalizePhoneRaw,
     incrementStampOnServer,
     getLoyaltyStatus,
-    redeemOnServer
+    redeemOnServer,
+    normalizePhoneRaw
   };
+
 </script>
 
 <!-- ========================= -->
 <!-- Main app script (cart UI, send, loyalty UI) -->
 <!-- ========================= -->
 <script>
+/* ------------------ clear cart on every page load (الحل الأول) ------------------ */
+(function clearCartAlways(){
+  const keys = ['cart','neo_cart','cartItems','cart_items'];
+  keys.forEach(k=>{
+    try{ localStorage.removeItem(k); }catch(e){}
+    try{ sessionStorage.removeItem(k); }catch(e){}
+  });
+})();
+
 /* -------------- init DOB & tables -------------- */
 (function initSelects(){
   const day = document.getElementById('dob-day');
@@ -214,50 +225,47 @@
   for(let i=1;i<=31;i++) day.appendChild(new Option(i,i));
   for(let i=1;i<=12;i++) month.appendChild(new Option(i,i));
   const yNow = new Date().getFullYear();
-  for(let y=yNow; y>= yNow-100; y--) year.appendChild(new Option(y,y));
+  for(let y=yNow-10; y>= yNow-80; y--) year.appendChild(new Option(y,y));
   const table = document.getElementById('cust-table');
   for(let t=1;t<=10;t++) table.appendChild(new Option(t,t));
 })();
 
 /* -------------- cart functions (load, render, edit) -------------- */
-/* fallback keys used by menu pages */
-const CART_KEYS = ['cart','neo_cart','cartItems','cart_items'];
-
-function readRawCartFromStorage(){
-  // try localStorage keys then sessionStorage keys
-  for(const k of CART_KEYS){
-    try{ const v = localStorage.getItem(k); if(v && v !== 'null') return v; }catch(e){}
-  }
-  for(const k of CART_KEYS){
-    try{ const v = sessionStorage.getItem(k); if(v && v !== 'null') return v; }catch(e){}
-  }
-  return null;
-}
-
-function parseCartRaw(raw){
-  if(!raw) return [];
-  try{
-    let cart = JSON.parse(raw);
-    if(!Array.isArray(cart) && typeof cart === 'object'){
-      if(cart.items && Array.isArray(cart.items)) cart = cart.items;
-      else cart = Object.keys(cart).map(k => cart[k]).filter(Boolean);
-    }
-    return cart;
-  }catch(e){
-    console.warn('parse cart failed', e);
-    return [];
-  }
-}
-
 function loadCart(){
   const list = document.getElementById("cart-items");
   const total = document.getElementById("total");
   if(!list || !total) return;
-  const raw = readRawCartFromStorage();
-  const cart = parseCartRaw(raw);
+
+  // try multiple keys (fallback)
+  const possibleKeys = ['cart','neo_cart','cartItems','cart_items'];
+  let raw = null;
+  for(const k of possibleKeys){
+    const v = localStorage.getItem(k);
+    if(v && v !== 'null'){ raw = v; break; }
+  }
+  if(!raw){
+    for(const k of possibleKeys){
+      const v = sessionStorage.getItem(k);
+      if(v && v !== 'null'){ raw = v; break; }
+    }
+  }
+
+  let cart = [];
+  if(raw){
+    try{
+      cart = JSON.parse(raw);
+      if(!Array.isArray(cart) && typeof cart === 'object'){
+        if(cart.items && Array.isArray(cart.items)) cart = cart.items;
+        else cart = Object.keys(cart).map(k => cart[k]).filter(Boolean);
+      }
+    }catch(e){
+      console.warn('cart parse failed, fallback to []', e);
+      cart = [];
+    }
+  }
+
   list.innerHTML = "";
   let sum = 0;
-
   cart.forEach((item, index) => {
     const qty = Number(item.qty || 1);
     const price = Number(item.price || 0);
@@ -285,70 +293,45 @@ function loadCart(){
     list.innerHTML = '<div style="color:#777;padding:10px">السلة فارغة — أضف منتجات من المنيو</div>';
   }
 
-  // attach listeners (we will edit whichever storage key currently holds the data)
+  // re-attach listeners (simple approach)
   document.querySelectorAll('.cart-plus').forEach(btn=>{
     btn.onclick = ()=>{
       const i = Number(btn.getAttribute('data-index'));
-      modifyStoredCart(cart => {
-        if(!cart[i]) return cart;
-        cart[i].qty = Number(cart[i].qty || 1) + 1;
-        return cart;
-      });
+      const cc = JSON.parse(localStorage.getItem('cart') || '[]');
+      if(!cc[i]) return;
+      cc[i].qty = Number(cc[i].qty||1) + 1;
+      localStorage.setItem("cart", JSON.stringify(cc));
+      loadCart();
     };
   });
   document.querySelectorAll('.cart-minus').forEach(btn=>{
     btn.onclick = ()=>{
       const i = Number(btn.getAttribute('data-index'));
-      modifyStoredCart(cart => {
-        if(!cart[i]) return cart;
-        cart[i].qty = Math.max(1, Number(cart[i].qty || 1) - 1);
-        return cart;
-      });
+      const cc = JSON.parse(localStorage.getItem('cart') || '[]');
+      if(!cc[i]) return;
+      cc[i].qty = Math.max(1, Number(cc[i].qty||1) - 1);
+      localStorage.setItem("cart", JSON.stringify(cc));
+      loadCart();
     };
   });
   document.querySelectorAll('.cart-remove').forEach(btn=>{
     btn.onclick = ()=>{
       const i = Number(btn.getAttribute('data-index'));
-      modifyStoredCart(cart => {
-        if(!cart[i]) return cart;
-        cart.splice(i,1);
-        return cart;
-      });
+      const cc = JSON.parse(localStorage.getItem('cart') || '[]');
+      if(!cc[i]) return;
+      cc.splice(i,1);
+      localStorage.setItem("cart", JSON.stringify(cc));
+      loadCart();
     };
   });
 }
 
-function modifyStoredCart(mutator){
-  // find which storage key actually holds the cart
-  let keyFound = null;
-  let raw = null;
-  for(const k of CART_KEYS){
-    try{ const v = localStorage.getItem(k); if(v && v !== 'null'){ keyFound = {type:'local', key:k}; raw=v; break; } }catch(e){}
-  }
-  if(!raw){
-    for(const k of CART_KEYS){
-      try{ const v = sessionStorage.getItem(k); if(v && v !== 'null'){ keyFound = {type:'session', key:k}; raw=v; break; } }catch(e){}
-    }
-  }
-  // if none found, we'll use localStorage 'cart' as default
-  if(!raw){
-    keyFound = {type:'local', key: 'cart'};
-    raw = '[]';
-  }
-  const cart = parseCartRaw(raw);
-  const updated = mutator(cart) || cart;
-  const json = JSON.stringify(updated);
-  if(keyFound.type === 'local') localStorage.setItem(keyFound.key, json);
-  else sessionStorage.setItem(keyFound.key, json);
-  loadCart();
-}
-
-/* initial load */
+// initial load
 loadCart();
 
 /* -------------- Loyalty UI binding & handlers -------------- */
 
-const DEST_WHATSAPP = '201034311119'; // رقم Neo Cafe (مع كود الدولة); غيّره لو تحب
+const DEST_WHATSAPP = '201034311119'; // رقم Neo Cafe للواتساب
 
 async function showLoyalStatusUI(){
   try{
@@ -357,37 +340,27 @@ async function showLoyalStatusUI(){
     const msg = document.getElementById('loyal-msg');
     const progress = document.getElementById('loyal-progress');
     const redeemBtn = document.getElementById('redeem-free');
-    if(!phoneEl) return;
+    if(!phoneEl || !window._neoFirebase || !window._neoFirebase.normalizePhoneRaw) {
+      if(wrap) wrap.style.display = 'none';
+      return;
+    }
     const raw = phoneEl.value || '';
-    // ensure firebase helper exists (defensive)
-    const fb = window._neoFirebase || {};
-    const norm = (fb.normalizePhoneRaw ? fb.normalizePhoneRaw(raw) : (raw || ''));
+    const norm = window._neoFirebase.normalizePhoneRaw(raw);
     if(!norm){
       if(wrap) wrap.style.display = 'none';
       return;
     }
-    // get status from server
-    if(fb.getLoyaltyStatus){
-      const res = await fb.getLoyaltyStatus(norm);
-      if(!res || !res.ok){
-        if(wrap) wrap.style.display = 'none';
-        return;
-      }
-      const entry = res.entry || { points:0, rewards:0 };
-      if(wrap){
-        wrap.style.display = 'block';
-        if(msg) msg.innerText = `نقاط الولاء: ${entry.points} / 5  — ${entry.rewards > 0 ? 'لديك مشروب مجاني متاح!' : 'لا توجد مشروبات مجانية حالياً'}`;
-        if(progress) progress.innerText = `التقدّم: ${'●'.repeat(entry.points)}${'○'.repeat(Math.max(0,5-entry.points))}`;
-        if(redeemBtn) redeemBtn.style.display = entry.rewards > 0 ? 'inline-block' : 'none';
-      }
-    } else {
-      // if no firebase yet, show placeholder
-      if(wrap){
-        wrap.style.display = 'block';
-        if(msg) msg.innerText = `نقاط الولاء: 0 / 5  — لا توجد مشروبات مجانية حالياً`;
-        if(progress) progress.innerText = `التقدّم: ○○○○○`;
-        if(redeemBtn) redeemBtn.style.display = 'none';
-      }
+    const res = await window._neoFirebase.getLoyaltyStatus(norm);
+    if(!res || !res.ok){
+      if(wrap) wrap.style.display = 'none';
+      return;
+    }
+    const entry = res.entry || { points:0, rewards:0 };
+    if(wrap){
+      wrap.style.display = 'block';
+      if(msg) msg.innerText = `نقاط الولاء: ${entry.points} / 5  — ${entry.rewards > 0 ? 'لديك مشروب مجاني متاح!' : 'لا توجد مشروبات مجانية حالياً'}`;
+      if(progress) progress.innerText = `التقدّم: ${'●'.repeat(entry.points)}${'○'.repeat(Math.max(0,5-entry.points))}`;
+      if(redeemBtn) redeemBtn.style.display = entry.rewards > 0 ? 'inline-block' : 'none';
     }
   }catch(err){
     console.warn('showLoyalStatusUI error', err);
@@ -401,7 +374,6 @@ async function showLoyalStatusUI(){
     if(phoneEl._timer) clearTimeout(phoneEl._timer);
     phoneEl._timer = setTimeout(()=> { showLoyalStatusUI(); }, 300);
   });
-  // initial run
   showLoyalStatusUI();
 })();
 
@@ -413,9 +385,9 @@ async function showLoyalStatusUI(){
   sendBtn.addEventListener('click', async function(e){
     e.preventDefault();
     const name = (document.getElementById('cust-name') || {value:''}).value.trim();
+    const nickname = (document.getElementById('cust-nick') || {value:''}).value.trim();
     const phoneRaw = (document.getElementById('phone') || {value:''}).value.trim();
-    const fb = window._neoFirebase || {};
-    const phone = (fb.normalizePhoneRaw ? fb.normalizePhoneRaw(phoneRaw) : phoneRaw);
+    const phone = window._neoFirebase && window._neoFirebase.normalizePhoneRaw ? window._neoFirebase.normalizePhoneRaw(phoneRaw) : phoneRaw;
     const table = (document.getElementById('cust-table') || {value:''}).value;
     const notes = (document.getElementById('notes') || {value:''}).value.trim();
     const d = document.getElementById('dob-day') ? document.getElementById('dob-day').value : '';
@@ -429,25 +401,47 @@ async function showLoyalStatusUI(){
       return;
     }
 
-    // 1) update loyalty atomically on server if function exists
-    if(fb.incrementStampOnServer){
+    // 1) update loyalty atomically (if firebase available)
+    if(window._neoFirebase && window._neoFirebase.incrementStampOnServer){
       try{
-        const inc = await fb.incrementStampOnServer(phone);
+        const inc = await window._neoFirebase.incrementStampOnServer(phone);
         if(inc && inc.ok && inc.reward){
           alert(inc.congratMsg || '🎉 انت من عملاء نيو كافيه المميزين — كسبت مشروب مجاني 💚');
         }
-      }catch(err){
-        console.warn('incrementStampOnServer error', err);
+      }catch(e){
+        console.warn('increment failed', e);
       }
     }
 
-    // 2) read cart and build message
-    const raw = readRawCartFromStorage();
-    const cart = parseCartRaw(raw);
+    // 2) build message lines
+    const possibleKeys = ['cart','neo_cart','cartItems','cart_items'];
+    let raw = null;
+    for(const k of possibleKeys){
+      const v = localStorage.getItem(k);
+      if(v && v !== 'null'){ raw = v; break; }
+    }
+    if(!raw){
+      for(const k of possibleKeys){
+        const v = sessionStorage.getItem(k);
+        if(v && v !== 'null'){ raw = v; break; }
+      }
+    }
+    let cart = [];
+    if(raw){
+      try{
+        cart = JSON.parse(raw);
+        if(!Array.isArray(cart) && typeof cart === 'object'){
+          if(cart.items && Array.isArray(cart.items)) cart = cart.items;
+          else cart = Object.keys(cart).map(k => cart[k]).filter(Boolean);
+        }
+      }catch(e){ cart = []; }
+    }
+
     let lines = [];
     lines.push(`طلب جديد من Neo Café`);
     lines.push(`------------------------`);
     lines.push(`الاسم: ${name || '-'}`);
+    if(nickname) lines.push(`اسم الشهرة: ${nickname}`);
     lines.push(`تاريخ الميلاد: ${dob}`);
     lines.push(`رقم الطاولة: ${table || '-'}`);
     lines.push(`رقم الموبايل: ${phone}`);
@@ -465,19 +459,17 @@ async function showLoyalStatusUI(){
     }
     lines.push(`------------------------`);
     if(notes) lines.push(`ملاحظات: ${notes}`);
-
-    // get latest loyalty snapshot to include in message
-    if(fb.getLoyaltyStatus){
+    // loyalty snapshot
+    if(window._neoFirebase && window._neoFirebase.getLoyaltyStatus){
       try{
-        const st = await fb.getLoyaltyStatus(phone);
+        const st = await window._neoFirebase.getLoyaltyStatus(phone);
         if(st && st.ok){
           const e = st.entry || { points:0, rewards:0 };
           lines.push(`------------------------`);
           lines.push(`حالة الولاء: ${e.points}/5 ، جوائز متاحة: ${e.rewards}`);
         }
-      }catch(err){ console.warn('getLoyaltyStatus error', err); }
+      }catch(e){ /* ignore */ }
     }
-
     lines.push('');
     lines.push(`شكراً لاختيارك Neo Café — Make It NEO Time`);
 
@@ -495,11 +487,9 @@ async function showLoyalStatusUI(){
   if(!redeemBtn) return;
   redeemBtn.addEventListener('click', async function(){
     const phone = (document.getElementById('phone')||{value:''}).value.trim();
-    const fb = window._neoFirebase || {};
-    const norm = (fb.normalizePhoneRaw ? fb.normalizePhoneRaw(phone) : phone);
+    const norm = window._neoFirebase && window._neoFirebase.normalizePhoneRaw ? window._neoFirebase.normalizePhoneRaw(phone) : phone;
     if(!norm){ alert('من فضلك اكتب رقم الموبايل أولاً'); return; }
-    if(!fb.getLoyaltyStatus){ alert('نظام الولاء غير متاح حالياً'); return; }
-    const s = await fb.getLoyaltyStatus(norm);
+    const s = await window._neoFirebase.getLoyaltyStatus(norm);
     if(!s.ok){ alert('حصل خطأ حاول مرة تانية'); return; }
     if((s.entry && s.entry.rewards || 0) <= 0){ alert('معندكش مشروب مجاني الآن'); return; }
     // pick via prompt (simple) - needs window.items array (menu)
@@ -511,14 +501,11 @@ async function showLoyalStatusUI(){
     if(isNaN(idx) || idx < 0 || idx >= menu.length){ alert('اختيار غير صالح'); return; }
     const chosen = menu[idx];
     // redeem on server
-    if(fb.redeemOnServer){
-      const res = await fb.redeemOnServer(norm);
-      if(!res.ok){ alert('فشل الاستبدال'); return; }
-    }
-    const cc = parseCartRaw(readRawCartFromStorage() || '[]');
-    cc.push({ name: chosen.name + ' (مجاني)', price: 0, qty: 1, img: chosen.img || '', free:true });
-    // save to localStorage default key 'cart'
-    localStorage.setItem('cart', JSON.stringify(cc));
+    const res = await window._neoFirebase.redeemOnServer(norm);
+    if(!res.ok){ alert('فشل الاستبدال'); return; }
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    cart.push({ name: chosen.name + ' (مجاني)', price: 0, qty: 1, img: chosen.img || '', free:true });
+    localStorage.setItem('cart', JSON.stringify(cart));
     loadCart();
     showLoyalStatusUI();
     alert(`تم إضافة ${chosen.name} مجانًا إلى السلة.`);
