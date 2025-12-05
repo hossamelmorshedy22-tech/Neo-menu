@@ -70,62 +70,23 @@
   .btn-primary:hover{ transform:translateY(-3px); }
 
   /* CART AREA - more visible */
-  /* container for both icon + pill */
   .cart-float{ position:fixed; right:18px; bottom:18px; display:flex; align-items:center; gap:10px; z-index:99999; pointer-events:auto; }
-  /* big icon */
   .cart-btn{ width:74px; height:74px; border-radius:16px; background:linear-gradient(180deg,var(--neo-olive),var(--neo-olive-2)); display:flex; align-items:center; justify-content:center; box-shadow:0 26px 60px rgba(47,93,58,0.2); cursor:pointer; transition:transform .18s ease, box-shadow .18s ease; position:relative; }
   .cart-btn:hover{ transform:translateY(-6px); box-shadow:0 36px 80px rgba(47,93,58,0.26); }
-  /* badge */
   .cart-badge{ position:absolute; top:-8px; left:-8px; min-width:26px; height:26px; line-height:26px; border-radius:999px; background:#ffeb3b; color:#111; font-weight:900; text-align:center; font-size:13px; box-shadow:0 8px 20px rgba(0,0,0,0.15); display:none; }
-  /* pulse ring when new item added */
-  .pulse-ring{
-    position:absolute;
-    width:94px; height:94px; border-radius:20px; right:-10px; bottom:-10px; z-index:-1;
-    background: radial-gradient(circle at center, rgba(63,111,69,0.18) 0%, rgba(63,111,69,0.05) 30%, rgba(63,111,69,0) 60%);
-    opacity:0; transform:scale(.9);
-    transition:opacity .18s ease, transform .35s cubic-bezier(.2,.85,.25,1);
-    pointer-events:none;
-  }
+  .pulse-ring{ position:absolute; width:94px; height:94px; border-radius:20px; right:-10px; bottom:-10px; z-index:-1; background: radial-gradient(circle at center, rgba(63,111,69,0.18) 0%, rgba(63,111,69,0.05) 30%, rgba(63,111,69,0) 60%); opacity:0; transform:scale(.9); transition:opacity .18s ease, transform .35s cubic-bezier(.2,.85,.25,1); pointer-events:none; }
   .pulse-ring.show{ opacity:1; transform:scale(1.05); animation: pulse 900ms ease-out; }
   @keyframes pulse{ 0%{ transform:scale(.95); opacity:.9 } 70%{ transform:scale(1.12); opacity:.35 } 100%{ transform:scale(1.3); opacity:0 } }
-
-  /* pill with text (open cart) - very visible */
-  .cart-pill{
-    background:linear-gradient(90deg,var(--neo-olive),var(--neo-olive-2));
-    color:#fff;
-    padding:10px 14px;
-    border-radius:999px;
-    font-weight:800;
-    box-shadow:0 18px 40px rgba(47,93,58,0.18);
-    display:flex;
-    gap:10px;
-    align-items:center;
-    cursor:pointer;
-    transform-origin:right bottom;
-    transition: transform .16s ease;
-  }
+  .cart-pill{ background:linear-gradient(90deg,var(--neo-olive),var(--neo-olive-2)); color:#fff; padding:10px 14px; border-radius:999px; font-weight:800; box-shadow:0 18px 40px rgba(47,93,58,0.18); display:flex; gap:10px; align-items:center; cursor:pointer; transform-origin:right bottom; transition: transform .16s ease; }
   .cart-pill:hover{ transform:translateY(-4px); }
   .pill-total{ font-weight:900; font-size:15px; background:rgba(255,255,255,0.12); padding:6px 8px; border-radius:8px; }
-
-  /* mobile: make pill slightly bigger and centered if wide screen small */
-  @media(max-width:520px){
-    .cart-pill{ padding:12px 16px; font-size:15px }
-    .cart-btn{ width:64px; height:64px }
-  }
-
-  /* tooltip small */
+  @media(max-width:520px){ .cart-pill{ padding:12px 16px; font-size:15px } .cart-btn{ width:64px; height:64px } }
   .cart-tooltip{ position:absolute; bottom:86px; right:0; background:#111; color:#fff; padding:8px 10px; border-radius:8px; font-size:13px; opacity:0; transform:translateY(6px); transition:opacity .14s ease, transform .14s ease; pointer-events:none; white-space:nowrap; }
   .cart-float.show-tooltip .cart-tooltip{ opacity:1; transform:translateY(0); }
-
-  /* small empty state text */
   .empty-hint{ font-size:12px; color:#666; margin-top:6px; text-align:center; }
-
-  /* footer social reuse */
   footer{ text-align:center; margin-top:40px; padding:20px 10px; color:var(--muted); }
   .socials{ display:flex; justify-content:center; gap:10px; margin-top:12px; }
   .socials a{ background:#fff; padding:8px 14px; border-radius:10px; box-shadow:var(--shadow); color:var(--neo-olive-2); font-weight:700; }
-
-  /* toast */
   .toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:110px; background:#111; color:#fff; padding:10px 14px; border-radius:10px; opacity:0; transition:opacity .18s ease; z-index:2000; }
   .toast.show{ opacity:1 }
 </style>
@@ -143,10 +104,12 @@
 <div class="container">
   <div class="tabs-wrap">
     <div class="tabs" id="tabs" role="tablist" aria-label="أقسام المنيو">
-      <button class="tab active" data-cat="hot" role="tab" aria-selected="true">مشروبات ساخنة</button>
+      <!-- new order of tabs: الكل ، مشروبات باردة ، مشروبات ساخنة ، أطباق ديزيرت ، مميز نيو -->
+      <button class="tab active" data-cat="all" role="tab" aria-selected="true">الكل</button>
       <button class="tab" data-cat="cold" role="tab">مشروبات باردة</button>
-      <button class="tab" data-cat="bakery" role="tab">مخبوزات</button>
-      <button class="tab" data-cat="dessert" role="tab">حلويات</button>
+      <button class="tab" data-cat="hot" role="tab">مشروبات ساخنة</button>
+      <button class="tab" data-cat="dessert_dishes" role="tab">أطباق ديزيرت</button>
+      <button class="tab" data-cat="special" role="tab">مميز نيو</button>
     </div>
     <div class="tabs-underline" id="tabsUnderline" aria-hidden="true"></div>
   </div>
@@ -168,7 +131,6 @@
   <div class="cart-tooltip" id="cartTooltip">اضغط لعرض السلة</div>
 
   <button id="cartBtn" class="cart-btn" aria-label="الانتقال للسلة" title="الانتقال للسلة">
-    <!-- cart SVG -->
     <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
       <path d="M6 6H21L20 12H8L6 6Z" stroke="#fff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M7 18C7.552 18 8 17.552 8 17C8 16.448 7.552 16 7 16C6.448 16 6 16.448 6 17C6 17.552 6.448 18 7 18Z" fill="#fff"/>
@@ -194,19 +156,26 @@
 
 <script>
 /* ========== MENU DATA ========== */
+/* added "cat" values: hot, cold, dessert_dishes, bakery (kept for compatibility), special */
 const MENU = [
   {id:'hot1',cat:'hot',name:'لاتيه كلاسيك',price:45,desc:'رغوة ناعمة وقوام كريمي',image:'https://via.placeholder.com/400x300?text=Latte'},
   {id:'hot2',cat:'hot',name:'كابتشينو',price:50,desc:'اسبريسو وقشدة خفيفة',image:'https://via.placeholder.com/400x300?text=Cappuccino'},
   {id:'hot3',cat:'hot',name:'موكا شوكولاتة',price:60,desc:'قهوة ومزيج شوكولاتة غني',image:'https://via.placeholder.com/400x300?text=Mocha'},
+
   {id:'cold1',cat:'cold',name:'آيس لاتيه',price:55,desc:'لاتيه بارد منعش',image:'https://via.placeholder.com/400x300?text=Iced+Latte'},
   {id:'cold2',cat:'cold',name:'فرابتشينو فانيلا',price:65,desc:'مخفوق مثلّج كريم',image:'https://via.placeholder.com/400x300?text=Frappe'},
   {id:'cold3',cat:'cold',name:'ليمون نعناع',price:40,desc:'انتعاش طبيعي',image:'https://via.placeholder.com/400x300?text=Mint+Lemon'},
+
+  {id:'dess1',cat:'dessert_dishes',name:'تشيز كيك بالأحمر',price:55,desc:'تشيز كيك كريمي مع صوص فراولة',image:'https://via.placeholder.com/400x300?text=Cheesecake'},
+  {id:'dess2',cat:'dessert_dishes',name:'براوني بالشوكولاتة',price:45,desc:'براوني طري غني',image:'https://via.placeholder.com/400x300?text=Brownie'},
+  {id:'dess3',cat:'dessert_dishes',name:'بان كيك بالعسل',price:40,desc:'بان كيك سميك مع عسل طبيعي',image:'https://via.placeholder.com/400x300?text=Pancake'},
+
   {id:'bak1',cat:'bakery',name:'كرواسون زبدة',price:25,desc:'كرواسون طازج',image:'https://via.placeholder.com/400x300?text=Croissant'},
-  {id:'bak2',cat:'bakery',name:'سندوتش جبنة',price:30,desc:'سندوتش خفيف',image:'https://via.placeholder.com/400x300?text=Sandwich'},
+  {id:'bak2',cat:'bakery',name:'ساندوتش جبنة',price:30,desc:'سندوتش طازج',image:'https://via.placeholder.com/400x300?text=Sandwich'},
   {id:'bak3',cat:'bakery',name:'بريوش بالعسل',price:35,desc:'بريوش ناعم بالعسل',image:'https://via.placeholder.com/400x300?text=Brioche'},
-  {id:'des1',cat:'dessert',name:'تشيز كيك',price:55,desc:'تشيز كيك بصوص الفراولة',image:'https://via.placeholder.com/400x300?text=Cheesecake'},
-  {id:'des2',cat:'dessert',name:'براوني شوكولاتة',price:45,desc:'براوني طري ومركز',image:'https://via.placeholder.com/400x300?text=Brownie'},
-  {id:'des3',cat:'dessert',name:'بان كيك بالعسل',price:40,desc:'بان كيك سميك',image:'https://via.placeholder.com/400x300?text=Pancake'},
+
+  {id:'spec1',cat:'special',name:'نيو سبشل آيس',price:75,desc:'مشروب خاص من نيو بكريمة ونكهات',image:'https://via.placeholder.com/400x300?text=Neo+Special'},
+  {id:'spec2',cat:'special',name:'حلوى نيو الخاصة',price:95,desc:'أطباق ديزيرت مميزة من الشيف',image:'https://via.placeholder.com/400x300?text=Neo+Dessert'},
 ];
 
 /* ========== STORAGE ========== */
@@ -246,15 +215,11 @@ function renderCartUI(wasAdded=false){
   pillTotal.textContent = `${total} ج`;
   cartPill.style.display = 'flex';
   cartTooltip.textContent = 'اضغط لعرض السلة';
-  // show tooltip briefly on add
   if(wasAdded){
-    // pulse effect
     pulseRing.classList.remove('show');
     void pulseRing.offsetWidth;
     pulseRing.classList.add('show');
-    // small bounce on icon
     cartBtn.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-8px)' }, { transform: 'translateY(0)' }], { duration: 420, easing: 'cubic-bezier(.2,.85,.25,1)' });
-    // flash the pill
     cartPill.animate([{ transform:'translateY(0)' }, { transform:'translateY(-6px)' }, { transform:'translateY(0)' }], { duration:380 });
   }
 }
@@ -265,8 +230,6 @@ renderCartUI();
 /* cart interactions */
 cartBtn.addEventListener('click', ()=> window.location.href = 'checkout.html');
 cartPill.addEventListener('click', ()=> window.location.href = 'checkout.html');
-
-/* tooltip on hover/touch */
 cartFloat.addEventListener('mouseenter', ()=> cartFloat.classList.add('show-tooltip'));
 cartFloat.addEventListener('mouseleave', ()=> cartFloat.classList.remove('show-tooltip'));
 cartFloat.addEventListener('touchstart', ()=> { cartFloat.classList.add('show-tooltip'); setTimeout(()=>cartFloat.classList.remove('show-tooltip'),1200); });
@@ -291,18 +254,38 @@ function createCard(item, idx){
   return el;
 }
 
+/* render category: special handling for 'all' */
 function renderCategory(cat){
   const content = document.getElementById('content');
   content.innerHTML = '';
   const title = document.createElement('div');
   title.className = 'section-title';
-  title.textContent = ({hot:'مشروبات ساخنة', cold:'مشروبات باردة', bakery:'مخبوزات', dessert:'حلويات'})[cat] || cat;
-  content.appendChild(title);
 
+  let itemsToShow = [];
+  if(cat === 'all'){
+    title.textContent = 'كل المنتجات';
+    itemsToShow = MENU.slice();
+  } else if(cat === 'cold'){
+    title.textContent = 'مشروبات باردة';
+    itemsToShow = MENU.filter(i => i.cat === 'cold');
+  } else if(cat === 'hot'){
+    title.textContent = 'مشروبات ساخنة';
+    itemsToShow = MENU.filter(i => i.cat === 'hot');
+  } else if(cat === 'dessert_dishes'){
+    title.textContent = 'أطباق ديزيرت';
+    itemsToShow = MENU.filter(i => i.cat === 'dessert_dishes' || i.cat === 'dessert' );
+  } else if(cat === 'special'){
+    title.textContent = 'مميز نيو';
+    itemsToShow = MENU.filter(i => i.cat === 'special');
+  } else {
+    title.textContent = cat;
+    itemsToShow = MENU.filter(i => i.cat === cat);
+  }
+
+  content.appendChild(title);
   const grid = document.createElement('div');
   grid.className = 'grid';
-  const items = MENU.filter(i => i.cat === cat);
-  items.forEach((it, idx) => grid.appendChild(createCard(it, idx)));
+  itemsToShow.forEach((it, idx) => grid.appendChild(createCard(it, idx)));
   content.appendChild(grid);
 
   requestAnimationFrame(() => moveUnderlineToActiveTab());
@@ -328,6 +311,11 @@ function addToCart(item){
   saveCart(cart);
   showToast(`${item.name} اتضاف للسلة ✔`);
 }
+
+/* helper storage functions (used earlier) */
+function loadCart(){ try{ const r = localStorage.getItem(CART_KEY); return r ? JSON.parse(r) : []; } catch(e){ return []; } }
+function saveCart(cart){ try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); renderCartUI(true); } catch(e){ console.error(e); } }
+function clearCart(){ if(!confirm('تفريغ السلة؟')) return; localStorage.removeItem(CART_KEY); renderCartUI(); }
 
 /* ========== toast ========= */
 function showToast(text){
@@ -363,7 +351,7 @@ document.querySelectorAll('.tab').forEach(btn=>{
 });
 
 /* init */
-renderCategory('hot');
+renderCategory('all');
 renderCartUI();
 
 /* expose for popup windows */
