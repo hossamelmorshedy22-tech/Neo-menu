@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>نيو كافية منيو - NEO CAFÉ</title>
+<title>نيو كافية  - NEO CAFÉ</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
@@ -43,7 +43,7 @@ img{max-width:100%;display:block}
 .section-title{font-size:18px;font-weight:800;color:var(--neo-green-2);margin:10px 0;text-align:right}
 
 /* product grid - mobile first: single column */
-.grid{display:grid;grid-template-columns:1fr;gap:12px;padding-bottom:120px}
+.grid{display:grid;grid-template-columns:1fr;gap:12px;padding-bottom:140px}
 .card{background:#fff;border-radius:14px;padding:12px;display:flex;gap:12px;align-items:center;box-shadow:var(--shadow);transition:transform .18s ease;overflow:visible}
 .card:active{transform:translateY(2px)}
 .thumb{width:96px;height:76px;border-radius:10px;background:#efefef;flex-shrink:0;object-fit:cover}
@@ -54,7 +54,7 @@ img{max-width:100%;display:block}
   overflow:visible;
   text-overflow:unset;
   display:block;
-  line-height:1.3;
+  line-height:1.25;
   font-size:17px;
   font-weight:800;
   color:var(--neo-green);
@@ -69,6 +69,34 @@ img{max-width:100%;display:block}
 .btn{padding:8px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:800;font-size:14px}
 .btn-outline{background:#fff;border:1px solid #eee;color:#444}
 .btn-primary{background:var(--neo-green);color:#fff;box-shadow:0 8px 20px rgba(18,77,51,0.12)}
+
+/* toast */
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:120px;background:rgba(0,0,0,0.86);color:#fff;padding:10px 14px;border-radius:10px;font-weight:700;z-index:2147483647;opacity:0;transition:opacity .18s}
+
+/* custom confirm modal */
+#neoConfirm {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2147483650;
+  background: rgba(0,0,0,0.35);
+}
+#neoConfirm .box {
+  background: #fff;
+  padding: 14px;
+  border-radius: 12px;
+  max-width: 320px;
+  width: calc(100% - 40px);
+  text-align: center;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.25);
+}
+#neoConfirm .box p{ margin: 8px 0 16px; font-weight:700; color:#222}
+#neoConfirm .box .row{ display:flex; gap:8px; justify-content:center }
+#neoConfirm button{ padding:10px 12px; border-radius:10px; border:0; font-weight:800; cursor:pointer }
+#neoConfirm .ok{ background:var(--neo-green); color:#fff }
+#neoConfirm .cancel{ background:#eee; color:#111 }
 
 /* cart floating (visible) */
 .cart-float{
@@ -180,6 +208,20 @@ img{max-width:100%;display:block}
   </footer>
 </main>
 
+<!-- toast element -->
+<div id="toast" aria-hidden="true"></div>
+
+<!-- Custom confirm modal -->
+<div id="neoConfirm" aria-hidden="true">
+  <div class="box" role="dialog" aria-modal="true">
+    <p id="neoConfirmText">هل أنت متأكد؟</p>
+    <div class="row">
+      <button class="ok" id="neoConfirmOk">نعم</button>
+      <button class="cancel" id="neoConfirmCancel">الغاء</button>
+    </div>
+  </div>
+</div>
+
 <!-- CART FLOAT -->
 <div id="cartFloat" class="cart-float" aria-live="polite">
   <button id="cartBtn" class="cart-btn" title="عرض السلة" aria-label="عرض السلة">
@@ -215,7 +257,7 @@ img{max-width:100%;display:block}
 
 <script>
 /* =========================
-   MENU DATA (كل الأصناف)
+   MENU DATA (شملت كل الأصناف + مشروبات طاقة وشويبس ومبردات جاهزة)
    ========================= */
 const MENU = [
   /* مشروبات ساخنة */
@@ -313,10 +355,24 @@ const MENU = [
   {id:'d8', cat:'dessert_dishes', name:'تشيز كيك', price:75},
   {id:'d9', cat:'dessert_dishes', name:'شوكليت كيك', price:75},
 
-  /* سوفت درينك (محدثة) */
+  /* سوفت درينك (محدثة مع طاقة وشويبس ومشروبات مبردة جاهزة) */
   {id:'sdx1',cat:'soft', name:'V-Cola Soda', price:30},
   {id:'sdx2',cat:'soft', name:'V-Cola Cola', price:30},
   {id:'sdx3',cat:'soft', name:'V-Cola Diet', price:30},
+
+  /* energy + ready cold bottled drinks */
+  {id:'e1', cat:'soft', name:'ريد بول (Red Bull)', price:65},
+  {id:'e2', cat:'soft', name:'توست / تويست (Twist)', price:30},
+  {id:'e3', cat:'soft', name:'شويبس - Schweppes', price:28},
+  {id:'e4', cat:'soft', name:'بيبسي (زجاجة)', price:30},
+  {id:'e5', cat:'soft', name:'كوكاكولا (زجاجة)', price:30},
+  {id:'e6', cat:'soft', name:'سبرايت (زجاجة)', price:30},
+  {id:'e7', cat:'soft', name:'فانتا (زجاجة)', price:30},
+  {id:'e8', cat:'soft', name:'مياه معدنية صغيرة', price:12},
+  {id:'e9', cat:'soft', name:'مياه معدنية كبيرة', price:18},
+  {id:'e10',cat:'soft', name:'عصير معبأ (برتقال)', price:28},
+  {id:'e11',cat:'soft', name:'عصير معبأ (تفاح)', price:28},
+  {id:'e12',cat:'soft', name:'ماتشا بارد جاهز', price:65},
 
   /* مميز نيو */
   {id:'sp1',cat:'special', name:'بطاطا فواكه ومكسرات وعسل', price:65},
@@ -327,7 +383,7 @@ const MENU = [
 /* CART key */
 const CART_KEY = 'neoCafe_cart_v1';
 
-/* per user request: clear cart on each page load (like fresh for every visit) */
+/* per user request: clear cart on each page load (fresh) */
 try{ localStorage.removeItem(CART_KEY); } catch(e){ console.warn(e); }
 
 /* helpers */
@@ -339,10 +395,40 @@ function setCartSilent(cart){ try{ localStorage.setItem(CART_KEY, JSON.stringify
 const content = document.getElementById('content');
 function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
 
+/* safe-add locking map to prevent rapid clicks */
+const addLock = new Map();
+
+function safeAddToCart(item){
+  const now = Date.now();
+  const last = addLock.get(item.id) || 0;
+  if(now - last < 600) return; // ignore quick repeat
+  addLock.set(item.id, now);
+  addToCartImmediate(item);
+  setTimeout(()=> addLock.delete(item.id), 700);
+}
+
+function addToCartImmediate(item){
+  const cart = loadCart();
+  const existing = cart.find(i=>i.id === item.id);
+  if(existing) existing.qty = Number(existing.qty) + 1;
+  else cart.push({...item, qty:1});
+  saveCart(cart);
+  renderCartModal();
+  showToast(`${item.name} اتضاف للسلة ✔`);
+}
+
+function safeAddToCartFromBtn(e, itemJson){
+  let item;
+  try{ item = JSON.parse(itemJson); } catch(err){ console.error(err); return; }
+  safeAddToCart(item);
+}
+
+/* create card uses safeAddToCartFromBtn inline */
 function createCard(item, idx){
   const el = document.createElement('div');
   el.className = 'card';
   el.style.animationDelay = `${idx * 20}ms`;
+  const itemJson = JSON.stringify(item).replaceAll("'", "\\'");
   el.innerHTML = `
     <img class="thumb" src="https://via.placeholder.com/400x300?text=${encodeURIComponent(item.name)}" alt="${escapeHtml(item.name)}">
     <div class="meta">
@@ -352,7 +438,7 @@ function createCard(item, idx){
         <div class="price">${item.price} ج</div>
         <div class="actions">
           <button class="btn btn-outline" onclick='viewDetails("${item.id}")'>عرض</button>
-          <button class="btn btn-primary" onclick='addToCart(${JSON.stringify(item).replaceAll("'", "\\'")})'>أضف للسلة</button>
+          <button class="btn btn-primary" onclick='safeAddToCartFromBtn(event, "${itemJson}")'>أضف للسلة</button>
         </div>
       </div>
     </div>
@@ -375,11 +461,11 @@ function renderCategory(cat){
   if(cat==='all') document.getElementById('tabAllBtn').classList.add('active'); else document.getElementById('tabAllBtn').classList.remove('active');
 }
 
-/* details */
+/* details replaced with toast (no alert) */
 function viewDetails(id){
   const item = MENU.find(i=>i.id===id);
-  if(!item) return alert('المنتج غير موجود');
-  alert(`${item.name}\nالسعر: ${item.price} ج`);
+  if(!item) return showToast('المنتج غير موجود');
+  showToast(`${item.name} — ${item.price} ج`);
 }
 
 /* CART UI */
@@ -416,23 +502,14 @@ function renderCartUI(wasAdded=false){
   }
 }
 
-/* addToCart called from buttons */
-function addToCart(item){
-  const cart = loadCart();
-  const existing = cart.find(i=>i.id === item.id);
-  if(existing) existing.qty = Number(existing.qty) + 1;
-  else cart.push({...item, qty:1});
-  saveCart(cart);
-  renderCartModal();
-  showToast(`${item.name} اتضاف للسلة ✔`);
-}
+/* addToCart called from buttons -> safeAddToCartFromBtn wrapper used */
 
 /* toast */
 function showToast(text){
-  let t = document.getElementById('toast');
-  if(!t){ t = document.createElement('div'); t.id='toast'; t.style.position='fixed'; t.style.left='50%'; t.style.transform='translateX(-50%)'; t.style.bottom='140px'; t.style.background='#111'; t.style.color='#fff'; t.style.padding='10px 14px'; t.style.borderRadius='10px'; t.style.zIndex=2147483647; t.style.opacity='0'; t.style.transition='opacity .18s'; document.body.appendChild(t); }
-  t.textContent = text; t.style.opacity = '1';
-  setTimeout(()=>{ t.style.opacity='0'; }, 1100);
+  const t = document.getElementById('toast');
+  t.textContent = text;
+  t.style.opacity = '1';
+  clearTimeout(t._h); t._h = setTimeout(()=>{ t.style.opacity = '0'; }, 1200);
 }
 
 /* render modal items */
@@ -514,7 +591,50 @@ function closeCartModal(){ cartModal.classList.remove('show'); cartModal.setAttr
 
 cartBtn.addEventListener('click', ()=> openCartModal() );
 closeCartBtn.addEventListener('click', ()=> closeCartModal() );
-clearCartBtn.addEventListener('click', ()=> { if(!confirm('تفريغ السلة؟')) return; localStorage.removeItem(CART_KEY); renderCartUI(); renderCartModal(); });
+
+/* custom confirm modal usage for clearing cart */
+const neoConfirm = document.getElementById('neoConfirm');
+const neoConfirmText = document.getElementById('neoConfirmText');
+const neoConfirmOk = document.getElementById('neoConfirmOk');
+const neoConfirmCancel = document.getElementById('neoConfirmCancel');
+
+function showNeoConfirm(message, callback){
+  neoConfirmText.textContent = message || 'هل تريد المتابعة؟';
+  neoConfirm.style.display = 'flex';
+  neoConfirm.setAttribute('aria-hidden','false');
+
+  function cleanup(){
+    neoConfirm.style.display = 'none';
+    neoConfirm.setAttribute('aria-hidden','true');
+    neoConfirmOk.removeEventListener('click', onOk);
+    neoConfirmCancel.removeEventListener('click', onCancel);
+  }
+  function onOk(){
+    cleanup();
+    callback(true);
+  }
+  function onCancel(){
+    cleanup();
+    callback(false);
+  }
+  neoConfirmOk.addEventListener('click', onOk);
+  neoConfirmCancel.addEventListener('click', onCancel);
+}
+
+if(clearCartBtn){
+  clearCartBtn.onclick = function(e){
+    showNeoConfirm('تفريغ السلة؟', function(confirmed){
+      if(confirmed){
+        localStorage.removeItem(CART_KEY);
+        renderCartUI();
+        renderCartModal();
+        showToast('تم تفريغ السلة');
+      }
+    });
+  };
+}
+
+/* checkout button */
 checkoutNowBtn.addEventListener('click', ()=> { window.location.href = 'checkout.html'; });
 
 /* click outside to close */
@@ -529,24 +649,8 @@ window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeCartModal(
 renderCategory('all');
 renderCartUI(false);
 
-/* expose addToCart for inline onclick */
-window.addToCart = addToCart;
-
-/* tabs handlers */
-document.querySelectorAll('.tab').forEach(btn=>{
-  btn.addEventListener('click', ()=>{
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    btn.classList.add('active');
-    renderCategory(btn.dataset.cat);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-});
-document.getElementById('tabAllBtn').addEventListener('click', ()=>{
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('tabAllBtn').classList.add('active');
-  renderCategory('all');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
+/* expose safeAddToCart for console/other uses */
+window.safeAddToCart = safeAddToCart;
 
 /* listen storage events for multi-tab sync (optional) */
 window.addEventListener('storage', (e)=>{ if(e.key === CART_KEY) renderCartUI(); });
