@@ -2,9 +2,10 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>نيو كافية منيو - NEO CAFÉ</title>
 
+<!-- خطوط -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
 <style>
@@ -17,68 +18,73 @@
     --shadow: 0 12px 30px rgba(15,40,25,0.06);
     --radius:12px;
   }
+
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:var(--neo-beige);font-family:"Cairo","Poppins",system-ui,Segoe UI,Roboto,Arial;color:#111;-webkit-font-smoothing:antialiased}
+  html,body{margin:0;padding:0;height:100%;background:var(--neo-beige);font-family:"Cairo","Poppins",system-ui,Segoe UI,Roboto,Arial;color:#111;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
   a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  body{overflow-x:hidden}
 
-  /* header */
-  header{padding:22px 16px 6px;text-align:center;position:relative}
-  .logo{position:absolute;top:12px;right:12px;width:78px;height:auto;object-fit:contain}
+  /* Header */
+  header{padding:20px 16px 6px;text-align:center;position:relative}
+  .logo{position:absolute;top:10px;right:10px;width:110px;height:auto;object-fit:contain}
+  @media(max-width:520px){ .logo{width:90px;top:8px;right:8px} }
   .title{margin:0;font-size:22px;color:var(--neo-green);font-weight:700}
-  .tag{margin-top:6px;color:var(--neo-green-2);font-weight:600;font-family:"Poppins",sans-serif}
+  .subtitle{margin-top:6px;color:var(--neo-green-2);font-weight:600;font-family:"Poppins",sans-serif}
 
-  /* tabs - single line (no wrap) */
-  .tabs-wrap{padding:12px 0;display:flex;justify-content:center}
-  .tabs{display:flex;gap:10px;flex-wrap:nowrap;overflow-x:auto;padding:8px 12px;align-items:center;max-width:1100px}
-  .tab{flex:0 0 auto;padding:9px 16px;border-radius:999px;background:var(--neo-cream);border:1px solid rgba(18,77,51,0.06);color:var(--neo-green-2);font-weight:700;cursor:pointer;white-space:nowrap;transition:transform .15s,box-shadow .15s}
-  .tab:hover{transform:translateY(-6px);box-shadow:0 10px 26px rgba(18,77,51,0.06)}
-  .tab.active{background:linear-gradient(180deg,var(--neo-green),var(--neo-green-2));color:#fff;box-shadow:0 16px 44px rgba(18,77,51,0.12)}
+  /* Tabs */
+  .tabs-area{padding:10px 12px;display:flex;flex-direction:column;align-items:center;gap:8px}
+  .tab-all-wrap{display:flex;justify-content:center;width:100%}
+  .tab-all{background:var(--neo-green);color:#fff;padding:10px 20px;border-radius:999px;font-weight:800;border:none;cursor:pointer;box-shadow:0 14px 36px rgba(18,77,51,0.14)}
+  .tabs-row{display:flex;gap:10px;flex-wrap:nowrap;overflow-x:auto;padding:8px 6px;justify-content:center;width:100%}
+  .tab{flex:0 0 auto;padding:8px 14px;border-radius:999px;background:var(--neo-cream);border:1px solid rgba(18,77,51,0.06);color:var(--neo-green-2);font-weight:700;cursor:pointer;white-space:nowrap;transition:transform .15s}
+  .tab.active{background:linear-gradient(180deg,var(--neo-green),var(--neo-green-2));color:#fff;box-shadow:0 12px 32px rgba(18,77,51,0.12)}
+  .tab:hover{transform:translateY(-6px)}
 
-  /* underline (decor) */
-  .tabs-underline{height:4px;border-radius:999px;background:linear-gradient(90deg,var(--neo-green),var(--neo-green-2));width:0;opacity:0;transition:all .28s; margin-top:6px}
+  /* Container */
+  .container{max-width:1100px;margin:10px auto;padding:0 14px 240px}
+  .section-title{font-size:18px;font-weight:700;color:var(--neo-green-2);margin:6px 0 14px;text-align:right}
 
-  /* container & spacing so cart doesn't overlap content */
-  .container{max-width:1100px;margin:10px auto;padding:0 14px 180px} /* big bottom padding so cart doesn't cover content */
-  .section-title{font-size:18px;font-weight:700;color:var(--neo-green-2);margin:6px 0 10px;text-align:right}
-
-  /* grid */
+  /* Grid */
   .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-  @media(max-width:820px){ .grid{grid-template-columns:1fr} }
-
-  /* cards */
+  @media (max-width:360px){ .grid{grid-template-columns:1fr} }
   .card{background:#fff;border-radius:var(--radius);padding:12px;display:flex;gap:12px;align-items:center;box-shadow:var(--shadow);opacity:0;transform:translateY(10px);animation:cardIn .42s cubic-bezier(.2,.85,.25,1) forwards}
   @keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-  .thumb{width:110px;height:86px;border-radius:10px;background:#efefef;object-fit:cover;flex-shrink:0}
+  .thumb{width:110px;height:86px;border-radius:10px;background:#efefef;flex-shrink:0;object-fit:cover}
   .meta{flex:1;min-width:0;text-align:right}
   .meta h3{margin:0;font-size:16px;font-weight:700;color:#08321f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .meta p{margin:6px 0 0;color:var(--muted);font-size:13px;height:36px;overflow:hidden}
   .meta .price{margin-top:8px;color:var(--neo-green);font-weight:800}
-
   .actions{display:flex;flex-direction:column;gap:8px;align-items:flex-end;min-width:120px}
   .btn{padding:8px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:700;font-size:13px}
   .btn-outline{background:#fff;border:1px solid #eee;color:#444}
   .btn-primary{background:var(--neo-green);color:#fff;box-shadow:0 8px 20px rgba(18,77,51,0.12)}
   .btn-primary:hover{transform:translateY(-3px)}
 
-  /* cart float - visible and not cut */
-  .cart-float{position:fixed;right:18px;bottom:22px;z-index:99999;display:flex;align-items:center;gap:12px;pointer-events:auto}
-  .cart-btn{width:78px;height:78px;border-radius:18px;background:linear-gradient(180deg,var(--neo-green),var(--neo-green-2));display:flex;align-items:center;justify-content:center;box-shadow:0 28px 60px rgba(18,77,51,0.22);cursor:pointer;position:relative;transition:transform .18s}
-  .cart-btn:hover{transform:translateY(-6px)}
-  .cart-badge{position:absolute;top:-10px;left:-10px;min-width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:999px;background:#ffeb3b;color:#111;font-weight:900;box-shadow:0 8px 20px rgba(0,0,0,0.14);font-size:13px;display:none}
-  .cart-pill{background:linear-gradient(90deg,var(--neo-green),var(--neo-green-2));color:#fff;padding:12px 16px;border-radius:999px;box-shadow:0 20px 50px rgba(18,77,51,0.14);display:none;gap:10px;align-items:center;cursor:pointer;font-weight:800}
+  /* Cart float */
+  .cart-float{position:fixed;right:16px;bottom:22px;z-index:99999;display:flex;align-items:center;gap:10px;pointer-events:auto;max-width:calc(100% - 40px)}
+  .cart-btn{width:82px;height:82px;border-radius:18px;background:linear-gradient(180deg,var(--neo-green),var(--neo-green-2));display:flex;align-items:center;justify-content:center;box-shadow:0 28px 60px rgba(18,77,51,0.22);cursor:pointer;position:relative;flex-shrink:0}
+  .cart-btn svg{filter:drop-shadow(0 2px 6px rgba(0,0,0,0.18))}
+  .cart-badge{position:absolute;top:-10px;left:-10px;min-width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:999px;background:#ffeb3b;color:#111;font-weight:900;box-shadow:0 8px 20px rgba(0,0,0,0.14);font-size:14px;display:none}
+  .pulse{position:absolute;right:-12px;bottom:-12px;width:110px;height:110px;border-radius:20px;background:radial-gradient(circle at center, rgba(47,107,70,0.18) 0%, rgba(47,107,70,0.05) 30%, rgba(47,107,70,0) 60%);opacity:0;transform:scale(.9);pointer-events:none}
+  .cart-pill{background:linear-gradient(90deg,var(--neo-green),var(--neo-green-2));color:#fff;padding:12px 16px;border-radius:999px;box-shadow:0 20px 50px rgba(18,77,51,0.14);display:flex;gap:12px;align-items:center;cursor:pointer;font-weight:800;min-width:140px;justify-content:space-between}
+  .pill-left{display:flex;flex-direction:column;align-items:flex-end;line-height:1}
   .pill-total{background:rgba(255,255,255,0.12);padding:6px 8px;border-radius:8px;font-weight:900}
-  .pulse{position:absolute;right:-12px;bottom:-12px;width:100px;height:100px;border-radius:20px;background:radial-gradient(circle at center, rgba(47,107,70,0.18) 0%, rgba(47,107,70,0.05) 30%, rgba(47,107,70,0) 60%);opacity:0;transform:scale(.9);pointer-events:none}
+  @media(max-width:420px){ .cart-pill{min-width:120px;padding:10px 12px;font-size:14px} .cart-btn{width:70px;height:70px} }
 
   .tooltip{position:absolute;bottom:96px;right:0;background:#111;color:#fff;padding:8px 10px;border-radius:8px;font-size:13px;opacity:0;transform:translateY(6px);transition:opacity .14s,transform .14s;pointer-events:none;white-space:nowrap}
   .cart-float.show-tooltip .tooltip{opacity:1;transform:none}
 
-  /* footer */
-  footer{text-align:center;padding:18px 12px 34px;color:var(--muted);margin-top:26px}
-  .socials{display:flex;justify-content:center;gap:10px;margin-top:12px}
-  .socials a{background:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.06);color:var(--neo-green-2);font-weight:700}
+  /* footer & social colors */
+  footer{text-align:center;padding:22px 12px 34px;color:var(--muted);margin-top:26px}
+  .socials{display:flex;justify-content:center;gap:12px;margin-top:12px;flex-wrap:wrap}
+  .socials a{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;color:#fff;font-weight:700}
+  .social-facebook{background:#1877F2}
+  .social-instagram{background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af)}
+  .social-tiktok{background:#010101}
+  .thank{margin-top:18px;font-weight:700;color:var(--neo-green-2);font-size:15px}
 
-  /* toast */
-  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:120px;background:#111;color:#fff;padding:10px 14px;border-radius:10px;opacity:0;transition:opacity .18s ease;z-index:2000}
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:140px;background:#111;color:#fff;padding:10px 14px;border-radius:10px;opacity:0;transition:opacity .18s ease;z-index:2000}
   .toast.show{opacity:1}
 </style>
 </head>
@@ -87,17 +93,19 @@
 <header>
   <img src="assets/images/logo.png" class="logo" alt="NEO CAFÉ Logo" onerror="this.style.display='none'">
   <h1 class="title">نيو كافية منيو - NEO CAFÉ</h1>
-  <div class="tag">Make It NEO Time</div>
+  <div class="subtitle">Make It NEO Time</div>
 </header>
 
-<div class="tabs-wrap">
-  <div class="tabs" id="tabs" role="tablist" aria-label="أقسام المنيو">
-    <!-- single-line tabs -->
-    <button class="tab active" data-cat="all" aria-selected="true">الكل</button>
+<div class="tabs-area">
+  <div class="tab-all-wrap">
+    <button class="tab-all" id="tabAllBtn" data-cat="all">الكل</button>
+  </div>
+
+  <div class="tabs-row" id="tabs" role="tablist" aria-label="أقسام المنيو">
     <button class="tab" data-cat="cold">مشروبات باردة</button>
     <button class="tab" data-cat="hot">مشروبات ساخنة</button>
-    <button class="tab" data-cat="dessert_dishes">أطباق ديزيرت</button>
     <button class="tab" data-cat="soft">سوفت درينك</button>
+    <button class="tab" data-cat="dessert_dishes">ديزيرت</button>
     <button class="tab" data-cat="special">مميز نيو</button>
   </div>
 </div>
@@ -108,10 +116,12 @@
   <footer>
     <div>تابعنا على السوشيال</div>
     <div class="socials">
-      <a href="https://facebook.com/neo.cafe.eg" target="_blank" rel="noopener">Facebook</a>
-      <a href="https://instagram.com/neocafe.eg" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://tiktok.com/@neo.cafe.eg" target="_blank" rel="noopener">TikTok</a>
+      <a class="social-facebook" href="https://facebook.com/neo.cafe.eg" target="_blank" rel="noopener">Facebook</a>
+      <a class="social-instagram" href="https://instagram.com/neocafe.eg" target="_blank" rel="noopener">Instagram</a>
+      <a class="social-tiktok" href="https://tiktok.com/@neo.cafe.eg" target="_blank" rel="noopener">TikTok</a>
     </div>
+
+    <div class="thank">❤️ شكراً لاختياركم نيو كافية — حب وتمييز دايمًا لعملاء نيو 💚</div>
   </footer>
 </div>
 
@@ -120,17 +130,18 @@
   <div id="cartTooltip" class="tooltip">اضغط لعرض السلة</div>
 
   <button id="cartBtn" class="cart-btn" title="الانتقال للسلة" aria-label="الانتقال للسلة">
-    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
       <path d="M6 6H21L20 12H8L6 6Z" stroke="#fff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M7 18C7.552 18 8 17.552 8 17C8 16.448 7.552 16 7 16C6.448 16 6 16.448 6 17C6 17.552 6.448 18 7 18Z" fill="#fff"/>
       <path d="M18 18C18.552 18 19 17.552 19 17C19 16.448 18.552 16 18 16C17.448 16 17 16.448 17 17C17 17.552 17.448 18 18 18Z" fill="#fff"/>
     </svg>
+
     <div id="cartBadge" class="cart-badge" aria-hidden="true">0</div>
     <div id="pulse" class="pulse" aria-hidden="true"></div>
   </button>
 
   <div id="cartPill" class="cart-pill" role="button" aria-label="افتح السلة">
-    <div style="display:flex;flex-direction:column;align-items:flex-end;line-height:1">
+    <div class="pill-left">
       <div style="font-size:13px">افتح السلة</div>
       <div class="pill-total" id="pillTotal">0 ج</div>
     </div>
@@ -143,9 +154,11 @@
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script>
-/* ===== MENU DATA (with soft drink names updated) ===== */
+/* =========================
+   MENU DATA
+   ========================= */
 const MENU = [
-  /* مشروبات ساخنة (sample prices) */
+  /* مشروبات ساخنة */
   {id:'s1', cat:'hot', name:'شاي', price:18},
   {id:'s2', cat:'hot', name:'شاي أخضر', price:22},
   {id:'s3', cat:'hot', name:'شاي نكهات', price:20},
@@ -186,7 +199,6 @@ const MENU = [
   {id:'c9', cat:'cold', name:'ملك تشيك شوكلت', price:75},
   {id:'c10',cat:'cold', name:'ملك تشيك نيو (مورو - هوهوز - أوريو)', price:95},
 
-  /* ايس وفربتشينو */
   {id:'i1', cat:'cold', name:'ايس لاتيه', price:55},
   {id:'i2', cat:'cold', name:'ايس كوفي', price:55},
   {id:'i3', cat:'cold', name:'ايس أمريكان', price:50},
@@ -196,7 +208,6 @@ const MENU = [
   {id:'i7', cat:'cold', name:'فرابتشينو اسنيكرز', price:75},
   {id:'i8', cat:'cold', name:'ايس سبانش لاتيه', price:60},
 
-  /* فريش / اسموزي / صودا etc */
   {id:'f1', cat:'cold', name:'فريش مانجو', price:55},
   {id:'f2', cat:'cold', name:'فريش فراولة', price:55},
   {id:'f3', cat:'cold', name:'فراولة لبن', price:50},
@@ -231,7 +242,7 @@ const MENU = [
   {id:'sd10',cat:'cold', name:'موخيتو بلوبري', price:55},
   {id:'sd11',cat:'cold', name:'موخيتو خوخ', price:55},
 
-  /* dessert */
+  /* ديزيرت */
   {id:'d1', cat:'dessert_dishes', name:'وافل كلاسيك', price:55},
   {id:'d2', cat:'dessert_dishes', name:'وافل نوتيلا', price:75},
   {id:'d3', cat:'dessert_dishes', name:'وافل أوريو', price:75},
@@ -242,32 +253,41 @@ const MENU = [
   {id:'d8', cat:'dessert_dishes', name:'تشيز كيك', price:75},
   {id:'d9', cat:'dessert_dishes', name:'شوكليت كيك', price:75},
 
-  /* soft drinks (updated names) */
+  /* سوفت درينك */
   {id:'sdx1',cat:'soft', name:'V-Cola Soda', price:30},
   {id:'sdx2',cat:'soft', name:'V-Cola Cola', price:30},
   {id:'sdx3',cat:'soft', name:'V-Cola Diet', price:30},
 
-  /* special */
+  /* مميز نيو */
   {id:'sp1',cat:'special', name:'بطاطا فواكه ومكسرات وعسل', price:65},
   {id:'sp2',cat:'special', name:'اندومي بقطع الفراخ بتتبيلة نيو', price:55},
   {id:'sp3',cat:'special', name:'كوكتيل نيو المميز', price:120}
 ];
 
-/* ===== storage / cart ===== */
+/* ===== storage / cart key ===== */
 const CART_KEY = 'neoCafe_cart_v1';
+
+/* =========> التعديل المطلوب: تفريغ السلة عند كل تحميل للصفحة */
+try{
+  localStorage.removeItem(CART_KEY);
+} catch(e){
+  console.warn('could not reset cart on load', e);
+}
+
+/* ===== utility functions ===== */
 function loadCart(){ try{ const r = localStorage.getItem(CART_KEY); return r ? JSON.parse(r) : []; } catch(e){ return []; } }
 function saveCart(cart){ try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); renderCartUI(true); } catch(e){ console.error(e); } }
 function clearCart(){ if(!confirm('تفريغ السلة؟')) return; localStorage.removeItem(CART_KEY); renderCartUI(); }
 
-/* ===== render ===== */
+/* ===== rendering ===== */
 const content = document.getElementById('content');
 const tabsEl = document.getElementById('tabs');
-const underlineEl = document.getElementById('tabsUnderline');
+const tabAllBtn = document.getElementById('tabAllBtn');
 
 function createCard(item, idx){
   const el = document.createElement('div');
   el.className = 'card';
-  el.style.animationDelay = `${idx * 60}ms`;
+  el.style.animationDelay = `${idx * 50}ms`;
   el.innerHTML = `
     <img class="thumb" src="https://via.placeholder.com/400x300?text=${encodeURIComponent(item.name)}" alt="${escapeHtml(item.name)}">
     <div class="meta">
@@ -293,7 +313,7 @@ function renderCategory(cat){
     title.textContent = 'كل المنتجات';
     itemsToShow = MENU.slice();
   } else {
-    const map = {'hot':'مشروبات ساخنة','cold':'مشروبات باردة','dessert_dishes':'أطباق ديزيرت','soft':'سوفت درينك','special':'مميز نيو'};
+    const map = {'hot':'مشروبات ساخنة','cold':'مشروبات باردة','dessert_dishes':'ديزيرت','soft':'سوفت درينك','special':'مميز نيو'};
     title.textContent = map[cat] || cat;
     itemsToShow = MENU.filter(i => i.cat === cat);
   }
@@ -304,10 +324,10 @@ function renderCategory(cat){
   itemsToShow.forEach((it, idx) => grid.appendChild(createCard(it, idx)));
   content.appendChild(grid);
 
-  requestAnimationFrame(moveUnderlineToActiveTab);
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  if(cat === 'all') tabAllBtn.classList.add('active'); else tabAllBtn.classList.remove('active');
 }
 
-/* view details */
 function viewDetails(id){
   const item = MENU.find(i=>i.id===id);
   if(!item) return alert('المنتج غير موجود');
@@ -315,7 +335,7 @@ function viewDetails(id){
   w.document.write(`<html dir="rtl"><head><meta charset="utf-8"><title>${item.name}</title></head><body style="font-family:Cairo;padding:18px;"><h2>${item.name}</h2><img src="https://via.placeholder.com/600x420?text=${encodeURIComponent(item.name)}" style="width:100%;border-radius:8px"><p style="color:#666;margin-top:12px">${item.desc || ''}</p><p style="font-weight:800">${item.price} ج</p><button style="padding:10px 12px;background:${'#124d33'};border:0;color:#fff;border-radius:8px;cursor:pointer" onclick="window.opener.addToCart(${JSON.stringify(item)})">أضف للسلة</button></body></html>`);
 }
 
-/* cart UI */
+/* ===== cart UI logic ===== */
 const cartBtn = document.getElementById('cartBtn');
 const cartBadge = document.getElementById('cartBadge');
 const cartPill = document.getElementById('cartPill');
@@ -336,6 +356,7 @@ function renderCartUI(wasAdded=false){
     cartBadge.style.display = 'none';
     cartPill.style.display = 'none';
     cartTooltip.textContent = 'السلة فارغة';
+    pillTotal.textContent = '0 ج';
     return;
   }
   const { total,count } = calcTotals(cart);
@@ -372,20 +393,19 @@ cartFloat.addEventListener('touchstart', ()=> { cartFloat.classList.add('show-to
 /* toast */
 function showToast(text){ const t = document.getElementById('toast'); t.textContent=text; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1200); }
 
-/* tabs underline movement (keeps visual) */
-function moveUnderlineToActiveTab(){
-  // optional: not used heavily but keep for look
-  const active = tabsEl.querySelector('.tab.active');
-  if(!active) return;
-}
-
-/* tabs click */
+/* tabs interaction */
 document.querySelectorAll('.tab').forEach(btn=>{
   btn.addEventListener('click', (e)=>{
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
     btn.classList.add('active');
     renderCategory(btn.dataset.cat);
   });
+});
+
+tabAllBtn.addEventListener('click', ()=>{
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  tabAllBtn.classList.add('active');
+  renderCategory('all');
 });
 
 /* helper */
@@ -400,6 +420,5 @@ window.addToCart = addToCart;
 window.clearCart = clearCart;
 window.renderCartUI = renderCartUI;
 </script>
-
 </body>
 </html>
