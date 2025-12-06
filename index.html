@@ -2,9 +2,10 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover" />
-<title>نيو كافية منيو - NEO CAFÉ MENU</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>نيو كافية  - NEO CAFÉ</title>
 
+<!-- خطوط -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
 <style>
@@ -18,32 +19,32 @@
   --radius:12px;
 }
 
-/* reset & base */
+/* base */
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;height:100%;background:var(--neo-beige);font-family:"Cairo","Poppins",system-ui,Segoe UI,Roboto,Arial;color:#111;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
 a{color:inherit;text-decoration:none}
 img{max-width:100%;display:block}
-body{overflow-x:hidden;padding-bottom:120px} /* enough space so the floating cart doesn't cover last items */
+body{overflow-x:hidden;padding-bottom:140px}
 
 /* header */
 header{padding:18px 14px 8px;text-align:center;position:relative}
-.logo{position:absolute;top:8px;right:10px;width:120px;height:auto;object-fit:contain}
+.logo{position:absolute;top:8px;right:12px;width:110px;height:auto;object-fit:contain}
 .title{margin:0;font-size:20px;color:var(--neo-green);font-weight:800}
 .subtitle{margin-top:6px;color:var(--neo-green-2);font-weight:600;font-family:"Poppins",sans-serif}
 
-/* tabs */
+/* tabs: "الكل" centered then other tabs row */
 .tabs-area{padding:10px 12px 6px;display:flex;flex-direction:column;align-items:center;gap:8px}
 .tab-all-wrap{display:flex;justify-content:center;width:100%}
-.tab-all{background:var(--neo-green);color:#fff;padding:10px 20px;border-radius:999px;font-weight:800;border:none;cursor:pointer;box-shadow:0 12px 30px rgba(18,77,51,0.12)}
+.tab-all{background:var(--neo-green);color:#fff;padding:10px 22px;border-radius:999px;font-weight:800;border:none;cursor:pointer;box-shadow:0 12px 30px rgba(18,77,51,0.12)}
 .tabs-row{display:flex;gap:8px;flex-wrap:nowrap;overflow-x:auto;padding:8px 6px;justify-content:center;width:100%}
 .tab{flex:0 0 auto;padding:8px 12px;border-radius:999px;background:var(--neo-cream);border:1px solid rgba(18,77,51,0.06);color:var(--neo-green-2);font-weight:700;cursor:pointer;white-space:nowrap}
 .tab.active{background:linear-gradient(180deg,var(--neo-green),var(--neo-green-2));color:#fff;box-shadow:0 10px 28px rgba(18,77,51,0.12)}
 
-/* container */
+/* content */
 .container{max-width:760px;margin:8px auto;padding:0 14px}
 .section-title{font-size:18px;font-weight:800;color:var(--neo-green-2);margin:10px 0;text-align:right}
 
-/* mobile single-column grid */
+/* single-column grid for mobile */
 .grid{display:grid;grid-template-columns:1fr;gap:12px}
 .card{background:#fff;border-radius:14px;padding:12px;display:flex;gap:12px;align-items:center;box-shadow:var(--shadow);transition:transform .18s ease}
 .card:active{transform:translateY(2px)}
@@ -58,16 +59,12 @@ header{padding:18px 14px 8px;text-align:center;position:relative}
 .btn-primary{background:var(--neo-green);color:#fff;box-shadow:0 8px 20px rgba(18,77,51,0.12)}
 .btn-primary:hover{transform:translateY(-3px)}
 
-/* ===== CART BUTTON (small, always visible) =====
-   - small circular button that sits above content, bottom-right
-   - will not overlap visible text because we added body padding-bottom
-   - when item added, it "bumps" (grows) for 2s then returns
-*/
+/* small floating cart button (visible & opaque) */
 .cart-float{
   position:fixed;
   right:14px;
   bottom:14px;
-  z-index:9999999; /* very high to stay on top */
+  z-index:2147483647; /* max to ensure above everything */
   display:flex;
   align-items:center;
   gap:10px;
@@ -75,46 +72,25 @@ header{padding:18px 14px 8px;text-align:center;position:relative}
   user-select:none;
 }
 
-/* small circular icon button (default small) */
+/* explicit solid button so it's not transparent */
 .cart-btn{
-  width:56px;
-  height:56px;
-  border-radius:14px;
-  background:linear-gradient(180deg,var(--neo-green),var(--neo-green-2));
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 22px 46px rgba(18,77,51,0.24);
-  cursor:pointer;
-  position:relative;
-  transition:transform .18s ease, box-shadow .18s ease;
-  flex-shrink:0;
-  touch-action:manipulation;
+  width:60px;height:60px;border-radius:14px;background:linear-gradient(180deg,var(--neo-green),var(--neo-green-2));display:flex;align-items:center;justify-content:center;box-shadow:0 28px 70px rgba(18,77,51,0.30);cursor:pointer;position:relative;flex-shrink:0;transition:transform .16s ease,box-shadow .16s ease;
 }
+.cart-btn svg{filter:drop-shadow(0 2px 6px rgba(0,0,0,0.25))}
+.cart-badge{position:absolute;top:-8px;left:-8px;min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:999px;background:#ffeb3b;color:#111;font-weight:900;box-shadow:0 8px 20px rgba(0,0,0,0.12);font-size:13px;display:none}
 
-/* badge count */
-.cart-badge{
-  position:absolute;top:-8px;left:-8px;min-width:26px;height:26px;display:flex;align-items:center;justify-content:center;border-radius:999px;background:#ffeb3b;color:#111;font-weight:900;box-shadow:0 8px 20px rgba(0,0,0,0.12);font-size:12px;display:none;
-}
+/* bump animation (class added via JS) */
+.cart-btn.bump{transform:scale(1.22);box-shadow:0 36px 96px rgba(18,77,51,0.36)}
 
-/* pill (optional) kept hidden by default to keep small footprint; can show if needed */
+/* keep pill hidden for now to keep footprint small (available if needed) */
 .cart-pill{display:none}
 
-/* bump class: enlarge for a short time (we'll keep class for 2s via JS) */
-.cart-btn.bump{
-  transform:scale(1.25);
-  box-shadow:0 32px 80px rgba(18,77,51,0.3);
-}
-
-/* ensure button always above any modal or content */
-.cart-float, .cart-btn{will-change:transform}
-
-/* cart modal (floating details) - unchanged behavior */
+/* cart modal (floating details) */
 .cart-modal{
   position:fixed;
   right:14px;
   bottom:86px;
-  z-index:10000000;
+  z-index:2147483646;
   width:calc(100% - 28px);
   max-width:420px;
   background:#fff;
@@ -144,11 +120,6 @@ header{padding:18px 14px 8px;text-align:center;position:relative}
 .checkout-btn{background:var(--neo-green);color:#fff;padding:12px 14px;border-radius:12px;border:0;font-weight:900;cursor:pointer;box-shadow:0 16px 40px rgba(18,77,51,0.16)}
 .empty-note{padding:18px;text-align:center;color:var(--muted);font-weight:700}
 
-/* responsive tweaks */
-@media (min-width:420px){
-  .cart-btn{width:64px;height:64px;border-radius:16px}
-}
-
 /* footer & socials */
 footer.page-footer{text-align:center;padding:18px 12px 40px;color:var(--muted);margin-top:18px}
 .socials{display:flex;justify-content:center;gap:10px;margin-top:10px;flex-wrap:wrap}
@@ -157,16 +128,22 @@ footer.page-footer{text-align:center;padding:18px 12px 40px;color:var(--muted);m
 .social-instagram{background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af)}
 .social-tiktok{background:#010101}
 .thank{margin-top:12px;font-weight:700;color:var(--neo-green-2);font-size:15px}
+
+/* small screens tweak */
+@media (min-width:420px){
+  .cart-btn{width:64px;height:64px;border-radius:16px}
+}
 </style>
 </head>
 <body>
 
 <header>
   <img src="assets/images/logo.png" class="logo" alt="NEO CAFÉ Logo" onerror="this.style.display='none'">
-  <h1 class="title">نيو كافية منيو - NEO CAFÉ MENU</h1>
+  <h1 class="title">نيو كافية منيو - NEO CAFÉ</h1>
   <div class="subtitle">Make It NEO Time</div>
 </header>
 
+<!-- Tabs -->
 <div class="tabs-area">
   <div class="tab-all-wrap">
     <button class="tab-all" id="tabAllBtn" data-cat="all">الكل</button>
@@ -190,13 +167,14 @@ footer.page-footer{text-align:center;padding:18px 12px 40px;color:var(--muted);m
       <a class="social-instagram" href="https://instagram.com/neocafe.eg" target="_blank" rel="noopener">Instagram</a>
       <a class="social-tiktok" href="https://tiktok.com/@neo.cafe.eg" target="_blank" rel="noopener">TikTok</a>
     </div>
-    <div class="thank">💚 شكراً لاختيارك نيو كافية — حب وتمييز دايمًا لعملاء نيو 💚</div>
+    <div class="thank">❤️ شكراً لاختيارك نيو كافية — حب وتمييز دايمًا لعملاء نيو 💚</div>
   </footer>
 </div>
 
 <!-- small floating cart button -->
 <div id="cartFloat" class="cart-float" aria-live="polite">
   <button id="cartBtn" class="cart-btn" title="عرض السلة" aria-label="عرض السلة">
+    <!-- cart icon -->
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
       <path d="M6 6H21L20 12H8L6 6Z" stroke="#fff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M7 18C7.552 18 8 17.552 8 17C8 16.448 7.552 16 7 16C6.448 16 6 16.448 6 17C6 17.552 6.448 18 7 18Z" fill="#fff"/>
@@ -204,8 +182,8 @@ footer.page-footer{text-align:center;padding:18px 12px 40px;color:var(--muted);m
     </svg>
     <div id="cartBadge" class="cart-badge" aria-hidden="true">0</div>
   </button>
-  <!-- optional pill kept hidden because you asked small button; leave for future -->
-  <div id="cartPill" class="cart-pill" role="button" aria-label="افتح السلة" style="display:none">
+  <!-- kept hidden to preserve small footprint, could be shown later -->
+  <div id="cartPill" class="cart-pill" style="display:none" role="button" aria-label="افتح السلة">
     <div class="pill-left">
       <div style="font-size:13px">افتح السلة</div>
       <div class="pill-total" id="pillTotal">0 ج</div>
@@ -239,133 +217,123 @@ footer.page-footer{text-align:center;padding:18px 12px 40px;color:var(--muted);m
 
 <script>
 /* =========================
-   MENU DATA (اختصار هنا — انسخ كل العناصر اللي عندك)
+   MENU DATA - كامل العناصر اللي زودتها
    ========================= */
 const MENU = [
   /* مشروبات ساخنة */
-  {id:'hot_01', cat:'hot', name:'شاي', price:18},
-  {id:'hot_02', cat:'hot', name:'شاي أخضر', price:22},
-  {id:'hot_03', cat:'hot', name:'شاي نكهات', price:20},
-  {id:'hot_04', cat:'hot', name:'نعناع', price:18},
-  {id:'hot_05', cat:'hot', name:'ينسون', price:18},
-  {id:'hot_06', cat:'hot', name:'جنزبيل', price:20},
-  {id:'hot_07', cat:'hot', name:'اسبريسو', price:35},
-  {id:'hot_08', cat:'hot', name:'اسبريسو دبل', price:55},
-  {id:'hot_09', cat:'hot', name:'قهوة تركي سنجل', price:30},
-  {id:'hot_10', cat:'hot', name:'قهوة تركي دبل', price:45},
-  {id:'hot_11', cat:'hot', name:'قهوة فرنساوي', price:40},
-  {id:'hot_12', cat:'hot', name:'قهوة بندق', price:48},
-  {id:'hot_13', cat:'hot', name:'قهوة نوتيلا', price:60},
-  {id:'hot_14', cat:'hot', name:'قهوة بستاشيو', price:65},
-  {id:'hot_15', cat:'hot', name:'لاتيه', price:45},
-  {id:'hot_16', cat:'hot', name:'اسبانش لاتيه', price:50},
-  {id:'hot_17', cat:'hot', name:'كابتشينو', price:48},
-  {id:'hot_18', cat:'hot', name:'نسكافيه', price:35},
-  {id:'hot_19', cat:'hot', name:'أميركان كوفي', price:38},
-  {id:'hot_20', cat:'hot', name:'هوت شوكليت', price:50},
-  {id:'hot_21', cat:'hot', name:'هوت سيدر', price:40},
-  {id:'hot_22', cat:'hot', name:'سحلب', price:55},
-  {id:'hot_23', cat:'hot', name:'سحلب مكسرات', price:75},
-  {id:'hot_24', cat:'hot', name:'سحلب لوتس', price:70},
-  {id:'hot_25', cat:'hot', name:'سحلب بستاشيو', price:85},
-  {id:'hot_26', cat:'hot', name:'سحلب نوتيلا', price:80},
-  {id:'hot_27', cat:'hot', name:'سحلب فواكه', price:60},
+  {id:'s1', cat:'hot', name:'شاي', price:18},
+  {id:'s2', cat:'hot', name:'شاي أخضر', price:22},
+  {id:'s3', cat:'hot', name:'شاي نكهات', price:20},
+  {id:'s4', cat:'hot', name:'نعناع', price:18},
+  {id:'s5', cat:'hot', name:'ينسون', price:18},
+  {id:'s6', cat:'hot', name:'جنزبيل', price:20},
+  {id:'s7', cat:'hot', name:'اسبريسو', price:35},
+  {id:'s8', cat:'hot', name:'اسبريسو دبل', price:55},
+  {id:'s9', cat:'hot', name:'قهوة تركي سنجل', price:30},
+  {id:'s10',cat:'hot', name:'قهوة تركي دبل', price:45},
+  {id:'s11',cat:'hot', name:'قهوة فرنساوي', price:40},
+  {id:'s12',cat:'hot', name:'قهوة بندق', price:48},
+  {id:'s13',cat:'hot', name:'قهوة نوتيلا', price:60},
+  {id:'s14',cat:'hot', name:'قهوة بستاشيو', price:65},
+  {id:'s15',cat:'hot', name:'لاتيه', price:45},
+  {id:'s16',cat:'hot', name:'اسبانش لاتيه', price:50},
+  {id:'s17',cat:'hot', name:'كابتشينو', price:48},
+  {id:'s18',cat:'hot', name:'نسكافيه', price:35},
+  {id:'s19',cat:'hot', name:'أمريكان كوفي', price:38},
+  {id:'s20',cat:'hot', name:'هوت شوكليت', price:50},
+  {id:'s21',cat:'hot', name:'هوت سيدر', price:40},
+  {id:'s22',cat:'hot', name:'سحلب', price:55},
+  {id:'s23',cat:'hot', name:'سحلب مكسرات', price:75},
+  {id:'s24',cat:'hot', name:'سحلب لوتس', price:70},
+  {id:'s25',cat:'hot', name:'سحلب بستاشيو', price:85},
+  {id:'s26',cat:'hot', name:'سحلب نوتيلا', price:80},
+  {id:'s27',cat:'hot', name:'سحلب فواكه', price:60},
 
-  /* مشروبات باردة (بما فيها السوفت درينك) */
-  /* الملك تشيك */
-  {id:'cold_mlk_oreo', cat:'cold', name:'ملك تشيك - أوريو', price:75},
-  {id:'cold_mlk_hohoz', cat:'cold', name:'ملك تشيك - هوهوز', price:75},
-  {id:'cold_mlk_van', cat:'cold', name:'ملك تشيك - فانليا', price:70},
-  {id:'cold_mlk_carmel', cat:'cold', name:'ملك تشيك - كراميل', price:75},
-  {id:'cold_mlk_straw', cat:'cold', name:'ملك تشيك - فراولة', price:75},
-  {id:'cold_mlk_mango', cat:'cold', name:'ملك تشيك - مانجو', price:75},
-  {id:'cold_mlk_snickers', cat:'cold', name:'ملك تشيك - اسنيكرز', price:85},
-  {id:'cold_mlk_moro', cat:'cold', name:'ملك تشيك - مورو', price:75},
-  {id:'cold_mlk_choc', cat:'cold', name:'ملك تشيك - شوكلت', price:75},
-  {id:'cold_mlk_new', cat:'cold', name:'ملك تشيك NEW (مورو - هوهوز - أوريو)', price:95},
+  /* مشروبات باردة */
+  {id:'c1', cat:'cold', name:'ملك تشيك أوريو', price:75},
+  {id:'c2', cat:'cold', name:'ملك تشيك هوهوز', price:75},
+  {id:'c3', cat:'cold', name:'ملك تشيك فانيليا', price:70},
+  {id:'c4', cat:'cold', name:'ملك تشيك كراميل', price:75},
+  {id:'c5', cat:'cold', name:'ملك تشيك فراولة', price:75},
+  {id:'c6', cat:'cold', name:'ملك تشيك مانجو', price:75},
+  {id:'c7', cat:'cold', name:'ملك تشيك اسنيكرز', price:85},
+  {id:'c8', cat:'cold', name:'ملك تشيك مورو', price:75},
+  {id:'c9', cat:'cold', name:'ملك تشيك شوكلت', price:75},
+  {id:'c10',cat:'cold', name:'ملك تشيك نيو (مورو - هوهوز - أوريو)', price:95},
 
-  /* ايس */
-  {id:'cold_ice_latte', cat:'cold', name:'ايس لاتيه', price:55},
-  {id:'cold_ice_coffee', cat:'cold', name:'ايس كوفي', price:55},
-  {id:'cold_ice_american', cat:'cold', name:'ايس اميركان', price:50},
-  {id:'cold_frapp_choc', cat:'cold', name:'فرابتشينو - شوكليت', price:65},
-  {id:'cold_frapp_carmel', cat:'cold', name:'فرابتشينو - كراميل', price:65},
-  {id:'cold_frapp_oreo', cat:'cold', name:'فرابتشينو - أوريو', price:65},
-  {id:'cold_frapp_snick', cat:'cold', name:'فرابتشينو - اسنيكرز', price:75},
-  {id:'cold_ice_spanish', cat:'cold', name:'ايس سبانش لاتيه', price:60},
+  {id:'i1', cat:'cold', name:'ايس لاتيه', price:55},
+  {id:'i2', cat:'cold', name:'ايس كوفي', price:55},
+  {id:'i3', cat:'cold', name:'ايس اميركان', price:50},
+  {id:'i4', cat:'cold', name:'فرابتشينو شوكليت', price:65},
+  {id:'i5', cat:'cold', name:'فرابتشينو كراميل', price:65},
+  {id:'i6', cat:'cold', name:'فرابتشينو اوريو', price:65},
+  {id:'i7', cat:'cold', name:'فرابتشينو اسنيكرز', price:75},
+  {id:'i8', cat:'cold', name:'ايس سبانش لاتيه', price:60},
 
-  /* فريش */
-  {id:'cold_fresh_mango', cat:'cold', name:'فريش مانجو', price:55},
-  {id:'cold_fresh_straw', cat:'cold', name:'فريش فراولة', price:55},
-  {id:'cold_fresh_straw_milk', cat:'cold', name:'فراولة لبن', price:50},
-  {id:'cold_fresh_banana_milk', cat:'cold', name:'موز بلبن', price:50},
-  {id:'cold_fresh_date', cat:'cold', name:'بلح', price:45},
-  {id:'cold_fresh_watermelon', cat:'cold', name:'بطيخ', price:45},
-  {id:'cold_fresh_orange', cat:'cold', name:'برتقال', price:45},
-  {id:'cold_fresh_kiwi', cat:'cold', name:'كيوي (موسمي)', price:60},
-  {id:'cold_fresh_affogato', cat:'cold', name:'افوجاتو', price:70},
-  {id:'cold_fresh_guava', cat:'cold', name:'جوافة', price:45},
-  {id:'cold_fresh_new', cat:'cold', name:'نيو (افوجاتو - عسل - مكسرات - مانجو - موز)', price:95},
-  {id:'cold_fresh_cocktail', cat:'cold', name:'فريش كوكتيل', price:80},
-  {id:'cold_fresh_chunk_cocktail', cat:'cold', name:'كوكتيل قطع', price:85},
+  {id:'f1', cat:'cold', name:'فريش مانجو', price:55},
+  {id:'f2', cat:'cold', name:'فريش فراولة', price:55},
+  {id:'f3', cat:'cold', name:'فراولة لبن', price:50},
+  {id:'f4', cat:'cold', name:'موز بلبن', price:50},
+  {id:'f5', cat:'cold', name:'بلح', price:45},
+  {id:'f6', cat:'cold', name:'بطيخ', price:45},
+  {id:'f7', cat:'cold', name:'برتقال', price:45},
+  {id:'f8', cat:'cold', name:'كيوي (موسمي)', price:60},
+  {id:'f9', cat:'cold', name:'أفوجاتو', price:70},
+  {id:'f10',cat:'cold', name:'جوافة', price:45},
+  {id:'f11',cat:'cold', name:'نيو (افوجاتو – عسل – مكسرات – مانجو – موز)', price:95},
+  {id:'f12',cat:'cold', name:'فريش كوكتيل', price:80},
+  {id:'f13',cat:'cold', name:'كوكتيل قطع', price:85},
 
-  /* اسموزي */
-  {id:'cold_smooth_straw', cat:'cold', name:'اسموزي فراولة', price:60},
-  {id:'cold_smooth_mango', cat:'cold', name:'اسموزي مانجو', price:60},
-  {id:'cold_smooth_pine', cat:'cold', name:'اسموزي أناناس', price:60},
-  {id:'cold_smooth_peach', cat:'cold', name:'اسموزي خوخ', price:60},
-  {id:'cold_smooth_kiwi', cat:'cold', name:'اسموزي كيوي', price:65},
-  {id:'cold_smooth_water', cat:'cold', name:'اسموزي بطيخ', price:60},
-  {id:'cold_smooth_blue', cat:'cold', name:'اسموزي بلوبري', price:70},
+  {id:'sm1',cat:'cold', name:'اسموزي فراولة', price:60},
+  {id:'sm2',cat:'cold', name:'اسموزي مانجو', price:60},
+  {id:'sm3',cat:'cold', name:'اسموزي أناناس', price:60},
+  {id:'sm4',cat:'cold', name:'اسموزي خوخ', price:60},
+  {id:'sm5',cat:'cold', name:'اسموزي كيوي', price:65},
+  {id:'sm6',cat:'cold', name:'اسموزي بطيخ', price:60},
+  {id:'sm7',cat:'cold', name:'اسموزي بلوبري', price:70},
 
-  /* صودا + موخيتو + (السوفت درينك تم دمجها هنا) */
-  {id:'cold_soda_blueberry', cat:'cold', name:'بلوبري صودا', price:45},
-  {id:'cold_soda_blue', cat:'cold', name:'بلو صودا', price:45},
-  {id:'cold_soda_brandit', cat:'cold', name:'برانديت صودا', price:45},
-  {id:'cold_soda_straw', cat:'cold', name:'فراولة صودا', price:45},
-  {id:'cold_soda_pine', cat:'cold', name:'اناناس صودا', price:45},
-  {id:'cold_soda_peach', cat:'cold', name:'خوخ صودا', price:45},
-  {id:'cold_mojito', cat:'cold', name:'موخيتو', price:50},
-  {id:'cold_mojito_pine', cat:'cold', name:'موخيتو أناناس', price:55},
-  {id:'cold_mojito_straw', cat:'cold', name:'موخيتو فراولة', price:55},
-  {id:'cold_mojito_blue', cat:'cold', name:'موخيتو بلوبري', price:55},
-  {id:'cold_mojito_peach', cat:'cold', name:'موخيتو خوخ', price:55},
-
-  /* سوفت درينك مدمجة: (أسماء حديثة مع اضافات Red Bull و Twist) */
-  {id:'soft_vcola_soda', cat:'cold', name:'V-Cola Soda', price:30},
-  {id:'soft_vcola_cola', cat:'cold', name:'V-Cola Cola', price:30},
-  {id:'soft_vcola_diet', cat:'cold', name:'V-Cola Diet', price:30},
-  {id:'soft_redbull', cat:'cold', name:'Red Bull', price:65},
-  {id:'soft_twist', cat:'cold', name:'Twist', price:30},
-  {id:'soft_vkola_sodap', cat:'cold', name:'في كولا صودا', price:30},
-  {id:'soft_vkola_kola', cat:'cold', name:'في كولا "كولا"', price:30},
-  {id:'soft_vkola_diet', cat:'cold', name:'في كولا دايت', price:30},
+  {id:'sd1',cat:'cold', name:'بلوبري صودا', price:45},
+  {id:'sd2',cat:'cold', name:'بلو صودا', price:45},
+  {id:'sd3',cat:'cold', name:'برانديت صودا', price:45},
+  {id:'sd4',cat:'cold', name:'فراولة صودا', price:45},
+  {id:'sd5',cat:'cold', name:'أناناس صودا', price:45},
+  {id:'sd6',cat:'cold', name:'خوخ صودا', price:45},
+  {id:'sd7',cat:'cold', name:'موخيتو', price:50},
+  {id:'sd8',cat:'cold', name:'موخيتو أناناس', price:55},
+  {id:'sd9',cat:'cold', name:'موخيتو فراولة', price:55},
+  {id:'sd10',cat:'cold', name:'موخيتو بلوبري', price:55},
+  {id:'sd11',cat:'cold', name:'موخيتو خوخ', price:55},
 
   /* ديزيرت */
-  {id:'dessert_waffle_classic', cat:'dessert_dishes', name:'وافل كلاسيك', price:55},
-  {id:'dessert_waffle_nutella', cat:'dessert_dishes', name:'وافل نوتيلا', price:75},
-  {id:'dessert_waffle_oreo', cat:'dessert_dishes', name:'وافل أوريو', price:75},
-  {id:'dessert_waffle_lotus', cat:'dessert_dishes', name:'وافل لوتس', price:75},
-  {id:'dessert_waffle_pistachio', cat:'dessert_dishes', name:'وافل بستاشيو', price:85},
-  {id:'dessert_waffle_fruit', cat:'dessert_dishes', name:'وافل فواكه', price:80},
-  {id:'dessert_molten', cat:'dessert_dishes', name:'مولتن', price:70},
-  {id:'dessert_cheesecake', cat:'dessert_dishes', name:'تشيز كيك', price:75},
-  {id:'dessert_choccake', cat:'dessert_dishes', name:'شوكليت كيك', price:75},
+  {id:'d1', cat:'dessert_dishes', name:'وافل كلاسيك', price:55},
+  {id:'d2', cat:'dessert_dishes', name:'وافل نوتيلا', price:75},
+  {id:'d3', cat:'dessert_dishes', name:'وافل أوريو', price:75},
+  {id:'d4', cat:'dessert_dishes', name:'وافل لوتس', price:75},
+  {id:'d5', cat:'dessert_dishes', name:'وافل بستاشيو', price:85},
+  {id:'d6', cat:'dessert_dishes', name:'وافل فواكه', price:80},
+  {id:'d7', cat:'dessert_dishes', name:'مولتن', price:70},
+  {id:'d8', cat:'dessert_dishes', name:'تشيز كيك', price:75},
+  {id:'d9', cat:'dessert_dishes', name:'شوكليت كيك', price:75},
+
+  /* سوفت درينك */
+  {id:'sdx1',cat:'soft', name:'V-Cola Soda', price:30},
+  {id:'sdx2',cat:'soft', name:'V-Cola Cola', price:30},
+  {id:'sdx3',cat:'soft', name:'V-Cola Diet', price:30},
 
   /* مميز نيو */
-  {id:'special_potato_fruit', cat:'special', name:'بطاطا فواكه ومكسرات وعسل', price:65},
-  {id:'special_indomie_chicken', cat:'special', name:'اندومي بقطع الفراخ الحقيقية بتتبيلة نيو', price:55},
-  {id:'special_neo_cocktail', cat:'special', name:'كوكتيل نيو المميز (قطع فاكهة فاخرة، سموزي، عسل، مكسرات، هوهوز، مورو)', price:120}
+  {id:'sp1',cat:'special', name:'بطاطا فواكه ومكسرات وعسل', price:65},
+  {id:'sp2',cat:'special', name:'اندومي بقطع الفراخ بتتبيلة نيو', price:55},
+  {id:'sp3',cat:'special', name:'كوكتيل نيو المميز', price:120}
 ];
 
-
+/* storage key */
 const CART_KEY = 'neoCafe_cart_v1';
 
-/* حسب طلبك: تفريغ السلة على كل تحميل */
-try{ localStorage.removeItem(CART_KEY); } catch(e){ console.warn('reset cart failed', e); }
+/* ====== behaviour: clear cart on each page load (as requested) ====== */
+try{ localStorage.removeItem(CART_KEY); } catch(e){ console.warn('could not clear cart on load', e); }
 
-/* helper storage */
-function loadCart(){ try{ const r = localStorage.getItem(CART_KEY); return r ? JSON.parse(r) : []; } catch(e){ return []; } }
+/* helper storage funcs */
+function loadCart(){ try{ const d = localStorage.getItem(CART_KEY); return d ? JSON.parse(d) : []; } catch(e){ return []; } }
 function saveCart(cart){ try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); renderCartUI(true); } catch(e){ console.error(e); } }
 function setCartSilent(cart){ try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); renderCartUI(false); } catch(e){ console.error(e); } }
 function clearCart(){ localStorage.removeItem(CART_KEY); renderCartUI(); renderCartModal(); }
@@ -380,7 +348,7 @@ function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll(
 function createCard(item, idx){
   const el = document.createElement('div');
   el.className = 'card';
-  el.style.animationDelay = `${idx * 25}ms`;
+  el.style.animationDelay = `${idx * 20}ms`;
   el.innerHTML = `
     <img class="thumb" src="https://via.placeholder.com/400x300?text=${encodeURIComponent(item.name)}" alt="${escapeHtml(item.name)}">
     <div class="meta">
@@ -401,7 +369,7 @@ function renderCategory(cat){
   const title = document.createElement('div'); title.className='section-title';
   let itemsToShow=[];
   if(cat==='all'){ title.textContent='كل المنتجات'; itemsToShow = MENU.slice(); }
-  else { const map={'hot':'مشروبات ساخنة','cold':'مشروبات باردة','dessert_dishes':'ديزيرت ','special':'مميز نيو'}; title.textContent = map[cat]||cat; itemsToShow = MENU.filter(i=>i.cat===cat); }
+  else { const map={'hot':'مشروبات ساخنة','cold':'مشروبات باردة','dessert_dishes':'ديزيرت','special':'مميز نيو'}; title.textContent = map[cat]||cat; itemsToShow = MENU.filter(i=>i.cat===cat); }
   content.appendChild(title);
   const grid = document.createElement('div'); grid.className='grid';
   itemsToShow.forEach((it,idx)=> grid.appendChild(createCard(it, idx)));
@@ -411,7 +379,14 @@ function renderCategory(cat){
   if(cat==='all') tabAllBtn.classList.add('active'); else tabAllBtn.classList.remove('active');
 }
 
-/* cart UI (small button + modal) */
+/* quick view placeholder */
+function viewDetails(id){
+  const item = MENU.find(i=>i.id===id);
+  if(!item) return alert('المنتج غير موجود');
+  alert(`${item.name}\nالسعر: ${item.price} ج`);
+}
+
+/* cart UI */
 const cartBtn = document.getElementById('cartBtn');
 const cartBadge = document.getElementById('cartBadge');
 const cartPill = document.getElementById('cartPill');
@@ -431,44 +406,41 @@ function calcTotals(cart){
 
 function renderCartUI(wasAdded=false){
   const cart = loadCart();
-  if(!cart || cart.length===0){
-    cartBadge.style.display='none';
-    if(cartPill) cartPill.style.display='none';
-    pillTotal && (pillTotal.textContent='0 ج');
+  if(!cart || cart.length === 0){
+    cartBadge.style.display = 'none';
+    if(pillTotal) pillTotal.textContent = '0 ج';
     return;
   }
-  const { total,count } = calcTotals(cart);
-  cartBadge.style.display='flex';
+  const { total, count } = calcTotals(cart);
+  cartBadge.style.display = 'flex';
   cartBadge.textContent = count;
-  if(cartPill) cartPill.style.display='none'; // keep small footprint
   if(pillTotal) pillTotal.textContent = `${total} ج`;
 
   if(wasAdded){
-    // bump the small icon for 2 seconds
-    animateCartBump();
+    bumpCartIcon();
   }
 }
 
-/* animate: add 'bump' class for 2s then remove */
+/* bump animation: add class for 2s */
 let bumpTimeout = null;
-function animateCartBump(){
+function bumpCartIcon(){
   cartBtn.classList.add('bump');
   if(bumpTimeout) clearTimeout(bumpTimeout);
   bumpTimeout = setTimeout(()=>{ cartBtn.classList.remove('bump'); bumpTimeout = null; }, 2000);
 }
 
-/* add to cart logic */
+/* add to cart */
 function addToCart(item){
-  let cart = loadCart();
-  const existing = cart.find(i=>i.id===item.id);
-  if(existing) existing.qty = Number(existing.qty)+1;
+  const cart = loadCart();
+  const found = cart.find(x=>x.id === item.id);
+  if(found) found.qty = Number(found.qty) + 1;
   else cart.push({...item, qty:1});
   saveCart(cart);
-  renderCartModal(); // update modal if open
+  renderCartModal(); // if modal open update
   showToast(`${item.name} اتضاف للسلة ✔`);
 }
 
-/* render cart modal details */
+/* render cart modal */
 function renderCartModal(){
   const cart = loadCart();
   cartItemsEl.innerHTML = '';
@@ -479,10 +451,8 @@ function renderCartModal(){
     cartModal.setAttribute('aria-hidden','false');
     return;
   }
-
   for(const it of cart){
-    const row = document.createElement('div');
-    row.className = 'item';
+    const row = document.createElement('div'); row.className = 'item';
     row.innerHTML = `
       <div class="left">
         <img src="https://via.placeholder.com/200x140?text=${encodeURIComponent(it.name)}" alt="${escapeHtml(it.name)}">
@@ -508,51 +478,32 @@ function renderCartModal(){
 
   // attach handlers
   cartItemsEl.querySelectorAll('.inc').forEach(b=>{
-    b.addEventListener('click', (e)=>{
-      const id = e.currentTarget.dataset.id;
-      const cart = loadCart();
-      const it = cart.find(x=>x.id===id);
-      if(it){ it.qty = Number(it.qty)+1; setCartSilent(cart); renderCartModal(); }
-    });
+    b.addEventListener('click', (e)=>{ const id = e.currentTarget.dataset.id; const cart = loadCart(); const it = cart.find(x=>x.id===id); if(it){ it.qty = Number(it.qty)+1; setCartSilent(cart); renderCartModal(); } });
   });
   cartItemsEl.querySelectorAll('.dec').forEach(b=>{
-    b.addEventListener('click', (e)=>{
-      const id = e.currentTarget.dataset.id;
-      const cart = loadCart();
-      const it = cart.find(x=>x.id===id);
-      if(it){
-        it.qty = Number(it.qty)-1;
-        if(it.qty <=0){ const idx = cart.findIndex(x=>x.id===id); if(idx>-1) cart.splice(idx,1); }
-        setCartSilent(cart); renderCartModal();
-      }
-    });
+    b.addEventListener('click', (e)=>{ const id = e.currentTarget.dataset.id; let cart = loadCart(); const it = cart.find(x=>x.id===id); if(it){ it.qty = Number(it.qty)-1; if(it.qty <= 0){ cart = cart.filter(x=>x.id!==id); } setCartSilent(cart); renderCartModal(); } });
   });
   cartItemsEl.querySelectorAll('.remove').forEach(b=>{
-    b.addEventListener('click', (e)=>{
-      const id = e.currentTarget.dataset.id;
-      let cart = loadCart();
-      cart = cart.filter(x=>x.id!==id);
-      setCartSilent(cart);
-      renderCartModal();
-    });
+    b.addEventListener('click', (e)=>{ const id = e.currentTarget.dataset.id; let cart = loadCart(); cart = cart.filter(x=>x.id!==id); setCartSilent(cart); renderCartModal(); });
   });
 
   const totals = calcTotals(cart);
   modalTotal.textContent = `${totals.total} ج`;
 }
 
-/* open/close modal */
+/* open / close modal */
 function openCartModal(){ renderCartModal(); cartModal.classList.add('show'); cartModal.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
 function closeCartModal(){ cartModal.classList.remove('show'); cartModal.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
 
-cartBtn.addEventListener('click', ()=>{ openCartModal(); });
-if(cartPill) cartPill.addEventListener('click', ()=>{ openCartModal(); });
+cartBtn.addEventListener('click', ()=> openCartModal() );
+if(cartPill) cartPill.addEventListener('click', ()=> openCartModal() );
 
-closeCartBtn.addEventListener('click', closeCartModal);
+closeCartBtn.addEventListener('click', ()=> closeCartModal() );
 clearCartBtn.addEventListener('click', ()=>{ if(!confirm('تفريغ السلة؟')) return; localStorage.removeItem(CART_KEY); renderCartUI(); renderCartModal(); });
 
-checkoutNowBtn.addEventListener('click', ()=>{ window.location.href = 'checkout.html'; });
+checkoutNowBtn.addEventListener('click', ()=> { window.location.href = 'checkout.html'; });
 
+/* click outside to close modal */
 window.addEventListener('click', function(e){
   if(!cartModal.classList.contains('show')) return;
   const path = e.composedPath ? e.composedPath() : (e.path || []);
@@ -563,12 +514,12 @@ window.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeCartModal(
 /* toast */
 function showToast(text){
   let t = document.getElementById('toast');
-  if(!t){ t = document.createElement('div'); t.id='toast'; t.style.position='fixed'; t.style.left='50%'; t.style.transform='translateX(-50%)'; t.style.bottom='140px'; t.style.background='#111'; t.style.color='#fff'; t.style.padding='10px 14px'; t.style.borderRadius='10px'; t.style.zIndex=1000002; document.body.appendChild(t); }
+  if(!t){ t = document.createElement('div'); t.id='toast'; t.style.position='fixed'; t.style.left='50%'; t.style.transform='translateX(-50%)'; t.style.bottom='140px'; t.style.background='#111'; t.style.color='#fff'; t.style.padding='10px 14px'; t.style.borderRadius='10px'; t.style.zIndex=2147483647; document.body.appendChild(t); }
   t.textContent = text; t.style.opacity = '1';
   setTimeout(()=>{ t.style.opacity='0'; }, 1100);
 }
 
-/* tabs init */
+/* tabs interaction */
 document.querySelectorAll('.tab').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -579,17 +530,19 @@ document.querySelectorAll('.tab').forEach(btn=>{
 });
 tabAllBtn.addEventListener('click', ()=>{ document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); tabAllBtn.classList.add('active'); renderCategory('all'); window.scrollTo({ top:0, behavior:'smooth' }); });
 
-/* initial render */
+/* init */
 renderCategory('all');
 renderCartUI();
 
-/* ensure cart UI updates across tabs if needed */
+/* storage event */
 window.addEventListener('storage', (e)=>{ if(e.key === CART_KEY) renderCartUI(); });
 
-/* expose functions (optional) */
+/* expose some functions for debugging */
 window.addToCart = addToCart;
+window.clearCart = clearCart;
 window.renderCartUI = renderCartUI;
 window.renderCartModal = renderCartModal;
+
 </script>
 </body>
 </html>
