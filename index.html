@@ -1,156 +1,490 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>نيو كافية منيو - NEO CAFÉ</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
 <style>
-    .tabs {
-        display: flex;
-        overflow-x: auto;
-        gap: 10px;
-        margin-bottom: 20px;
-    }
+  :root{
+    /* NEO colors inspired by logo */
+    --neo-green:#124d33;        /* very dark green */
+    --neo-green-2:#2f6b46;      /* secondary olive */
+    --neo-beige:#f6efe6;        /* page background beige */
+    --neo-cream:#f7ead6;        /* cream for cards */
+    --muted:#6b6b6b;
+    --shadow: 0 12px 30px rgba(15,40,25,0.08);
+    --radius:14px;
+  }
 
-    .tab {
-        padding: 10px 18px;
-        border-radius: 10px;
-        background: #eee;
-        cursor: pointer;
-        font-weight: bold;
-        white-space: nowrap;
-        transition: .25s;
-    }
+  *{box-sizing:border-box}
+  html,body{
+    margin:0; padding:0;
+    font-family:"Cairo","Poppins",system-ui,Segoe UI,Roboto,Arial;
+    background:var(--neo-beige);
+    color:#111;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
 
-    .tab:hover {
-        background: #d8d8d8;
-    }
+  a{color:inherit;text-decoration:none}
 
-    .tab.active {
-        background: #ffb703;
-        color: #000;
-    }
+  /* ===== Header ===== */
+  header{
+    padding:26px 16px 8px;
+    text-align:center;
+    position:relative;
+  }
+  .logo{
+    position:absolute;
+    top:12px;
+    right:12px;
+    width:86px;
+    height:auto;
+    object-fit:contain;
+  }
+  .title{
+    margin:0;
+    font-size:24px;
+    color:var(--neo-green);
+    font-weight:700;
+    letter-spacing:0.2px;
+  }
+  .subtitle{ margin-top:6px; color:var(--neo-green-2); font-weight:600; font-family:"Poppins",sans-serif; }
 
-    .items {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
+  /* ===== Tabs ===== */
+  .tabs-wrap{ padding:12px 16px; display:flex; justify-content:center; }
+  .tabs{ display:flex; gap:10px; flex-wrap:wrap; max-width:1100px; }
+  .tab{
+    background:var(--neo-cream);
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid rgba(18,77,51,0.06);
+    color:var(--neo-green-2);
+    font-weight:700;
+    cursor:pointer;
+    transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .tab:hover{ transform:translateY(-6px); box-shadow:0 10px 26px rgba(18,77,51,0.06); }
+  .tab.active{ background:linear-gradient(180deg,var(--neo-green),var(--neo-green-2)); color:#fff; box-shadow:0 16px 44px rgba(18,77,51,0.12); }
 
-    .item-box {
-        padding: 15px;
-        border-radius: 12px;
-        background: #fafafa;
-        border: 1px solid #ddd;
-    }
+  .tabs-underline{ height:4px; border-radius:999px; background:linear-gradient(90deg,var(--neo-green),var(--neo-green-2)); width:0; opacity:0; transition:all .28s cubic-bezier(.2,.9,.2,1); position:relative; }
 
-    /* السلة — بارزة وواضحة */
-    .cart-btn {
-        position: fixed;
-        bottom: 25px;
-        right: 25px;
-        background: #ffb703;
-        padding: 18px 22px;
-        border-radius: 50px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        font-size: 20px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: .25s;
-    }
+  /* ===== Layout ===== */
+  .container{ max-width:1100px; margin:12px auto 110px; padding:0 14px; }
+  .section-title{ font-size:18px; font-weight:700; color:var(--neo-green-2); margin:6px 0 14px; text-align:right; }
 
-    .cart-btn:hover {
-        scale: 1.08;
-    }
+  /* grid two-column */
+  .grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+  @media(max-width:820px){ .grid{ grid-template-columns:1fr } }
+
+  /* ===== Card ===== */
+  .card{
+    background:linear-gradient(180deg,#fff,#fff);
+    border-radius:var(--radius);
+    padding:12px;
+    display:flex;
+    gap:12px;
+    align-items:center;
+    box-shadow:var(--shadow);
+    transform:translateY(10px);
+    opacity:0;
+    animation:cardIn .42s cubic-bezier(.2,.85,.25,1) forwards;
+  }
+  @keyframes cardIn{ from{ opacity:0; transform:translateY(12px) } to{ opacity:1; transform:none } }
+
+  .thumb{
+    width:110px; height:86px; border-radius:10px; background:#f0f0f0; object-fit:cover; flex-shrink:0;
+  }
+  .meta{ flex:1; min-width:0; text-align:right; }
+  .meta h3{ margin:0; font-size:16px; font-weight:700; color:#0b2f20; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .meta p{ margin:6px 0 0; color:var(--muted); font-size:13px; height:36px; overflow:hidden; }
+  .meta .price{ margin-top:8px; color:var(--neo-green); font-weight:800; }
+
+  .actions{ display:flex; gap:8px; flex-direction:column; align-items:flex-end; min-width:110px }
+  .btn{ padding:8px 12px; border-radius:10px; border:0; cursor:pointer; font-weight:700; font-size:13px; }
+  .btn-outline{ background:#fff; border:1px solid #eee; color:#444; }
+  .btn-primary{ background:var(--neo-green); color:#fff; box-shadow:0 8px 20px rgba(18,77,51,0.12); }
+  .btn-primary:hover{ transform:translateY(-3px) }
+
+  /* ===== Cart Float (big & visible) ===== */
+  .cart-float{
+    position:fixed; right:18px; bottom:18px; z-index:9999; display:flex; align-items:center; gap:12px; pointer-events:auto;
+  }
+  .cart-btn{
+    width:76px; height:76px; border-radius:18px; background:linear-gradient(180deg,var(--neo-green),var(--neo-green-2)); display:flex; align-items:center; justify-content:center; box-shadow:0 28px 60px rgba(18,77,51,0.22); cursor:pointer; position:relative; transition:transform .18s;
+  }
+  .cart-btn:hover{ transform:translateY(-6px); }
+  .cart-badge{
+    position:absolute; top:-8px; left:-8px; min-width:28px; height:28px; display:flex; align-items:center; justify-content:center; border-radius:999px; background:#ffeb3b; color:#111; font-weight:900; box-shadow:0 8px 20px rgba(0,0,0,0.14); font-size:13px; display:none;
+  }
+  .cart-pill{ background:linear-gradient(90deg,var(--neo-green),var(--neo-green-2)); color:#fff; padding:12px 16px; border-radius:999px; box-shadow:0 20px 50px rgba(18,77,51,0.14); display:none; gap:10px; align-items:center; cursor:pointer; font-weight:800; }
+  .pill-total{ background:rgba(255,255,255,0.12); padding:6px 8px; border-radius:8px; font-weight:900; }
+
+  .pulse{ position:absolute; right:-10px; bottom:-10px; width:96px; height:96px; border-radius:20px; background: radial-gradient(circle at center, rgba(47,107,70,0.18) 0%, rgba(47,107,70,0.05) 30%, rgba(47,107,70,0) 60%); opacity:0; transform:scale(.9); pointer-events:none; }
+
+  /* tooltip */
+  .tooltip{ position:absolute; bottom:96px; right:0; background:#111; color:#fff; padding:8px 10px; border-radius:8px; font-size:13px; opacity:0; transform:translateY(6px); transition:opacity .14s, transform .14s; pointer-events:none; white-space:nowrap; }
+
+  .cart-float.show-tooltip .tooltip{ opacity:1; transform:none; }
+
+  /* footer */
+  footer{ text-align:center; padding:18px 12px 30px; color:var(--muted); margin-top:26px; }
+  .socials{ display:flex; justify-content:center; gap:10px; margin-top:12px; }
+  .socials a{ background:#fff; padding:10px 14px; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.06); color:var(--neo-green-2); font-weight:700; }
+
+  /* toast */
+  .toast{ position:fixed; left:50%; transform:translateX(-50%); bottom:110px; background:#111; color:#fff; padding:10px 14px; border-radius:10px; opacity:0; transition:opacity .18s ease; z-index:2000; }
+  .toast.show{ opacity:1 }
 </style>
+</head>
+<body>
 
+<header>
+  <img src="assets/images/logo.png" class="logo" alt="NEO CAFÉ Logo" onerror="this.style.display='none'">
+  <h1 class="title">نيو كافية منيو - NEO CAFÉ</h1>
+  <div class="subtitle">Make It NEO Time</div>
+</header>
 
-<div class="tabs">
-    <div class="tab active" onclick="showCategory('all')">الكل</div>
-    <div class="tab" onclick="showCategory('hot')">مشروبات ساخنة</div>
-    <div class="tab" onclick="showCategory('cold')">مشروبات باردة</div>
-    <div class="tab" onclick="showCategory('dessert')">أطباق ديزيرت</div>
-    <div class="tab" onclick="showCategory('soft')">سوفت درينك</div>
-    <div class="tab" onclick="showCategory('new')">مميز نيو</div>
+<div class="tabs-wrap">
+  <div class="tabs" id="tabs" role="tablist" aria-label="أقسام المنيو">
+    <button class="tab active" data-cat="all" aria-selected="true">الكل</button>
+    <button class="tab" data-cat="cold">مشروبات باردة</button>
+    <button class="tab" data-cat="hot">مشروبات ساخنة</button>
+    <button class="tab" data-cat="dessert_dishes">أطباق ديزيرت</button>
+    <button class="tab" data-cat="soft">سوفت درينك</button>
+    <button class="tab" data-cat="special">مميز نيو</button>
+  </div>
+  <div style="text-align:center; width:100%"><div class="tabs-underline" id="tabsUnderline"></div></div>
 </div>
 
+<div class="container">
+  <main id="content" aria-live="polite"></main>
 
-<div id="menuItems" class="items"></div>
-
-
-<div class="cart-btn" onclick="openCart()">
-    🛒 السلة
+  <footer>
+    <div>تابعنا على السوشيال</div>
+    <div class="socials">
+      <a href="https://facebook.com/neo.cafe.eg" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://instagram.com/neocafe.eg" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://tiktok.com/@neo.cafe.eg" target="_blank" rel="noopener">TikTok</a>
+    </div>
+  </footer>
 </div>
 
+<!-- CART FLOAT -->
+<div id="cartFloat" class="cart-float" aria-live="polite">
+  <div class="tooltip" id="cartTooltip">اضغط لعرض السلة</div>
+
+  <button id="cartBtn" class="cart-btn" title="الانتقال للسلة" aria-label="الانتقال للسلة">
+    <!-- cart icon -->
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 6H21L20 12H8L6 6Z" stroke="#fff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M7 18C7.552 18 8 17.552 8 17C8 16.448 7.552 16 7 16C6.448 16 6 16.448 6 17C6 17.552 6.448 18 7 18Z" fill="#fff"/>
+      <path d="M18 18C18.552 18 19 17.552 19 17C19 16.448 18.552 16 18 16C17.448 16 17 16.448 17 17C17 17.552 17.448 18 18 18Z" fill="#fff"/>
+    </svg>
+    <div id="cartBadge" class="cart-badge" aria-hidden="true">0</div>
+    <div id="pulse" class="pulse" aria-hidden="true"></div>
+  </button>
+
+  <div id="cartPill" class="cart-pill" role="button" aria-label="افتح السلة">
+    <div style="display:flex;flex-direction:column;align-items:flex-end;line-height:1">
+      <div style="font-size:13px">افتح السلة</div>
+      <div class="pill-total" id="pillTotal">0 ج</div>
+    </div>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9 18l6-6-6-6" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script>
-    const menu = {
-        hot: [
-            "شاي","شاي أخضر","شاي نكهات","نعناع","ينسون","جنزبيل","اسبريسو","اسبريسو دبل",
-            "قهوة تركي سنجل","قهوة تركي دبل","قهوة فرنساوي","قهوة بندق","قهوة نوتيلا","قهوة بستاشيو",
-            "لاتيه","اسبانش لاتيه","كابتشينو","نسكافيه","أمريكان كوفي","هوت شوكليت","هوت سيدر",
-            "سحلب","سحلب مكسرات","سحلب لوتس","سحلب بستاشيو","سحلب نوتيلا","سحلب فواكه"
-        ],
+/* ==========================
+   MENU DATA (from your list)
+   each item has id, cat, name, price, desc, image
+   prices are suggested defaults you can change
+   ========================== */
 
-        cold: [
-            "ملك تشيك أوريو","ملك تشيك هوهوز","ملك تشيك فانيليا","ملك تشيك كراميل","ملك تشيك فراولة",
-            "ملك تشيك مانجو","ملك تشيك اسنيكرز","ملك تشيك مورو","ملك تشيك شوكلت",
-            "ملك تشيك نيو (مورو - هوهوز - أوريو)",
+const MENU = [
+  /* مشروبات ساخنة */
+  {id:'s1', cat:'hot', name:'شاي', price:18},
+  {id:'s2', cat:'hot', name:'شاي أخضر', price:22},
+  {id:'s3', cat:'hot', name:'شاي نكهات', price:20},
+  {id:'s4', cat:'hot', name:'نعناع', price:18},
+  {id:'s5', cat:'hot', name:'ينسون', price:18},
+  {id:'s6', cat:'hot', name:'جنزبيل', price:20},
+  {id:'s7', cat:'hot', name:'اسبريسو', price:35},
+  {id:'s8', cat:'hot', name:'اسبريسو دبل', price:55},
+  {id:'s9', cat:'hot', name:'قهوة تركي سنجل', price:30},
+  {id:'s10',cat:'hot', name:'قهوة تركي دبل', price:45},
+  {id:'s11',cat:'hot', name:'قهوة فرنساوي', price:40},
+  {id:'s12',cat:'hot', name:'قهوة بندق', price:48},
+  {id:'s13',cat:'hot', name:'قهوة نوتيلا', price:60},
+  {id:'s14',cat:'hot', name:'قهوة بستاشيو', price:65},
+  {id:'s15',cat:'hot', name:'لاتيه', price:45},
+  {id:'s16',cat:'hot', name:'اسبانش لاتيه', price:50},
+  {id:'s17',cat:'hot', name:'كابتشينو', price:48},
+  {id:'s18',cat:'hot', name:'نسكافيه', price:35},
+  {id:'s19',cat:'hot', name:'أمريكان كوفي', price:38},
+  {id:'s20',cat:'hot', name:'هوت شوكليت', price:50},
+  {id:'s21',cat:'hot', name:'هوت سيدر', price:40},
+  {id:'s22',cat:'hot', name:'سحلب', price:55},
+  {id:'s23',cat:'hot', name:'سحلب مكسرات', price:75},
+  {id:'s24',cat:'hot', name:'سحلب لوتس', price:70},
+  {id:'s25',cat:'hot', name:'سحلب بستاشيو', price:85},
+  {id:'s26',cat:'hot', name:'سحلب نوتيلا', price:80},
+  {id:'s27',cat:'hot', name:'سحلب فواكه', price:60},
 
-            "ايس لاتيه","ايس كوفي","ايس أمريكان","فرابتشينو فانيلا
-            "فربتشينو شوكليت","فربتشينو كراميل",
-            "فربتشينو أوريو","فربتشينو اسنيكرز","ايس سبانش لاتيه",
+  /* مشروبات باردة - ملك تشيك وغيرها */
+  {id:'c1', cat:'cold', name:'ملك تشيك أوريو', price:75},
+  {id:'c2', cat:'cold', name:'ملك تشيك هوهوز', price:75},
+  {id:'c3', cat:'cold', name:'ملك تشيك فانيليا', price:70},
+  {id:'c4', cat:'cold', name:'ملك تشيك كراميل', price:75},
+  {id:'c5', cat:'cold', name:'ملك تشيك فراولة', price:75},
+  {id:'c6', cat:'cold', name:'ملك تشيك مانجو', price:75},
+  {id:'c7', cat:'cold', name:'ملك تشيك اسنيكرز', price:85},
+  {id:'c8', cat:'cold', name:'ملك تشيك مورو', price:75},
+  {id:'c9', cat:'cold', name:'ملك تشيك شوكلت', price:75},
+  {id:'c10',cat:'cold', name:'ملك تشيك نيو (مورو - هوهوز - أوريو)', price:95},
 
-            "فريش مانجو","فريش فراولة","فراولة لبن","موز بلبن","بلح","بطيخ","برتقال","كيوي (موسمي)",
-            "افوجاتو","جوافة","ليمون نعناع" "نيو (افوجاتو – عسل – مكسرات – مانجو – موز)","فريش كوكتيل","كوكتيل قطع",
+  /* ايس وفربتشينو */
+  {id:'i1', cat:'cold', name:'ايس لاتيه', price:55},
+  {id:'i2', cat:'cold', name:'ايس كوفي', price:55},
+  {id:'i3', cat:'cold', name:'ايس أمريكان', price:50},
+  {id:'i4', cat:'cold', name:'فرابتشينو شوكليت', price:65},
+  {id:'i5', cat:'cold', name:'فرابتشينو كراميل', price:65},
+  {id:'i6', cat:'cold', name:'فرابتشينو أوريو', price:65},
+  {id:'i7', cat:'cold', name:'فرابتشينو اسنيكرز', price:75},
+  {id:'i8', cat:'cold', name:'ايس سبانش لاتيه', price:60},
 
-            "اسموزي فراولة","اسموزي مانجو","اسموزي أناناس","اسموزي خوخ","اسموزي كيوي",
-            "اسموزي بطيخ","اسموزي بلوبري",
+  /* فريش */
+  {id:'f1', cat:'cold', name:'فريش مانجو', price:55},
+  {id:'f2', cat:'cold', name:'فريش فراولة', price:55},
+  {id:'f3', cat:'cold', name:'فراولة لبن', price:50},
+  {id:'f4', cat:'cold', name:'موز بلبن', price:50},
+  {id:'f5', cat:'cold', name:'بلح', price:45},
+  {id:'f6', cat:'cold', name:'بطيخ', price:45},
+  {id:'f7', cat:'cold', name:'برتقال', price:45},
+  {id:'f8', cat:'cold', name:'كيوي (موسمي)', price:60},
+  {id:'f9', cat:'cold', name:'أفوجاتو', price:70},
+  {id:'f10',cat:'cold', name:'جوافة', price:45},
+  {id:'f11',cat:'cold', name:'نيو (افوجاتو – عسل – مكسرات – مانجو – موز)', price:95},
+  {id:'f12',cat:'cold', name:'فريش كوكتيل', price:80},
+  {id:'f13',cat:'cold', name:'كوكتيل قطع', price:85},
 
-            "بلوبري صودا","بلو صودا","برانديت صودا","فراولة صودا","أناناس صودا","خوخ صودا",
-            "موخيتو","موخيتو أناناس","موخيتو فراولة","موخيتو بلوبري","موخيتو خوخ"
-        ],
+  /* اسموزي */
+  {id:'sm1',cat:'cold', name:'اسموزي فراولة', price:60},
+  {id:'sm2',cat:'cold', name:'اسموزي مانجو', price:60},
+  {id:'sm3',cat:'cold', name:'اسموزي أناناس', price:60},
+  {id:'sm4',cat:'cold', name:'اسموزي خوخ', price:60},
+  {id:'sm5',cat:'cold', name:'اسموزي كيوي', price:65},
+  {id:'sm6',cat:'cold', name:'اسموزي بطيخ', price:60},
+  {id:'sm7',cat:'cold', name:'اسموزي بلوبري', price:70},
 
-        dessert: [
-            "وافل كلاسيك","وافل نوتيلا","وافل أوريو","وافل لوتس","وافل بستاشيو","وافل فواكه",
-            "مولتن","تشيز كيك","شوكليت كيك"
-        ],
+  /* صودا */
+  {id:'sd1',cat:'cold', name:'بلوبري صودا', price:45},
+  {id:'sd2',cat:'cold', name:'بلو صودا', price:45},
+  {id:'sd3',cat:'cold', name:'برانديت صودا', price:45},
+  {id:'sd4',cat:'cold', name:'فراولة صودا', price:45},
+  {id:'sd5',cat:'cold', name:'أناناس صودا', price:45},
+  {id:'sd6',cat:'cold', name:'خوخ صودا', price:45},
+  {id:'sd7',cat:'cold', name:'موخيتو', price:50},
+  {id:'sd8',cat:'cold', name:'موخيتو أناناس', price:55},
+  {id:'sd9',cat:'cold', name:'موخيتو فراولة', price:55},
+  {id:'sd10',cat:'cold', name:'موخيتو بلوبري', price:55},
+  {id:'sd11',cat:'cold', name:'موخيتو خوخ', price:55},
 
-        soft: [
-            "في كولا صودا","في كولا (كولا)","في كولا دايت"
-        ],
+  /* ديزيرت */
+  {id:'d1', cat:'dessert_dishes', name:'وافل كلاسيك', price:55},
+  {id:'d2', cat:'dessert_dishes', name:'وافل نوتيلا', price:75},
+  {id:'d3', cat:'dessert_dishes', name:'وافل أوريو', price:75},
+  {id:'d4', cat:'dessert_dishes', name:'وافل لوتس', price:75},
+  {id:'d5', cat:'dessert_dishes', name:'وافل بستاشيو', price:85},
+  {id:'d6', cat:'dessert_dishes', name:'وافل فواكه', price:80},
+  {id:'d7', cat:'dessert_dishes', name:'مولتن', price:70},
+  {id:'d8', cat:'dessert_dishes', name:'تشيز كيك', price:75},
+  {id:'d9', cat:'dessert_dishes', name:'شوكليت كيك', price:75},
 
-        new: [
-            "بطاطا فواكه ومكسرات وعسل",
-            "اندومي بقطع الفراخ بتتبيلة نيو",
-            "كوكتيل نيو المميز (فواكه – سموزي – عسل – مكسرات – هوهوز – مورو)"
-        ]
+  /* سوفت درينك */
+  {id:'sdx1',cat:'soft', name:'في كولا صودا', price:30},
+  {id:'sdx2',cat:'soft', name:'في كولا (كولا)', price:30},
+  {id:'sdx3',cat:'soft', name:'في كولا دايت', price:30},
+
+  /* مميز نيو */
+  {id:'sp1',cat:'special', name:'بطاطا فواكه ومكسرات وعسل', price:65},
+  {id:'sp2',cat:'special', name:'اندومي بقطع الفراخ بتتبيلة نيو', price:55},
+  {id:'sp3',cat:'special', name:'كوكتيل نيو المميز', price:120},
+];
+
+/* ===== STORAGE KEYS ===== */
+const CART_KEY = 'neoCafe_cart_v1';
+
+/* ===== utility: load/save cart ===== */
+function loadCart(){ try{ const r = localStorage.getItem(CART_KEY); return r ? JSON.parse(r) : []; } catch(e){ return []; } }
+function saveCart(cart){ try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); renderCartUI(true); } catch(e){ console.error(e); } }
+function clearCart(){ if(!confirm('تفريغ السلة؟')) return; localStorage.removeItem(CART_KEY); renderCartUI(); }
+
+/* ===== render functions ===== */
+const content = document.getElementById('content');
+const tabsEl = document.getElementById('tabs');
+const underlineEl = document.getElementById('tabsUnderline');
+
+function createCard(item, idx){
+  const el = document.createElement('div');
+  el.className = 'card';
+  el.style.animationDelay = `${idx * 60}ms`;
+  el.innerHTML = `
+    <img class="thumb" src="https://via.placeholder.com/400x300?text=${encodeURIComponent(item.name)}" alt="${escapeHtml(item.name)}">
+    <div class="meta">
+      <h3>${escapeHtml(item.name)}</h3>
+      <p>${item.desc ? escapeHtml(item.desc) : ''}</p>
+      <div class="price">${item.price} ج</div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-outline" onclick='viewDetails("${item.id}")'>عرض</button>
+      <button class="btn btn-primary" onclick='addToCart(${JSON.stringify(item).replaceAll("'", "\\'")})'>أضف للسلة</button>
+    </div>
+  `;
+  return el;
+}
+
+function renderCategory(cat){
+  content.innerHTML = '';
+  const title = document.createElement('div');
+  title.className = 'section-title';
+  let itemsToShow = [];
+
+  if(cat === 'all'){
+    title.textContent = 'كل المنتجات';
+    itemsToShow = MENU.slice();
+  } else {
+    const map = {
+      'hot':'مشروبات ساخنة',
+      'cold':'مشروبات باردة',
+      'dessert_dishes':'أطباق ديزيرت',
+      'soft':'سوفت درينك',
+      'special':'مميز نيو'
     };
+    title.textContent = map[cat] || cat;
+    itemsToShow = MENU.filter(i => i.cat === cat);
+  }
+  content.appendChild(title);
 
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  itemsToShow.forEach((it, idx) => grid.appendChild(createCard(it, idx)));
+  content.appendChild(grid);
 
-    function showCategory(cat) {
-        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-        event.target.classList.add("active");
+  requestAnimationFrame(moveUnderlineToActiveTab);
+}
 
-        let itemsDiv = document.getElementById("menuItems");
-        itemsDiv.innerHTML = "";
+/* view details simple popup */
+function viewDetails(id){
+  const item = MENU.find(i=>i.id===id);
+  if(!item) return alert('المنتج غير موجود');
+  const w = window.open('','_blank','width=420,height=600,scrollbars=yes');
+  w.document.write(`<html dir="rtl"><head><meta charset="utf-8"><title>${item.name}</title></head><body style="font-family:Cairo;padding:18px;"><h2>${item.name}</h2><img src="https://via.placeholder.com/600x420?text=${encodeURIComponent(item.name)}" style="width:100%;border-radius:8px"><p style="color:#666;margin-top:12px">${item.desc || ''}</p><p style="font-weight:800">${item.price} ج</p><button style="padding:10px 12px;background:${'#124d33'};border:0;color:#fff;border-radius:8px;cursor:pointer" onclick="window.opener.addToCart(${JSON.stringify(item)})">أضف للسلة</button></body></html>`);
+}
 
-        let list = [];
+/* ===== cart UI ===== */
+const cartBtn = document.getElementById('cartBtn');
+const cartBadge = document.getElementById('cartBadge');
+const cartPill = document.getElementById('cartPill');
+const pillTotal = document.getElementById('pillTotal');
+const pulse = document.getElementById('pulse');
+const cartFloat = document.getElementById('cartFloat');
+const cartTooltip = document.getElementById('cartTooltip');
 
-        if (cat === "all") {
-            list = [
-                ...menu.hot,
-                ...menu.cold,
-                ...menu.dessert,
-                ...menu.soft,
-                ...menu.new
-            ];
-        } else {
-            list = menu[cat];
-        }
+function calcTotals(cart){
+  let total=0, count=0;
+  for(const it of cart){ total += (Number(it.price)||0)*(Number(it.qty)||0); count += Number(it.qty)||0; }
+  return { total, count };
+}
 
-        list.forEach(i => {
-            itemsDiv.innerHTML += `<div class="item-box">${i}</div>`;
-        });
-    }
+function renderCartUI(wasAdded=false){
+  const cart = loadCart();
+  if(!cart || cart.length === 0){
+    cartBadge.style.display = 'none';
+    cartPill.style.display = 'none';
+    cartTooltip.textContent = 'السلة فارغة';
+    return;
+  }
+  const { total, count } = calcTotals(cart);
+  cartBadge.style.display = 'flex';
+  cartBadge.textContent = count;
+  pillTotal.textContent = `${total} ج`;
+  cartPill.style.display = 'flex';
+  cartTooltip.textContent = 'اضغط لعرض السلة';
+  if(wasAdded){
+    // pulse animation
+    pulse.classList.remove('show'); void pulse.offsetWidth; pulse.classList.add('show');
+    pulse.style.opacity = '1';
+    cartBtn.animate([{ transform: 'translateY(0)'},{ transform: 'translateY(-8px)' },{ transform: 'translateY(0)'}], { duration:420, easing:'cubic-bezier(.2,.85,.25,1)' });
+  }
+}
 
-    showCategory("all");
+/* add to cart logic */
+function addToCart(item){
+  const cart = loadCart();
+  const existing = cart.find(i => i.id === item.id);
+  if(existing) existing.qty = Number(existing.qty) + 1;
+  else cart.push({...item, qty:1});
+  saveCart(cart);
+  showToast(`${item.name} اتضاف للسلة ✔`);
+}
 
-    function openCart() {
-        alert("فتح السلة");
-    }
+/* open checkout */
+cartBtn.addEventListener('click', ()=> window.location.href = 'checkout.html');
+cartPill.addEventListener('click', ()=> window.location.href = 'checkout.html');
+
+cartFloat.addEventListener('mouseenter', ()=> cartFloat.classList.add('show-tooltip'));
+cartFloat.addEventListener('mouseleave', ()=> cartFloat.classList.remove('show-tooltip'));
+cartFloat.addEventListener('touchstart', ()=> { cartFloat.classList.add('show-tooltip'); setTimeout(()=>cartFloat.classList.remove('show-tooltip'),1200); });
+
+/* toast */
+function showToast(text){
+  const t = document.getElementById('toast');
+  t.textContent = text; t.classList.add('show');
+  setTimeout(()=> t.classList.remove('show'), 1200);
+}
+
+/* tabs underline movement */
+function moveUnderlineToActiveTab(){
+  const active = tabsEl.querySelector('.tab.active');
+  if(!active) return;
+  const tabsRect = tabsEl.getBoundingClientRect();
+  const rect = active.getBoundingClientRect();
+  const width = Math.max(40, rect.width * 0.9);
+  const center = (rect.left + rect.right)/2 - tabsRect.left;
+  underlineEl.style.width = `${width}px`;
+  underlineEl.style.right = `calc(50% - ${center}px)`;
+  underlineEl.style.opacity = '1';
+}
+
+/* tab clicks */
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click', (e) => {
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    renderCategory(btn.dataset.cat);
+  });
+});
+
+/* helper escape */
+function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+/* init */
+renderCategory('all');
+renderCartUI();
+
+/* expose for popup */
+window.addToCart = addToCart;
+window.clearCart = clearCart;
+window.renderCartUI = renderCartUI;
 </script>
+</body>
+</html>
