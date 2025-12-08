@@ -4,167 +4,305 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>نيو كافية منيو - NEO CAFE</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+<!-- Cairo font for Arabic modern look -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
 <style>
 :root{
   --neo-green:#124d33;
-  --neo-green-2:#2f6b46;
+  --neo-green-2:#21593f;
   --neo-beige:#f6efe6;
-  --neo-cream:#faf1e4;
+  --neo-cream:#fbf4e9;
   --muted:#6b6b6b;
+  --accent:#e8ddcc;
   --card-radius:14px;
-  --shadow: 0 14px 40px rgba(18,77,51,0.06);
+  --shadow: 0 18px 40px rgba(18,77,51,0.06);
 }
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;height:100%;background:var(--neo-beige);font-family:"Cairo",sans-serif;color:#111}
-img{max-width:100%;display:block}
 
-/* Header */
-.header{padding:16px 14px 8px;text-align:center;position:relative;background:linear-gradient(180deg,var(--neo-cream),var(--neo-beige))}
-.header .logo{position:absolute;top:8px;right:12px;width:80px;height:auto;object-fit:contain}
-.header h1{margin:6px 0 0;font-size:20px;color:var(--neo-green);font-weight:900}
-.header p{margin:6px 0 0;color:var(--neo-green-2);font-weight:700}
+/* reset */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--neo-beige);
+  font-family:"Cairo",sans-serif;
+  color:#0b0b0b;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.4;
+  -webkit-tap-highlight-color: transparent;
+}
 
-/* categories */
-.cats{display:flex;gap:8px;overflow-x:auto;padding:12px 12px 6px;border-bottom:1px solid rgba(0,0,0,0.03)}
-.cat{flex:0 0 auto;background:#fff;border-radius:999px;padding:10px 14px;border:1px solid rgba(18,77,51,0.06);font-weight:800;color:var(--neo-green);cursor:pointer;white-space:nowrap}
-.cat.active{background:linear-gradient(180deg,var(--neo-green),var(--neo-green-2));color:#fff;box-shadow:0 12px 30px rgba(18,77,51,0.12)}
+/* header */
+.header{
+  background: linear-gradient(180deg,var(--neo-cream),var(--neo-beige));
+  padding:18px 14px 8px;
+  text-align:center;
+  position:relative;
+}
+.header h1{
+  color:var(--neo-green);
+  font-weight:800;
+  font-size:20px;
+  margin-bottom:6px;
+}
+.header p{
+  color:var(--neo-green-2);
+  font-weight:700;
+}
 
-/* container & sections */
-.container{padding:12px;max-width:980px;margin:8px auto}
-.section-title{font-size:18px;font-weight:900;color:var(--neo-green-2);margin:6px 0 12px;text-align:right}
+/* logo top-right */
+.logo{
+  position:absolute;
+  right:12px;
+  top:12px;
+  width:68px;
+  height:auto;
+  object-fit:contain;
+}
 
-/* grid - two columns */
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+/* categories row */
+.cats{
+  display:flex;
+  gap:10px;
+  padding:12px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.cat{
+  flex:0 0 auto;
+  background:#fff;
+  border-radius:999px;
+  padding:10px 14px;
+  border:1px solid rgba(18,77,51,0.06);
+  font-weight:800;
+  color:var(--neo-green);
+  cursor:pointer;
+  white-space:nowrap;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.03);
+}
+.cat.active{
+  background:linear-gradient(180deg,var(--neo-green),var(--neo-green-2));
+  color:white;
+  box-shadow:0 20px 50px rgba(18,77,51,0.14);
+}
+
+/* container */
+.container{max-width:980px;margin:8px auto;padding:6px 12px 80px}
+
+/* section title */
+.section-title{
+  color:var(--neo-green-2);
+  font-weight:900;
+  font-size:18px;
+  margin:8px 0 12px;
+  text-align:right;
+}
+
+/* product grid */
+.grid{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:12px;
+}
+
+/* each card */
 .product-card{
-  background:#fff;border-radius:12px;padding:8px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;
-  transition:transform .14s ease, box-shadow .14s ease;
+  background:#fff;
+  border-radius:12px;
+  padding:8px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  transition: transform .14s ease, box-shadow .14s ease;
 }
-.product-card:hover{transform:translateY(-4px);box-shadow:0 26px 60px rgba(18,77,51,0.12)}
-.product-img{width:100%;height:130px;background:#efefef;border-radius:10px;object-fit:cover}
-.product-body{padding:8px 6px;display:flex;flex-direction:column;gap:8px}
-.row-title{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.product-card:hover{ transform: translateY(-6px); box-shadow: 0 30px 80px rgba(18,77,51,0.12); }
+.product-img{
+  width:100%;
+  height:120px;
+  object-fit:cover;
+  border-radius:10px;
+  background:#f2f2f2;
+}
+.product-body{padding:10px 6px;display:flex;flex-direction:column;gap:8px}
+.row-title{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .product-name{font-weight:900;color:var(--neo-green);font-size:15px;line-height:1.1}
-.product-desc{font-size:13px;color:var(--muted);min-height:36px}
-.product-footer{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.price{color:var(--neo-green);font-weight:900;font-size:15px}
-.add-btn{background:var(--neo-green);color:#fff;padding:8px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:900}
+.product-desc{color:var(--muted);font-size:13px;min-height:36px}
+.product-footer{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.price{color:var(--neo-green);font-weight:900}
+.add-btn{
+  background:var(--neo-green);
+  color:#fff;
+  padding:8px 12px;
+  border-radius:10px;
+  border:0;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 8px 20px rgba(18,77,51,0.12);
+}
 
-/* floating cart */
-.cart-float{position:fixed;left:14px;bottom:14px;z-index:2147483647;display:flex;align-items:center;gap:8px}
-.cart-btn{background:linear-gradient(180deg,var(--neo-green),var(--neo-green-2));color:#fff;border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:8px;box-shadow:0 28px 80px rgba(18,77,51,0.28);cursor:pointer}
-.cart-count{background:#ffeb3b;color:#111;border-radius:999px;padding:6px 10px;font-weight:900;min-width:28px;text-align:center}
+/* floating cart - fixed on bottom-right */
+.cart-float{position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;align-items:center;gap:10px}
+.cart-btn{
+  background:var(--neo-green);
+  color:#fff;
+  padding:12px 14px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  box-shadow:0 30px 80px rgba(18,77,51,0.24);
+  cursor:pointer;
+  transform-origin:center;
+}
+.cart-icon{width:20px;height:20px;background:transparent;border-radius:6px}
+.cart-count{background:#ffeb3b;color:#111;padding:6px 10px;border-radius:999px;font-weight:900;min-width:26px;text-align:center;}
 
-/* modal for subcategory (B) */
-.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:flex-end;justify-content:center;padding:12px;z-index:2147483646}
-.modal-backdrop.show{display:flex}
-.modal{width:100%;max-width:720px;background:#fff;border-radius:14px;padding:12px;box-shadow:0 30px 80px rgba(0,0,0,0.25);direction:rtl}
+/* toast */
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:150px;background:rgba(0,0,0,0.78);color:#fff;padding:10px 14px;border-radius:10px;font-weight:900;z-index:99999;opacity:0;transition:opacity .2s}
+
+/* modal for cold subcats and cart mini card */
+.modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:flex-end;justify-content:center;padding:12px;z-index:9998}
+.modal-back.show{display:flex}
+.modal{width:100%;max-width:760px;background:#fff;border-radius:12px;padding:12px;box-shadow:0 30px 80px rgba(0,0,0,0.25);direction:rtl}
 .modal h3{margin:0 0 8px;color:var(--neo-green);font-weight:900}
-.modal .list{max-height:56vh;overflow:auto;padding-right:6px}
+.modal .list{max-height:60vh;overflow:auto;padding-right:6px}
 .modal .list .item{display:flex;align-items:center;justify-content:space-between;padding:10px 6px;border-bottom:1px solid #f3f3f3}
 
-/* small screens adjustments */
-@media (max-width:460px){
-  .grid{grid-template-columns:repeat(1,1fr);gap:10px} /* single column on small phones for readability */
+/* footer */
+footer{padding:18px 12px;text-align:center;color:var(--muted)}
+.footer-socials{display:flex;gap:10px;justify-content:center;margin-bottom:10px}
+.footer-socials a{padding:10px 14px;border-radius:12px;color:#fff;font-weight:900;text-decoration:none}
+.fb{background:#1877F2}
+.ig{background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af)}
+.tt{background:#010101}
+
+/* small/mobile adjustments */
+@media (max-width:600px){
+  .grid{grid-template-columns:repeat(1,1fr);gap:14px} /* SINGLE column on phones as requested */
+  .logo{width:58px;right:10px;top:8px}
+  .header h1{font-size:18px}
   .product-img{height:160px}
-  .header .logo{width:64px}
+  .cart-btn{padding:10px 12px;border-radius:12px}
 }
+
+/* ensure long product names wrap */
+.product-name{word-break:break-word}
+
+/* accessibility focus */
+.add-btn:focus,.cat:focus,.cart-btn:focus{outline:3px solid rgba(18,77,51,0.12)}
 </style>
 </head>
 <body>
 
+<!-- header -->
 <header class="header">
-  <img src="assets/images/logo.png" class="logo" alt="NEO CAFE" onerror="this.style.display='none'">
-  <h1>نيو كافية منيو - NEO CAFE</h1>
+  <img src="assets/images/logo.png" alt="NEO Cafe" class="logo" id="topLogo" onerror="this.style.display='none'">
+  <h1>نيو كافية منيو - NEO CAFÉ</h1>
   <p>Make It NEO Time</p>
 </header>
 
 <!-- categories -->
-<div class="cats" id="catsRow">
+<div class="cats" id="catsRow" aria-label="أقسام المنيو">
   <div class="cat active" data-cat="all">الكل</div>
-  <div class="cat" data-cat="hot">مشروبات ساخنة</div>
   <div class="cat" data-cat="cold">مشروبات باردة</div>
+  <div class="cat" data-cat="hot">مشروبات ساخنة</div>
   <div class="cat" data-cat="soft">سوفت درينك</div>
-  <div class="cat" data-cat="dessert">ديزيرت</div>
+  <div class="cat" data-cat="dessert">أطباق ديزيرت</div>
   <div class="cat" data-cat="special">مميز نيو</div>
-  <div class="cat" data-cat="fun">دلع نفسك في نيو</div>
+  <div class="cat" data-cat="fun">دلع نفسك في نيو - مجانًا</div>
 </div>
 
+<!-- main -->
 <main class="container" id="mainContent">
   <div id="sections"></div>
 </main>
 
 <!-- floating cart -->
-<div class="cart-float">
-  <div id="cartBtn" class="cart-btn" aria-label="عرض السلة">
-    <div id="cartCount" class="cart-count">0</div>
+<div class="cart-float" aria-hidden="false">
+  <div id="cartBtn" class="cart-btn" role="button" aria-label="افتح السلة">
+    <div class="cart-count" id="cartCount">0</div>
     <div style="font-weight:900">السلة</div>
   </div>
 </div>
 
-<!-- modal for subcategory items -->
-<div id="modalBackdrop" class="modal-backdrop" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+<!-- modal backdrop (used for cold subcats and floating cart view) -->
+<div id="modalBackdrop" class="modal-back" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" id="modalContent">
     <h3 id="modalTitle">قائمة</h3>
     <div class="list" id="modalList"></div>
     <div style="display:flex;justify-content:space-between;margin-top:8px">
       <button id="closeModal" class="add-btn" style="background:#888">إغلاق</button>
+      <button id="checkoutNow" class="add-btn" style="background:var(--neo-green)">اطلب دلوقتي</button>
     </div>
   </div>
 </div>
 
-<footer style="padding:18px 12px 40px;text-align:center;color:var(--muted)">
+<!-- toast -->
+<div id="miniToast" class="toast" role="status" aria-live="polite"></div>
+
+<!-- footer -->
+<footer>
   <div style="font-weight:800;margin-bottom:8px">تابعنا على السوشيال</div>
-  <div style="display:flex;gap:8px;justify-content:center;margin-bottom:10px">
-    <a href="https://facebook.com/neo.cafe.eg" target="_blank" style="background:#1877F2;color:#fff;padding:8px 12px;border-radius:10px">Facebook</a>
-    <a href="https://instagram.com/neocafe.eg" target="_blank" style="background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af);color:#fff;padding:8px 12px;border-radius:10px">Instagram</a>
-    <a href="https://tiktok.com/@neo.cafe.eg" target="_blank" style="background:#010101;color:#fff;padding:8px 12px;border-radius:10px">TikTok</a>
+  <div class="footer-socials">
+    <a class="fb" href="https://facebook.com/neo.cafe.eg" target="_blank">Facebook</a>
+    <a class="ig" href="https://instagram.com/neocafe.eg" target="_blank">Instagram</a>
+    <a class="tt" href="https://tiktok.com/@neo.cafe.eg" target="_blank">TikTok</a>
   </div>
   <div style="font-weight:700;color:var(--neo-green)">❤️ شكراً لاختياركم نيو كافية — حب وتمييز لعملاء نيو دائماً</div>
 </footer>
 
 <script>
-/* ---------- CONFIG ---------- */
+/* =========================================================
+   Index single-file JS
+   - Cart guarded against double-add
+   - Cart resets on refresh (as requested)
+   - All menu data included
+   - Single delegated click listener
+   - Floating cart modal preview + "اطلب دلوقتي" button (links checkout.html)
+   ========================================================= */
+
+/* ------------- CONFIG ------------- */
 const CART_KEY = 'neoCafe_cart_v1';
 
-/* كما طلبت: السلة تفْرغ عند فتح المنيو (لو عايز تحتفظ بالسلة بعد الريفرِش احذف السطر التالي) */
+/* Reset cart on load (clear localStorage key) so refresh = empty cart */
 localStorage.removeItem(CART_KEY);
 
-/* ---------- MENU DATA (محدث وكامل) ---------- */
-/* استخدمت نفس البيانات المفصّلة اللي اتفقنا عليها سابقًا (أسماء، وصف، أسعار افتراضية، صور placeholder).
-   أنت حر تغيّر img إلى مسار صور حقيقي داخل assets/images/ */
+/* ------------- MENU DATA (from your list) ------------- */
+/* Data includes id, name, desc, price, img (placeholder) */
 const MENU = {
   hot: {
     title: 'المشروبات الساخنة',
     items: [
-      {id:'hot_1', name:'شاي', desc:'شاي أسود مصري تقليدي', price:18, img:'https://via.placeholder.com/600x400?text=شاي'},
-      {id:'hot_2', name:'شاي أخضر', desc:'شاي أخضر طازج', price:22, img:'https://via.placeholder.com/600x400?text=شاي+أخضر'},
-      {id:'hot_3', name:'شاي نكهات', desc:'اختار نكهتك المفضلة', price:20, img:'https://via.placeholder.com/600x400?text=شاي+نكهات'},
-      {id:'hot_4', name:'شاي بحليب', desc:'شاي بحليب ناعم', price:20, img:'https://via.placeholder.com/600x400?text=شاي+بحليب'},
-      {id:'hot_5', name:'نعناع', desc:'نعناع طازج مهدئ', price:18, img:'https://via.placeholder.com/600x400?text=نعناع'},
-      {id:'hot_6', name:'ينسون', desc:'مشروب ينسون مميز', price:18, img:'https://via.placeholder.com/600x400?text=ينسون'},
-      {id:'hot_7', name:'جنزبيل', desc:'جنزبيل ساخن ومنعش', price:20, img:'https://via.placeholder.com/600x400?text=جنزبيل'},
-      {id:'hot_8', name:'اسبريسو', desc:'اسبريسو مركز', price:25, img:'https://via.placeholder.com/600x400?text=اسبريسو'},
-      {id:'hot_9', name:'اسبريسو دبل', desc:'قوة مضاعفة', price:35, img:'https://via.placeholder.com/600x400?text=اسبريسو+دبل'},
-      {id:'hot_10', name:'قهوة تركي سنجل', desc:'تركي تقليدي', price:30, img:'https://via.placeholder.com/600x400?text=تركي+سنجل'},
-      {id:'hot_11', name:'قهوة تركي دبل', desc:'قهوة تركية أقوى', price:45, img:'https://via.placeholder.com/600x400?text=تركي+دبل'},
-      {id:'hot_12', name:'قهوة فرنساوي', desc:'قهوة مطحونة خاصة', price:40, img:'https://via.placeholder.com/600x400?text=فرنساوي'},
-      {id:'hot_13', name:'قهوة بندق', desc:'نكهة البندق الغنية', price:45, img:'https://via.placeholder.com/600x400?text=بندق'},
-      {id:'hot_14', name:'قهوة نوتيلا', desc:'قهوة بطعم النوتيلا', price:55, img:'https://via.placeholder.com/600x400?text=نوتيلا'},
-      {id:'hot_15', name:'قهوة بستاشيو', desc:'نغمة البستاشيو الفاخرة', price:60, img:'https://via.placeholder.com/600x400?text=بستاشيو'},
-      {id:'hot_16', name:'لاتيه', desc:'لاتيه بكريمة ناعمة', price:45, img:'https://via.placeholder.com/600x400?text=لاتيه'},
-      {id:'hot_17', name:'اسبانش لاتيه', desc:'لاتيه مع لمسة كراميل', price:55, img:'https://via.placeholder.com/600x400?text=اسبانيش+لاتيه'},
-      {id:'hot_18', name:'كابتشينو', desc:'رغوة متقنة ومرّات متوازنة', price:50, img:'https://via.placeholder.com/600x400?text=كابتشينو'},
-      {id:'hot_19', name:'نسكافيه', desc:'خيار سريع ولذيذ', price:30, img:'https://via.placeholder.com/600x400?text=نسكافيه'},
-      {id:'hot_20', name:'أميركان كوفي', desc:'قهوة أمريكية خفيفة', price:35, img:'https://via.placeholder.com/600x400?text=اميركان'},
-      {id:'hot_21', name:'هوت شوكليت', desc:'شوكليت ساخن غني', price:45, img:'https://via.placeholder.com/600x400?text=هوت+شوكليت'},
-      {id:'hot_22', name:'هوت سيدر', desc:'تفاح ساخن بالتوابل', price:40, img:'https://via.placeholder.com/600x400?text=هوت+سيدر'},
-      {id:'hot_23', name:'سحلب', desc:'سحلب تقليدي دافئ', price:50, img:'https://via.placeholder.com/600x400?text=سحلب'},
-      {id:'hot_24', name:'سحلب مكسرات', desc:'سحلب مع مكسرات', price:65, img:'https://via.placeholder.com/600x400?text=سحلب+مكسرات'},
-      {id:'hot_25', name:'سحلب لوتس', desc:'نكهة لوتس المميزة', price:70, img:'https://via.placeholder.com/600x400?text=سحلب+لوتس'},
-      {id:'hot_26', name:'سحلب بستاشيو', desc:'سحلب بطعم البستاشيو', price:75, img:'https://via.placeholder.com/600x400?text=سحلب+بستاشيو'},
-      {id:'hot_27', name:'سحلب نوتيلا', desc:'سحلب بنكهة نوتيلا', price:75, img:'https://via.placeholder.com/600x400?text=سحلب+نوتيلا'},
-      {id:'hot_28', name:'سحلب فواكه', desc:'سحلب مع قطع فواكه', price:80, img:'https://via.placeholder.com/600x400?text=سحلب+فواكه'}
+      {id:'hot_1', name:'شاي', desc:'شاي أسود مصري تقليدي', price:18, img:'assets/images/placeholder-1.png'},
+      {id:'hot_2', name:'شاي أخضر', desc:'شاي أخضر طازج', price:22, img:'assets/images/placeholder-2.png'},
+      {id:'hot_3', name:'شاي نكهات', desc:'اختار نكهتك', price:20, img:'assets/images/placeholder-3.png'},
+      {id:'hot_4', name:'شاي بحليب', desc:'شاي بحليب دافئ', price:20, img:'assets/images/placeholder-4.png'},
+      {id:'hot_5', name:'نعناع', desc:'نعناع طازج', price:18, img:'assets/images/placeholder-5.png'},
+      {id:'hot_6', name:'ينسون', desc:'ينسون مهدئ', price:18, img:'assets/images/placeholder-6.png'},
+      {id:'hot_7', name:'جنزبيل', desc:'جنزبيل صحي', price:20, img:'assets/images/placeholder-7.png'},
+      {id:'hot_8', name:'اسبريسو', desc:'اسبريسو مركز', price:25, img:'assets/images/placeholder-8.png'},
+      {id:'hot_9', name:'اسبريسو دبل', desc:'قوة مضاعفة', price:35, img:'assets/images/placeholder-9.png'},
+      {id:'hot_10', name:'قهوة تركي سنجل', desc:'تركي سنجل', price:30, img:'assets/images/placeholder-10.png'},
+      {id:'hot_11', name:'قهوة تركي دبل', desc:'تركي دبل', price:45, img:'assets/images/placeholder-11.png'},
+      {id:'hot_12', name:'قهوة فرنساوي', desc:'قهوة خاصة', price:40, img:'assets/images/placeholder-12.png'},
+      {id:'hot_13', name:'قهوة بندق', desc:'نكهة بندق', price:45, img:'assets/images/placeholder-13.png'},
+      {id:'hot_14', name:'قهوة نوتيلا', desc:'قهوة بطعم نوتيلا', price:55, img:'assets/images/placeholder-14.png'},
+      {id:'hot_15', name:'قهوة بستاشيو', desc:'قهوة بستاشيو', price:60, img:'assets/images/placeholder-15.png'},
+      {id:'hot_16', name:'لاتيه', desc:'لاتيه كريمي', price:45, img:'assets/images/placeholder-16.png'},
+      {id:'hot_17', name:'اسبانش لاتيه', desc:'لمسة اسبانية', price:55, img:'assets/images/placeholder-17.png'},
+      {id:'hot_18', name:'كابتشينو', desc:'رغوة مثالية', price:50, img:'assets/images/placeholder-18.png'},
+      {id:'hot_19', name:'نسكافيه', desc:'خيار سريع', price:30, img:'assets/images/placeholder-19.png'},
+      {id:'hot_20', name:'أميركان كوفي', desc:'قهوة امريكية', price:35, img:'assets/images/placeholder-20.png'},
+      {id:'hot_21', name:'هوت شوكليت', desc:'شوكليت غني', price:45, img:'assets/images/placeholder-21.png'},
+      {id:'hot_22', name:'هوت سيدر', desc:'تفاح وتوابل', price:40, img:'assets/images/placeholder-22.png'},
+      {id:'hot_23', name:'سحلب', desc:'سحلب تقليدي', price:50, img:'assets/images/placeholder-23.png'},
+      {id:'hot_24', name:'سحلب مكسرات', desc:'مع مكسرات', price:65, img:'assets/images/placeholder-24.png'},
+      {id:'hot_25', name:'سحلب لوتس', desc:'نكهة لوتس', price:70, img:'assets/images/placeholder-25.png'},
+      {id:'hot_26', name:'سحلب بستاشيو', desc:'بستاشيو فاخر', price:75, img:'assets/images/placeholder-26.png'},
+      {id:'hot_27', name:'سحلب نوتيلا', desc:'نوتيلا', price:75, img:'assets/images/placeholder-27.png'},
+      {id:'hot_28', name:'سحلب فواكه', desc:'قطع فواكه', price:80, img:'assets/images/placeholder-28.png'}
     ]
   },
 
@@ -172,64 +310,64 @@ const MENU = {
     title: 'المشروبات الباردة',
     subcats: [
       { key:'milkshake', title:'ملك تشيك (Milkshake)', items:[
-        {id:'milk_1',name:'ملك تشيك - أوريو',desc:'ميلك شيك غني بقطع الأوريو',price:75,img:'https://via.placeholder.com/600x400?text=ملك+تشيك+أوريو'},
-        {id:'milk_2',name:'ملك تشيك - هوهوز',desc:'نكهة هوهوز السلسة',price:75,img:'https://via.placeholder.com/600x400?text=هوهوز'},
-        {id:'milk_3',name:'ملك تشيك - فانليا',desc:'فانليا ناعمة وكريمية',price:75,img:'https://via.placeholder.com/600x400?text=فانليا'},
-        {id:'milk_4',name:'ملك تشيك - كراميل',desc:'كراميل غني',price:75,img:'https://via.placeholder.com/600x400?text=كراميل'},
-        {id:'milk_5',name:'ملك تشيك - فراولة',desc:'طعم فراولة طازج',price:75,img:'https://via.placeholder.com/600x400?text=فراولة'},
-        {id:'milk_6',name:'ملك تشيك - مانجو',desc:'مانجو ناضجة',price:75,img:'https://via.placeholder.com/600x400?text=مانجو'},
-        {id:'milk_7',name:'ملك تشيك - اسنيكرز',desc:'نكهة اسنيكرز',price:80,img:'https://via.placeholder.com/600x400?text=اسنيكرز'},
-        {id:'milk_8',name:'ملك تشيك - مورو',desc:'مورو بطعم الشوكولاتة',price:75,img:'https://via.placeholder.com/600x400?text=مورو'},
-        {id:'milk_9',name:'ملك تشيك - شوكلت',desc:'شوكولاتة غنية',price:75,img:'https://via.placeholder.com/600x400?text=شوكولاتة'},
-        {id:'milk_10',name:'ملك تشيك - نيو (مورو/هوهوز/أوريو)',desc:'تشكيلة نيو',price:85,img:'https://via.placeholder.com/600x400?text=نيو+ملك+تشيك'}
+        {id:'milk_1',name:'ملك تشيك - أوريو',desc:'ميلك شيك قطع أوريو',price:75,img:'assets/images/placeholder-31.png'},
+        {id:'milk_2',name:'ملك تشيك - هوهوز',desc:'نكهة هوهوز',price:75,img:'assets/images/placeholder-32.png'},
+        {id:'milk_3',name:'ملك تشيك - فانليا',desc:'فانليا كريمي',price:75,img:'assets/images/placeholder-33.png'},
+        {id:'milk_4',name:'ملك تشيك - كراميل',desc:'كراميل غني',price:75,img:'assets/images/placeholder-34.png'},
+        {id:'milk_5',name:'ملك تشيك - فراولة',desc:'فراولة طازجة',price:75,img:'assets/images/placeholder-35.png'},
+        {id:'milk_6',name:'ملك تشيك - مانجو',desc:'مانجو طبيعي',price:75,img:'assets/images/placeholder-36.png'},
+        {id:'milk_7',name:'ملك تشيك - اسنيكرز',desc:'نكهة اسنيكرز',price:80,img:'assets/images/placeholder-37.png'},
+        {id:'milk_8',name:'ملك تشيك - مورو',desc:'مورو شوكولاته',price:75,img:'assets/images/placeholder-38.png'},
+        {id:'milk_9',name:'ملك تشيك - شوكلت',desc:'شوكولاتة غنية',price:75,img:'assets/images/placeholder-39.png'},
+        {id:'milk_10',name:'ملك تشيك - نيو (مورو/هوهوز/أوريو)',desc:'تشكيلة نيو',price:85,img:'assets/images/placeholder-40.png'}
       ]},
       { key:'iced', title:'آيس (Iced)', items:[
-        {id:'ice_1',name:'آيس لاتيه',desc:'لاتيه بارد ومنعش',price:50,img:'https://via.placeholder.com/600x400?text=آيس+لاتيه'},
-        {id:'ice_2',name:'آيس كوفي',desc:'قهوة باردة إنرجيتك',price:50,img:'https://via.placeholder.com/600x400?text=آيس+كوفي'},
-        {id:'ice_3',name:'آيس أميركان',desc:'أميركان بارد وخفيف',price:45,img:'https://via.placeholder.com/600x400?text=آيس+اميركان'},
-        {id:'ice_4',name:'آيس سبانش لاتيه',desc:'نسخة باردة من الإسبانيش',price:60,img:'https://via.placeholder.com/600x400?text=آيس+اسبانيش'}
+        {id:'ice_1',name:'آيس لاتيه',desc:'لاتيه بارد',price:50,img:'assets/images/placeholder-41.png'},
+        {id:'ice_2',name:'آيس كوفي',desc:'قهوة مثلجة',price:50,img:'assets/images/placeholder-42.png'},
+        {id:'ice_3',name:'آيس أميركان',desc:'أميركان بارد',price:45,img:'assets/images/placeholder-43.png'},
+        {id:'ice_4',name:'آيس سبانش لاتيه',desc:'اسبانيش بارد',price:60,img:'assets/images/placeholder-44.png'}
       ]},
       { key:'frapp', title:'فرابتشينو / فربتشينو', items:[
-        {id:'frap_1',name:'فرابتشينو - شوكليت',desc:'قطع شوكولاتة ومثلج',price:60,img:'https://via.placeholder.com/600x400?text=فرابتشينو+شوكليت'},
-        {id:'frap_2',name:'فرابتشينو - كراميل',desc:'كراميل لذيذ',price:60,img:'https://via.placeholder.com/600x400?text=كراميل'},
-        {id:'frap_3',name:'فرابتشينو - أوريو',desc:'قطع أوريو مقرمشة',price:60,img:'https://via.placeholder.com/600x400?text=اوريو'},
-        {id:'frap_4',name:'فرابتشينو - اسنيكرز',desc:'نكهة اسنيكرز',price:65,img:'https://via.placeholder.com/600x400?text=اسنيكرز'}
+        {id:'frap_1',name:'فرابتشينو - شوكليت',desc:'قطع شوكولاتة',price:60,img:'assets/images/placeholder-45.png'},
+        {id:'frap_2',name:'فرابتشينو - كراميل',desc:'كراميل مخفوق',price:60,img:'assets/images/placeholder-46.png'},
+        {id:'frap_3',name:'فرابتشينو - أوريو',desc:'أوريو مقرمش',price:60,img:'assets/images/placeholder-47.png'},
+        {id:'frap_4',name:'فرابتشينو - اسنيكرز',desc:'نكهة اسنيكرز',price:65,img:'assets/images/placeholder-48.png'}
       ]},
       { key:'fresh', title:'فريش (عصائر طازجة)', items:[
-        {id:'fresh_1',name:'فريش مانجو',desc:'مانجو طبيعي',price:55,img:'https://via.placeholder.com/600x400?text=فريش+مانجو'},
-        {id:'fresh_2',name:'فريش فراولة',desc:'فراولة حقيقية',price:55,img:'https://via.placeholder.com/600x400?text=فريش+فراولة'},
-        {id:'fresh_3',name:'فراولة لبن',desc:'فراولة مع لبن',price:55,img:'https://via.placeholder.com/600x400?text=فراولة+لبن'},
-        {id:'fresh_4',name:'موز لبن',desc:'كلاسيكي ومغذي',price:55,img:'https://via.placeholder.com/600x400?text=موز+لبن'},
-        {id:'fresh_5',name:'بلح',desc:'عصير بلح لذيذ',price:45,img:'https://via.placeholder.com/600x400?text=بلح'},
-        {id:'fresh_6',name:'بطيخ',desc:'منعش للغاية',price:50,img:'https://via.placeholder.com/600x400?text=بطيخ'},
-        {id:'fresh_7',name:'برتقال',desc:'عصير برتقال طازج',price:45,img:'https://via.placeholder.com/600x400?text=برتقال'},
-        {id:'fresh_8',name:'كيوي (موسمي)',desc:'كيوي طبيعي',price:60,img:'https://via.placeholder.com/600x400?text=كيوي'},
-        {id:'fresh_9',name:'أفوغاتوا',desc:'أفوغاتوا مميزة',price:65,img:'https://via.placeholder.com/600x400?text=افوجاتو'},
-        {id:'fresh_10',name:'جوافة',desc:'جوافة طازجة',price:50,img:'https://via.placeholder.com/600x400?text=جوافة'},
-        {id:'fresh_11',name:'نيو (تشكيلة)',desc:'تشكيلة نيو الخاصة',price:70,img:'https://via.placeholder.com/600x400?text=نيو+تشكيلة'},
-        {id:'fresh_12',name:'فريش كوكتيل',desc:'مزيج فواكه متوازن',price:75,img:'https://via.placeholder.com/600x400?text=فريش+كوكتيل'},
-        {id:'fresh_13',name:'كوكتيل قطع',desc:'قطع فاكهة داخل العصير',price:80,img:'https://via.placeholder.com/600x400?text=كوكتيل+قطع'}
+        {id:'fresh_1',name:'فريش مانجو',desc:'مانجو طبيعي',price:55,img:'assets/images/placeholder-51.png'},
+        {id:'fresh_2',name:'فريش فراولة',desc:'فراولة طازجة',price:55,img:'assets/images/placeholder-52.png'},
+        {id:'fresh_3',name:'فراولة لبن',desc:'فراولة مع لبن',price:55,img:'assets/images/placeholder-53.png'},
+        {id:'fresh_4',name:'موز لبن',desc:'كلاسيكي',price:55,img:'assets/images/placeholder-54.png'},
+        {id:'fresh_5',name:'بلح',desc:'عصير بلح',price:45,img:'assets/images/placeholder-55.png'},
+        {id:'fresh_6',name:'بطيخ',desc:'منعش',price:50,img:'assets/images/placeholder-56.png'},
+        {id:'fresh_7',name:'برتقال',desc:'عصير برتقال',price:45,img:'assets/images/placeholder-57.png'},
+        {id:'fresh_8',name:'كيوي (موسمي)',desc:'كيوي موسمي',price:60,img:'assets/images/placeholder-58.png'},
+        {id:'fresh_9',name:'افوجاتو',desc:'افوجاتو لذيذ',price:65,img:'assets/images/placeholder-59.png'},
+        {id:'fresh_10',name:'جوافة',desc:'جوافة صحية',price:50,img:'assets/images/placeholder-60.png'},
+        {id:'fresh_11',name:'نيو (تشكيلة)',desc:'تشكيلة نيو',price:70,img:'assets/images/placeholder-61.png'},
+        {id:'fresh_12',name:'فريش كوكتيل',desc:'مزيج فواكه',price:75,img:'assets/images/placeholder-62.png'},
+        {id:'fresh_13',name:'كوكتيل قطع',desc:'قطع فاكهة',price:80,img:'assets/images/placeholder-63.png'}
       ]},
       { key:'smoothie', title:'سموثي / اسموزي', items:[
-        {id:'sm_1',name:'اسموزي فراولة',desc:'سموثي ناعم بفراولة',price:65,img:'https://via.placeholder.com/600x400?text=سموزي+فراولة'},
-        {id:'sm_2',name:'اسموزي مانجو',desc:'سموزي مانجو غني',price:65,img:'https://via.placeholder.com/600x400?text=سموزي+مانجو'},
-        {id:'sm_3',name:'اسموزي أناناس',desc:'حمة أناناس منعشة',price:65,img:'https://via.placeholder.com/600x400?text=سموزي+اناناس'},
-        {id:'sm_4',name:'اسموزي خوخ',desc:'خوخ كريمي طازج',price:65,img:'https://via.placeholder.com/600x400?text=سموزي+خوخ'},
-        {id:'sm_5',name:'اسموزي كيوي',desc:'حامضي ومنعش',price:65,img:'https://via.placeholder.com/600x400?text=سموزي+كيوي'},
-        {id:'sm_6',name:'اسموزي بطيخ',desc:'بطيخ صيفي',price:65,img:'https://via.placeholder.com/600x400?text=سموزي+بطيخ'},
-        {id:'sm_7',name:'اسموزي بلوبري',desc:'نغمة توت مميزة',price:75,img:'https://via.placeholder.com/600x400?text=سموزي+بلوبري'}
+        {id:'sm_1',name:'اسموزي فراولة',desc:'سموثي فراولة',price:65,img:'assets/images/placeholder-71.png'},
+        {id:'sm_2',name:'اسموزي مانجو',desc:'سموثي مانجو',price:65,img:'assets/images/placeholder-72.png'},
+        {id:'sm_3',name:'اسموزي أناناس',desc:'سموثي أناناس',price:65,img:'assets/images/placeholder-73.png'},
+        {id:'sm_4',name:'اسموزي خوخ',desc:'سموثي خوخ',price:65,img:'assets/images/placeholder-74.png'},
+        {id:'sm_5',name:'اسموزي كيوي',desc:'سموثي كيوي',price:65,img:'assets/images/placeholder-75.png'},
+        {id:'sm_6',name:'اسموزي بطيخ',desc:'سموثي بطيخ',price:65,img:'assets/images/placeholder-76.png'},
+        {id:'sm_7',name:'اسموزي بلوبري',desc:'سموثي بلوبري',price:75,img:'assets/images/placeholder-77.png'}
       ]},
       { key:'soda', title:'الصودا (Soda / Sparkling)', items:[
-        {id:'sd_1',name:'بلوبري صودا',desc:'توتر ازرق',price:40,img:'https://via.placeholder.com/600x400?text=بلوبري+صودا'},
-        {id:'sd_2',name:'بلو صودا',desc:'منعش',price:40,img:'https://via.placeholder.com/600x400?text=بلو+صودا'},
-        {id:'sd_3',name:'برانديت صودا',desc:'نكهة برانديت',price:40,img:'https://via.placeholder.com/600x400?text=برانديت'},
-        {id:'sd_4',name:'فراولة صودا',desc:'فراولة غازية',price:40,img:'https://via.placeholder.com/600x400?text=فراولة+صودا'},
-        {id:'sd_5',name:'أناناس صودا',desc:'أناناس مع غاز',price:40,img:'https://via.placeholder.com/600x400?text=اناناس+صودا'},
-        {id:'sd_6',name:'خوخ صودا',desc:'خوخ لذيذ',price:40,img:'https://via.placeholder.com/600x400?text=خوخ+صودا'},
-        {id:'sd_7',name:'موخيتو',desc:'نعناع وليمون',price:45,img:'https://via.placeholder.com/600x400?text=موخيتو'},
-        {id:'sd_8',name:'موخيتو أناناس',desc:'لمسة أناناس',price:45,img:'https://via.placeholder.com/600x400?text=موخيتو+اناناس'},
-        {id:'sd_9',name:'موخيتو فراولة',desc:'موخيتو مع فراولة',price:45,img:'https://via.placeholder.com/600x400?text=موخيتو+فراولة'},
-        {id:'sd_10',name:'موخيتو بلوبري',desc:'توتر ونكهة',price:45,img:'https://via.placeholder.com/600x400?text=موخيتو+بلوبري'}
+        {id:'sd_1',name:'بلوبري صودا',desc:'بلوبري غازي',price:40,img:'assets/images/placeholder-81.png'},
+        {id:'sd_2',name:'بلو صودا',desc:'بلو صودا منعشة',price:40,img:'assets/images/placeholder-82.png'},
+        {id:'sd_3',name:'برانديت صودا',desc:'برانديت',price:40,img:'assets/images/placeholder-83.png'},
+        {id:'sd_4',name:'فراولة صودا',desc:'فراولة غازية',price:40,img:'assets/images/placeholder-84.png'},
+        {id:'sd_5',name:'أناناس صودا',desc:'أناناس مع غاز',price:40,img:'assets/images/placeholder-85.png'},
+        {id:'sd_6',name:'خوخ صودا',desc:'خوخ لذيذ',price:40,img:'assets/images/placeholder-86.png'},
+        {id:'sd_7',name:'موخيتو',desc:'نعناع وليمون',price:45,img:'assets/images/placeholder-87.png'},
+        {id:'sd_8',name:'موخيتو أناناس',desc:'لمسة أناناس',price:45,img:'assets/images/placeholder-88.png'},
+        {id:'sd_9',name:'موخيتو فراولة',desc:'موخيتو فراولة',price:45,img:'assets/images/placeholder-89.png'},
+        {id:'sd_10',name:'موخيتو بلوبري',desc:'موخيتو بلوبري',price:45,img:'assets/images/placeholder-90.png'}
       ]}
     ]
   },
@@ -237,83 +375,82 @@ const MENU = {
   soft: {
     title: 'سوفت درينك / معلبات ومشروبات تلاجة',
     items: [
-      {id:'soft_1',name:'V-Cola Soda',desc:'مشروب غازي بنكهة خاصة',price:30,img:'https://via.placeholder.com/600x400?text=V-Cola+Soda'},
-      {id:'soft_2',name:'V-Cola Cola',desc:'V-Cola الكلاسيكي',price:30,img:'https://via.placeholder.com/600x400?text=V-Cola+Cola'},
-      {id:'soft_3',name:'V-Cola Diet',desc:'نسخة دايت',price:30,img:'https://via.placeholder.com/600x400?text=V-Cola+Diet'},
-      {id:'soft_4',name:'ريد بول (Red Bull)',desc:'مشروب طاقة',price:65,img:'https://via.placeholder.com/600x400?text=Red+Bull'},
-      {id:'soft_5',name:'تويست (Twist)',desc:'مشروب غازي',price:30,img:'https://via.placeholder.com/600x400?text=Twist'},
-      {id:'soft_6',name:'شويبس (Schweppes)',desc:'مياه غازية منكهة',price:28,img:'https://via.placeholder.com/600x400?text=Schweppes'},
-      {id:'soft_7',name:'فيروز',desc:'عصير فيروز طبيعي',price:28,img:'https://via.placeholder.com/600x400?text=فيروز'},
-      {id:'soft_8',name:'جهينه طبيعي مانجو',desc:'جهينة 100% مانجو',price:35,img:'https://via.placeholder.com/600x400?text=جهينه+مانجو'},
-      {id:'soft_9',name:'جهينه طبيعي تفاح',desc:'جهينة تفاح',price:35,img:'https://via.placeholder.com/600x400?text=جهينه+تفاح'},
-      {id:'soft_10',name:'جهينه ميكس فراولة لبن',desc:'مزيج فريش',price:35,img:'https://via.placeholder.com/600x400?text=جهينه+ميكس'}
+      {id:'soft_1',name:'V-Cola Soda',desc:'مشروب غازي',price:30,img:'assets/images/placeholder-101.png'},
+      {id:'soft_2',name:'V-Cola Cola',desc:'V-Cola الكلاسيكي',price:30,img:'assets/images/placeholder-102.png'},
+      {id:'soft_3',name:'V-Cola Diet',desc:'نسخة دايت',price:30,img:'assets/images/placeholder-103.png'},
+      {id:'soft_4',name:'ريد بول (Red Bull)',desc:'مشروب طاقة',price:65,img:'assets/images/placeholder-104.png'},
+      {id:'soft_5',name:'تويست (Twist)',desc:'مشروب غازي',price:30,img:'assets/images/placeholder-105.png'},
+      {id:'soft_6',name:'شويبس (Schweppes)',desc:'مياه غازية',price:28,img:'assets/images/placeholder-106.png'},
+      {id:'soft_7',name:'فيروز',desc:'عصير فيروز',price:28,img:'assets/images/placeholder-107.png'},
+      {id:'soft_8',name:'جهينه طبيعي مانجو',desc:'جهينه مانجو',price:35,img:'assets/images/placeholder-108.png'},
+      {id:'soft_9',name:'جهينه طبيعي تفاح',desc:'جهينه تفاح',price:35,img:'assets/images/placeholder-109.png'},
+      {id:'soft_10',name:'جهينه ميكس فراولة لبن',desc:'مزيج فراولة لبن',price:35,img:'assets/images/placeholder-110.png'}
     ]
   },
 
   dessert: {
     title: 'ديزيرت (حلويات)',
     items: [
-      {id:'dess_1',name:'وافل كلاسيك',desc:'وافل مع طرقته التقليدية',price:55,img:'https://via.placeholder.com/600x400?text=وافل+كلاسيك'},
-      {id:'dess_2',name:'وافل نوتيلا',desc:'وافل مع نوتيلا لذيذة',price:75,img:'https://via.placeholder.com/600x400?text=وافل+نوتيلا'},
-      {id:'dess_3',name:'وافل أوريو',desc:'وافل مع قطع أوريو',price:70,img:'https://via.placeholder.com/600x400?text=وافل+اوريو'},
-      {id:'dess_4',name:'وافل لوتس',desc:'وافل مع لوتس',price:70,img:'https://via.placeholder.com/600x400?text=وافل+لوتس'},
-      {id:'dess_5',name:'وافل بستاشيو',desc:'وافل مع بستاشيو',price:80,img:'https://via.placeholder.com/600x400?text=وافل+بستاشيو'},
-      {id:'dess_6',name:'وافل فواكه',desc:'وافل مع فاكهة طازجة',price:85,img:'https://via.placeholder.com/600x400?text=وافل+فواكه'},
-      {id:'dess_7',name:'مولتن',desc:'مولتن شوكليت ساخن',price:90,img:'https://via.placeholder.com/600x400?text=مولتن'},
-      {id:'dess_8',name:'تشيز كيك',desc:'تشيز كيك ناعم',price:95,img:'https://via.placeholder.com/600x400?text=تشيز+كيك'},
-      {id:'dess_9',name:'شوكليت كيك',desc:'كيك شوكليت غني',price:95,img:'https://via.placeholder.com/600x400?text=شوكليت+كيك'}
+      {id:'dess_1',name:'وافل كلاسيك',desc:'وافل تقليدي',price:55,img:'assets/images/placeholder-121.png'},
+      {id:'dess_2',name:'وافل نوتيلا',desc:'وافل مع نوتيلا',price:75,img:'assets/images/placeholder-122.png'},
+      {id:'dess_3',name:'وافل أوريو',desc:'وافل أوريو',price:70,img:'assets/images/placeholder-123.png'},
+      {id:'dess_4',name:'وافل لوتس',desc:'وافل لوتس',price:70,img:'assets/images/placeholder-124.png'},
+      {id:'dess_5',name:'وافل بستاشيو',desc:'وافل بستاشيو',price:80,img:'assets/images/placeholder-125.png'},
+      {id:'dess_6',name:'وافل فواكه',desc:'وافل مع فواكه',price:85,img:'assets/images/placeholder-126.png'},
+      {id:'dess_7',name:'مولتن',desc:'مولتن شوكليت',price:90,img:'assets/images/placeholder-127.png'},
+      {id:'dess_8',name:'تشيز كيك',desc:'تشيز كيك ناعم',price:95,img:'assets/images/placeholder-128.png'},
+      {id:'dess_9',name:'شوكليت كيك',desc:'كيك شوكليت',price:95,img:'assets/images/placeholder-129.png'}
     ]
   },
 
   special: {
     title: 'مميز نيو',
     items: [
-      {id:'sp_1',name:'بطاطا فواكه ومكسرات وعسل',desc:'طبق فواكه ومكسرات',price:65,img:'https://via.placeholder.com/600x400?text=بطاطا+فاكهة'},
-      {id:'sp_2',name:'اندومي بقطع الفراخ بتتبيلة نيو',desc:'اندومي بطبخ نيو المميز',price:55,img:'https://via.placeholder.com/600x400?text=اندومي+نيو'},
-      {id:'sp_3',name:'كوكتيل نيو المميز',desc:'فاكهة فاخرة مع سموزي',price:120,img:'https://via.placeholder.com/600x400?text=كوكتيل+نيو'}
+      {id:'sp_1',name:'بطاطا فواكه ومكسرات وعسل',desc:'طبق فواكه ومكسرات',price:65,img:'assets/images/placeholder-141.png'},
+      {id:'sp_2',name:'اندومي بقطع الفراخ بتتبيلة نيو',desc:'اندومي بطبخة نيو',price:55,img:'assets/images/placeholder-142.png'},
+      {id:'sp_3',name:'كوكتيل نيو المميز',desc:'فاكهة فاخرة مع سموزي',price:120,img:'assets/images/placeholder-143.png'}
     ]
   },
 
   fun: {
     title: 'دلع نفسك في نيو — (مجانًا)',
     items: [
-      {id:'fun_1',name:'لعبة دومينو',desc:'مجموعة دومينو مجانية',price:0,img:'https://via.placeholder.com/600x400?text=دومينو'},
-      {id:'fun_2',name:'كوتشينة (كوتشينه)',desc:'طقم كوتشينة للمرح',price:0,img:'https://via.placeholder.com/600x400?text=كوتشينة'},
-      {id:'fun_3',name:'شطرنج',desc:'لوحة شطرنج كاملة',price:0,img:'https://via.placeholder.com/600x400?text=شطرنج'},
-      {id:'fun_4',name:'قول أميم',desc:'لعبة قول أميم',price:0,img:'https://via.placeholder.com/600x400?text=قول+اميم'},
-      {id:'fun_5',name:'افتح توبيك',desc:'ابدأ موضوع نقاش',price:0,img:'https://via.placeholder.com/600x400?text=افتح+توبيك'}
+      {id:'fun_1',name:'لعبة دومينو',desc:'مجموعة دومينو مجانية',price:0,img:'assets/images/placeholder-151.png'},
+      {id:'fun_2',name:'كوتشينة (كوتشينه)',desc:'طقم كوتشينة',price:0,img:'assets/images/placeholder-152.png'},
+      {id:'fun_3',name:'شطرنج',desc:'لوحة شطرنج',price:0,img:'assets/images/placeholder-153.png'},
+      {id:'fun_4',name:'قول أميم',desc:'لعبة قول أميم',price:0,img:'assets/images/placeholder-154.png'},
+      {id:'fun_5',name:'افتح توبيك',desc:'ابدأ موضوع نقاش',price:0,img:'assets/images/placeholder-155.png'}
     ]
   }
 };
 
-/* ---------- STORAGE HELPERS ---------- */
+/* ------------- STORAGE HELPERS ------------- */
 function getCart(){
   try{ const d = localStorage.getItem(CART_KEY); return d ? JSON.parse(d) : []; } catch(e){ return []; }
 }
 function setCart(cart){
-  try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartCountAnimation(); } catch(e){ console.error(e); }
+  try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); renderCartCount(true); } catch(e){ console.error(e); }
 }
 function calcCartTotals(cart){
-  let q=0, t=0;
-  (cart||[]).forEach(i=>{ q += Number(i.qty||0); t += (Number(i.price||0) * Number(i.qty||0)); });
-  return {qty:q, total:t};
+  let qty=0, total=0;
+  (cart||[]).forEach(i=>{ qty += Number(i.qty||0); total += Number(i.qty||0) * Number(i.price||0); });
+  return {qty, total};
 }
 
-/* ---------- ADD TO CART (single source of truth) ---------- */
+/* ------------- ADD TO CART (single source) ------------- */
 function addToCart(id, name, price){
-  // ensure single atomic update
+  // central atomic update - increases qty by exactly 1
   const cart = getCart();
   const found = cart.find(x=> x.id === id);
   if(found){
-    found.qty = Number(found.qty) + 1; // increase by exactly 1
+    found.qty = Number(found.qty) + 1;
   } else {
     cart.push({ id, name, price: Number(price||0), qty: 1 });
   }
   setCart(cart);
-  renderCartCount(true);
 }
 
-/* ---------- RENDER UI ---------- */
+/* ------------- RENDER UI ------------- */
 const sectionsEl = document.getElementById('sections');
 
 function createTitle(text){ const d = document.createElement('div'); d.className='section-title'; d.textContent = text; return d; }
@@ -323,11 +460,11 @@ function createGrid(items){
   items.forEach(it=>{
     const card = document.createElement('div'); card.className='product-card';
     card.innerHTML = `
-      <img class="product-img" src="${it.img}" alt="${escapeHtml(it.name)}">
+      <img class="product-img" src="${it.img}" alt="${escapeHtml(it.name)}" onerror="this.src='https://via.placeholder.com/600x400?text=NEO'">
       <div class="product-body">
         <div class="row-title">
           <div class="product-name">${escapeHtml(it.name)}</div>
-          <div class="price">${it.price===0? 'مجانًا' : it.price + ' ج'}</div>
+          <div class="price">${it.price===0?'مجانًا':it.price + ' ج'}</div>
         </div>
         <div class="product-desc">${escapeHtml(it.desc)}</div>
         <div class="product-footer">
@@ -341,6 +478,7 @@ function createGrid(items){
   return grid;
 }
 
+/* render all sections */
 function renderSections(){
   sectionsEl.innerHTML = '';
 
@@ -350,7 +488,7 @@ function renderSections(){
   hot.appendChild(createGrid(MENU.hot.items));
   sectionsEl.appendChild(hot);
 
-  // COLD (preview buttons for subcats)
+  // COLD - we render preview subcat buttons and user can open modal for subcat
   const cold = document.createElement('div'); cold.className='section';
   cold.appendChild(createTitle(MENU.cold.title));
   const preview = document.createElement('div'); preview.style.display='flex'; preview.style.flexWrap='wrap'; preview.style.gap='10px';
@@ -360,36 +498,34 @@ function renderSections(){
   cold.appendChild(preview);
   sectionsEl.appendChild(cold);
 
-  // SOFT
+  // render other sections
   const soft = document.createElement('div'); soft.className='section';
   soft.appendChild(createTitle(MENU.soft.title));
   soft.appendChild(createGrid(MENU.soft.items));
   sectionsEl.appendChild(soft);
 
-  // DESSERT
-  const dess = document.createElement('div'); dess.className='section';
-  dess.appendChild(createTitle(MENU.dessert.title));
-  dess.appendChild(createGrid(MENU.dessert.items));
-  sectionsEl.appendChild(dess);
+  const dessert = document.createElement('div'); dessert.className='section';
+  dessert.appendChild(createTitle(MENU.dessert.title));
+  dessert.appendChild(createGrid(MENU.dessert.items));
+  sectionsEl.appendChild(dessert);
 
-  // SPECIAL
-  const sp = document.createElement('div'); sp.className='section';
-  sp.appendChild(createTitle(MENU.special.title));
-  sp.appendChild(createGrid(MENU.special.items));
-  sectionsEl.appendChild(sp);
+  const special = document.createElement('div'); special.className='section';
+  special.appendChild(createTitle(MENU.special.title));
+  special.appendChild(createGrid(MENU.special.items));
+  sectionsEl.appendChild(special);
 
-  // FUN
   const fun = document.createElement('div'); fun.className='section';
   fun.appendChild(createTitle(MENU.fun.title));
   fun.appendChild(createGrid(MENU.fun.items));
   sectionsEl.appendChild(fun);
 }
 
-/* ---------- MODAL (for COLD subcats) ---------- */
+/* ------------- MODAL LOGIC (subcat & cart preview) ------------- */
 const modalBackdrop = document.getElementById('modalBackdrop');
 const modalTitle = document.getElementById('modalTitle');
 const modalList  = document.getElementById('modalList');
 const closeModal = document.getElementById('closeModal');
+const checkoutNow = document.getElementById('checkoutNow');
 
 function openSubcat(key){
   const sc = MENU.cold.subcats.find(s=> s.key === key);
@@ -412,29 +548,48 @@ function openSubcat(key){
   modalBackdrop.classList.add('show');
   modalBackdrop.setAttribute('aria-hidden','false');
 }
+
 closeModal.addEventListener('click', ()=> { modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); });
 modalBackdrop.addEventListener('click',(e)=>{ if(e.target === modalBackdrop){ modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); } });
 
-/* ---------- SINGLE DELEGATED CLICK HANDLER (fix duplicate-add issue) ---------- */
-/* Important: exactly one handler for clicks below; it performs checks and calls addToCart once. */
+checkoutNow.addEventListener('click', ()=>{
+  // redirect to checkout page (if you have one). If not, we can open checkout.html when you add it.
+  window.location.href = 'checkout.html';
+});
+
+/* ------------- CLICK DELEGATION with anti-double-add guard ------------- */
+/* ensure exactly one listener handles add clicks; guard prevents adding twice per quick double-click */
+const __neo_last_clicks = {}; // id -> timestamp
+const __NEO_GUARD_MS = 600; // ignore repeated clicks on same product within this ms
+
 document.addEventListener('click', function(e){
-  // 1) Add button clicks
+  // handle add button
   const addBtn = e.target.closest('.add-btn');
   if(addBtn && addBtn.dataset && addBtn.dataset.id){
-    // prevent double-handling: stop propagation and default
     e.preventDefault();
     e.stopPropagation();
-    const id = addBtn.dataset.id;
+
+    const id = String(addBtn.dataset.id);
     const name = addBtn.dataset.name || (addBtn.closest('.product-card')?.querySelector('.product-name')?.textContent || 'منتج');
     const price = Number(addBtn.dataset.price || 0);
-    // call centralized add function (adds exactly 1)
+
+    const now = Date.now();
+    if(__neo_last_clicks[id] && (now - __neo_last_clicks[id] < __NEO_GUARD_MS)){
+      // ignore quick duplicate
+      return;
+    }
+    __neo_last_clicks[id] = now;
+    setTimeout(()=> { __neo_last_clicks[id] = 0; }, __NEO_GUARD_MS + 50);
+
+    // centralized add
     addToCart(id, name, price);
-    // small visual feedback
-    showMiniToast(`${name} اتضاف للسلة`);
+    showToast(`${name} اتضاف للسلة`);
+    animateCartPulse();
+
     return;
   }
 
-  // 2) modal subcat preview buttons (open modal)
+  // open subcategory modal
   const subBtn = e.target.closest('.cat[data-sub]');
   if(subBtn && subBtn.dataset.sub){
     e.preventDefault();
@@ -443,7 +598,7 @@ document.addEventListener('click', function(e){
     return;
   }
 
-  // 3) top categories row filter (non-subcat .cat elements have data-cat)
+  // category filter
   const catBtn = e.target.closest('.cat[data-cat]');
   if(catBtn && catBtn.dataset.cat){
     e.preventDefault();
@@ -454,74 +609,235 @@ document.addEventListener('click', function(e){
     return;
   }
 
-  // otherwise nothing to do
+  // cart btn click -> open cart preview modal
+  const cartBtn = e.target.closest('#cartBtn');
+  if(cartBtn){
+    e.preventDefault();
+    e.stopPropagation();
+    openCartPreview();
+    return;
+  }
 });
 
-/* ---------- CART COUNT UI ---------- */
+/* ------------- CART UI ------------- */
 function renderCartCount(animate=false){
+  const el = document.getElementById('cartCount');
   const cart = getCart();
   const totals = calcCartTotals(cart);
-  const el = document.getElementById('cartCount');
   el.textContent = totals.qty;
   if(animate){
-    el.animate([{ transform: 'scale(1)' }, { transform:'scale(1.12)' }, { transform:'scale(1)' }], { duration: 500 });
+    el.animate([{ transform: 'scale(1)' }, { transform:'scale(1.18)' }, { transform:'scale(1)' }], { duration: 700 });
   }
 }
-function updateCartCountAnimation(){ renderCartCount(true); }
 
-/* ---------- HELPER TOAST ---------- */
-let toastTimer = 0;
-function showMiniToast(txt){
-  const id = '__neo_toast__';
-  let el = document.getElementById(id);
-  if(!el){
-    el = document.createElement('div'); el.id = id;
-    el.style.position = 'fixed'; el.style.left='50%'; el.style.transform='translateX(-50%)'; el.style.bottom='170px';
-    el.style.background='rgba(0,0,0,0.78)'; el.style.color='#fff'; el.style.padding='10px 14px'; el.style.borderRadius='10px';
-    el.style.zIndex = 2147483647; el.style.fontWeight='900';
-    document.body.appendChild(el);
-  }
+/* pulse animation when item added - grows then back */
+let cartPulseTimeout = null;
+function animateCartPulse(){
+  const btn = document.querySelector('.cart-btn');
+  if(!btn) return;
+  btn.style.transition = 'transform .18s';
+  btn.style.transform = 'scale(1.18)';
+  clearTimeout(cartPulseTimeout);
+  cartPulseTimeout = setTimeout(()=> { btn.style.transform = 'scale(1)'; }, 2000); // stays bigger then shrink
+}
+
+/* ------------- TOAST ------------- */
+let toastTimer = null;
+function showToast(txt){
+  const el = document.getElementById('miniToast');
   el.textContent = txt;
   el.style.opacity = '1';
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=> el.style.opacity = '0', 1100);
+  toastTimer = setTimeout(()=> { el.style.opacity = '0'; }, 1200);
 }
 
-/* ---------- CATEGORY FILTER ---------- */
+/* ------------- FILTER ------------- */
 function filterCategory(cat){
   const sections = document.querySelectorAll('.section');
   sections.forEach(s=> s.style.display = 'none');
-  if(cat === 'all'){
-    sections.forEach(s=> s.style.display = 'block'); return;
-  }
+  if(cat === 'all'){ sections.forEach(s=> s.style.display = 'block'); window.scrollTo({ top:120, behavior:'smooth' }); return; }
   const map = { hot:0, cold:1, soft:2, dessert:3, special:4, fun:5 };
   const idx = map[cat];
-  if(typeof idx === 'number'){
-    const sec = document.querySelectorAll('.section')[idx];
-    if(sec) sec.style.display = 'block';
-    window.scrollTo({ top:120, behavior:'smooth' });
-  } else { sections.forEach(s=> s.style.display = 'block'); }
+  const secList = document.querySelectorAll('.section');
+  if(typeof idx === 'number' && secList[idx]) secList[idx].style.display = 'block';
+  window.scrollTo({ top:120, behavior:'smooth' });
 }
 
-/* ---------- UTILS ---------- */
+/* ------------- MODAL: open cart preview ------------- */
+function openCartPreview(){
+  const cart = getCart();
+  modalTitle.textContent = 'السلة';
+  modalList.innerHTML = '';
+  if(!cart.length){
+    modalList.innerHTML = '<div style="padding:12px;color:var(--muted)">السلة فارغة — اذهب للمنيو لإضافة طلبات</div>';
+  } else {
+    cart.forEach((it, idx)=>{
+      const row = document.createElement('div'); row.className='item';
+      row.innerHTML = `
+        <div style="flex:1">
+          <div style="font-weight:900">${escapeHtml(it.name)}</div>
+          <div style="color:var(--muted);font-size:13px">${it.price} ج لكل وحدة</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+          <div style="display:flex;gap:6px;align-items:center">
+            <button class="qty-btn" data-action="inc" data-id="${it.id}" style="background:#eee;border-radius:6px;padding:6px 8px;border:0">+</button>
+            <div style="min-width:28px;text-align:center;font-weight:900">${it.qty}</div>
+            <button class="qty-btn" data-action="dec" data-id="${it.id}" style="background:#eee;border-radius:6px;padding:6px 8px;border:0">-</button>
+          </div>
+          <button class="remove-btn" data-id="${it.id}" style="background:transparent;border:0;color:#d9534f;font-weight:900">حذف</button>
+        </div>
+      `;
+      modalList.appendChild(row);
+    });
+    const totals = calcCartTotals(cart);
+    const totRow = document.createElement('div');
+    totRow.style.padding = '10px 6px';
+    totRow.innerHTML = `<div style="font-weight:900;color:var(--neo-green)">الإجمالي: ${totals.total} ج</div>`;
+    modalList.appendChild(totRow);
+  }
+  modalBackdrop.classList.add('show');
+  modalBackdrop.setAttribute('aria-hidden','false');
+}
+
+/* handle quantity changes / remove from cart within modal */
+modalList.addEventListener('click', function(e){
+  const btn = e.target.closest('.qty-btn');
+  if(btn){
+    e.preventDefault(); e.stopPropagation();
+    const id = btn.dataset.id;
+    const action = btn.dataset.action;
+    changeQty(id, action === 'inc' ? 1 : -1);
+    openCartPreview(); // re-render
+    return;
+  }
+  const rem = e.target.closest('.remove-btn');
+  if(rem){
+    e.preventDefault(); e.stopPropagation();
+    const id = rem.dataset.id;
+    removeFromCart(id);
+    openCartPreview();
+    return;
+  }
+});
+
+/* change qty function */
+function changeQty(id, delta){
+  const cart = getCart();
+  const found = cart.find(x=>x.id===id);
+  if(!found) return;
+  found.qty = Math.max(0, Number(found.qty) + Number(delta));
+  // remove if zero
+  const newCart = cart.filter(x=> Number(x.qty) > 0);
+  setCart(newCart);
+}
+
+/* remove */
+function removeFromCart(id){
+  const cart = getCart().filter(x=> x.id !== id);
+  setCart(cart);
+}
+
+/* ------------- UTILS ------------- */
 function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
 
-/* ---------- INIT PAGE ---------- */
+/* ------------- INIT & BINDINGS ------------- */
 function init(){
   renderSections();
   renderCartCount(false);
 
-  // cart button navigates to checkout page (checkout.html will read from localStorage)
-  document.getElementById('cartBtn').addEventListener('click', ()=> {
-    window.location.href = 'checkout.html';
-  });
+  // close modal
+  document.getElementById('closeModal').addEventListener('click',()=>{ modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); });
+  modalBackdrop.addEventListener('click',(e)=>{ if(e.target === modalBackdrop){ modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); } });
 
-  // ensure page opens fully on mobile (mobile-fit)
+  // qty buttons inside modal - handled above by event delegation
+
+  // cart button opens preview
+  document.getElementById('cartBtn').addEventListener('click', (e)=>{ e.preventDefault(); openCartPreview(); });
+
+  // important: after render, ensure categories with data-sub have attribute for click handling
+  // already set during renderSections
+
+  // small safety: focus top to make mobile open fully
   window.scrollTo(0,0);
 }
 
 init();
+renderCartCount(false);
 
+/* ------------- renderSections function declared after to ensure MENU used earlier ------------- */
+function renderSections(){
+  sectionsEl.innerHTML = '';
+
+  // HOT
+  const hot = document.createElement('div'); hot.className='section';
+  hot.appendChild(createTitle(MENU.hot.title));
+  hot.appendChild(createGrid(MENU.hot.items));
+  sectionsEl.appendChild(hot);
+
+  // COLD (subcat buttons)
+  const cold = document.createElement('div'); cold.className='section';
+  cold.appendChild(createTitle(MENU.cold.title));
+  const preview = document.createElement('div'); preview.style.display='flex'; preview.style.flexWrap='wrap'; preview.style.gap='10px';
+  MENU.cold.subcats.forEach(sc=>{
+    const btn = document.createElement('div'); btn.className='cat'; btn.textContent = sc.title; btn.dataset.sub = sc.key; preview.appendChild(btn);
+  });
+  cold.appendChild(preview);
+  sectionsEl.appendChild(cold);
+
+  // SOFT
+  const soft = document.createElement('div'); soft.className='section';
+  soft.appendChild(createTitle(MENU.soft.title));
+  soft.appendChild(createGrid(MENU.soft.items));
+  sectionsEl.appendChild(soft);
+
+  // DESSERT
+  const dessert = document.createElement('div'); dessert.className='section';
+  dessert.appendChild(createTitle(MENU.dessert.title));
+  dessert.appendChild(createGrid(MENU.dessert.items));
+  sectionsEl.appendChild(dessert);
+
+  // SPECIAL
+  const sp = document.createElement('div'); sp.className='section';
+  sp.appendChild(createTitle(MENU.special.title));
+  sp.appendChild(createGrid(MENU.special.items));
+  sectionsEl.appendChild(sp);
+
+  // FUN
+  const fun = document.createElement('div'); fun.className='section';
+  fun.appendChild(createTitle(MENU.fun.title));
+  fun.appendChild(createGrid(MENU.fun.items));
+  sectionsEl.appendChild(fun);
+}
+
+/* duplicate helper to create grid (needed because of function hoisting) */
+function createGrid(items){
+  const grid = document.createElement('div'); grid.className='grid';
+  items.forEach(it=>{
+    const card = document.createElement('div'); card.className='product-card';
+    card.innerHTML = `
+      <img class="product-img" src="${it.img}" alt="${escapeHtml(it.name)}" onerror="this.src='https://via.placeholder.com/600x400?text=NEO'">
+      <div class="product-body">
+        <div class="row-title">
+          <div class="product-name">${escapeHtml(it.name)}</div>
+          <div class="price">${it.price===0?'مجانًا':it.price + ' ج'}</div>
+        </div>
+        <div class="product-desc">${escapeHtml(it.desc)}</div>
+        <div class="product-footer">
+          <div></div>
+          <button class="add-btn" data-id="${it.id}" data-name="${escapeHtml(it.name)}" data-price="${it.price}">أضف</button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+  return grid;
+}
+
+/* ensure cart count re-renders when storage changes elsewhere (not likely) */
+window.addEventListener('storage', ()=> renderCartCount(false));
+
+/* ensure cartCount shows correct value at start */
+renderCartCount(false);
 </script>
 </body>
 </html>
