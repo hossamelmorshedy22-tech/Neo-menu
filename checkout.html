@@ -36,13 +36,13 @@ input[type="text"],input[type="tel"],select,textarea{width:100%;padding:10px;bor
   <div class="field">
     <label>تاريخ الميلاد</label>
     <div class="row">
-      <select id="birth-day" class="small-select">
+      <select id="birth-day" class="small-select" aria-label="اليوم">
         <option value="">اليوم</option>
       </select>
-      <select id="birth-month" class="small-select">
+      <select id="birth-month" class="small-select" aria-label="الشهر">
         <option value="">الشهر</option>
       </select>
-      <select id="birth-year" class="small-select">
+      <select id="birth-year" class="small-select" aria-label="السنة">
         <option value="">السنة</option>
       </select>
     </div>
@@ -79,36 +79,45 @@ input[type="text"],input[type="tel"],select,textarea{width:100%;padding:10px;bor
     <button id="sendBtn" class="btn">إرسال الطلب عبر واتساب للمحل</button>
     <button id="backBtn" class="btn" style="background:#888">العودة للمنيو</button>
   </div>
-  <div class="small" style="margin-top:8px">ملاحظة: السلة ستُفرَّغ عند إعادة تحميل الصفحة كما تم طلب ذلك.</div>
+  <div class="small" style="margin-top:8px">سيتم فتح واتساب على رقم المحل لإكمال الطلب.</div>
 </div>
 
 <script>
-/* تفريع السلة عند تحميل الصفحة */
-const CART_KEY = 'neoCafe_cart_v1';
-localStorage.removeItem(CART_KEY); // <-- يمسح السلة عند كل Refresh
+/* === checkout logic === */
+const CART_KEY = 'neoCafe_cart_v1'; // نفس المفتاح في index.html
+const SHOP_PHONE_WA = '201034311119'; // رقم المحل بصيغة دولية بدون "+"
+/* NOTE: لا يوجد هنا localStorage.removeItem -- عشان السلة تظل متاحة عند الوصول لل checkout */
 
-/* populate selects */
+/* عناصر للتحكم */
 const dayEl = document.getElementById('birth-day');
 const monthEl = document.getElementById('birth-month');
 const yearEl = document.getElementById('birth-year');
-for(let d=1; d<=31; d++){ const o = document.createElement('option'); o.value = d; o.textContent = d; dayEl.appendChild(o); }
-for(let m=1; m<=12; m++){ const o=document.createElement('option'); o.value=m; o.textContent=m; monthEl.appendChild(o); }
-const currentYear = new Date().getFullYear();
-for(let y=currentYear; y>=1960; y--){ const o=document.createElement('option'); o.value=y; o.textContent=y; yearEl.appendChild(o); }
 const tableEl = document.getElementById('table-number');
-for(let t=1; t<=10; t++){ const o=document.createElement('option'); o.value=t; o.textContent=t; tableEl.appendChild(o); }
-
-/* Since cart is cleared on load, the list will be empty. But keep render function to show current cart if any */
-function loadCart(){ try{ const d = localStorage.getItem(CART_KEY); return d ? JSON.parse(d) : []; } catch(e){ return []; } }
-function calcTotals(cart){ let total=0; cart.forEach(i=> total += (Number(i.price)||0)*(Number(i.qty)||0)); return total; }
 const itemsList = document.getElementById('itemsList');
 const grandTotalEl = document.getElementById('grandTotal');
 const loyaltyNote = document.getElementById('loyaltyNote');
 
+/* ملأ قوائم اليوم والشهر والسنة (سنة تبدأ من 1960) */
+for(let d=1; d<=31; d++){ const o = document.createElement('option'); o.value = d; o.textContent = d; dayEl.appendChild(o); }
+for(let m=1; m<=12; m++){ const o=document.createElement('option'); o.value=m; o.textContent=m; monthEl.appendChild(o); }
+const currentYear = new Date().getFullYear();
+for(let y=currentYear; y>=1960; y--){ const o=document.createElement('option'); o.value=y; o.textContent=y; yearEl.appendChild(o); }
+for(let t=1; t<=10; t++){ const o=document.createElement('option'); o.value=t; o.textContent=t; tableEl.appendChild(o); }
+
+/* helpers */
+function loadCart(){ try{ const d = localStorage.getItem(CART_KEY); return d ? JSON.parse(d) : []; } catch(e){ return []; } }
+function calcTotals(cart){ let total=0; cart.forEach(i=> total += (Number(i.price)||0)*(Number(i.qty)||0)); return total; }
+
+/* render cart */
 function renderCartOnCheckout(){
   const cart = loadCart();
   itemsList.innerHTML = '';
-  if(!cart || cart.length===0){ itemsList.innerHTML = '<div>السلة فارغة — اذهب للمنيو لإضافة طلبات</div>'; grandTotalEl.textContent = '0 ج'; loyaltyNote.textContent=''; return; }
+  if(!cart || cart.length===0){
+    itemsList.innerHTML = '<div>السلة فارغة — اذهب للمنيو لإضافة طلبات</div>';
+    grandTotalEl.textContent = '0 ج';
+    loyaltyNote.textContent = '';
+    return;
+  }
   cart.forEach((it, idx)=>{
     const div = document.createElement('div');
     div.className = 'item-line';
@@ -126,10 +135,11 @@ function renderCartOnCheckout(){
     loyaltyNote.textContent = `متبقي ${remain} ج لتحصل على مشروب مجاني (نظام الولاء عند 1000 ج).`;
   }
 }
+
+/* init render when page loads */
 renderCartOnCheckout();
 
-/* send via wa.me to specific shop number (as before) */
-const SHOP_PHONE_WA = '201034311119';
+/* send message to shop via wa.me (client opens WhatsApp with prefilled message) */
 document.getElementById('sendBtn').addEventListener('click', ()=>{
   const nickname = document.getElementById('nickname').value.trim() || '-';
   const day = document.getElementById('birth-day').value || '-';
@@ -152,8 +162,8 @@ document.getElementById('sendBtn').addEventListener('click', ()=>{
   window.open(`https://wa.me/${SHOP_PHONE_WA}?text=${encoded}`, '_blank');
 });
 
-/* back to menu */
-document.getElementById('backBtn')?.addEventListener('click', ()=> window.location.href = 'index.html');
+/* back button */
+document.getElementById('backBtn').addEventListener('click', ()=> window.location.href = 'index.html');
 </script>
 </body>
 </html>
