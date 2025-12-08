@@ -14,7 +14,6 @@
   --muted:#6b6b6b;
   --shadow: 0 12px 30px rgba(15,40,25,0.06);
 }
-/* resets */
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;height:100%;background:var(--neo-beige);font-family:"Cairo",sans-serif;color:#111}
 img{max-width:100%;display:block}
@@ -39,10 +38,10 @@ img{max-width:100%;display:block}
 
 /* grid */
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding-bottom:180px}
-.card{background:#fff;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow);transition:transform .18s}
-.thumb{width:100%;height:120px;border-radius:10px;background:#efefef;object-fit:cover}
+.card{background:#fff;border-radius:14px;padding:12px;display:flex;flex-direction:row;gap:12px;box-shadow:var(--shadow);transition:transform .14s}
+.thumb{width:120px;height:92px;border-radius:10px;background:#efefef;object-fit:cover;flex:0 0 120px}
+.info{flex:1;display:flex;flex-direction:column;justify-content:space-between}
 .product-title{font-size:16px;font-weight:800;color:var(--neo-green);word-break:break-word}
-.product-desc{font-size:13px;color:var(--muted)}
 .price-row{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
 .price{color:var(--neo-green);font-weight:900;font-size:15px}
 
@@ -59,6 +58,7 @@ img{max-width:100%;display:block}
 .cart-float{position:fixed;right:14px;bottom:14px;z-index:2147483647;display:flex;align-items:center;gap:10px;pointer-events:auto}
 .cart-btn{width:62px;height:62px;border-radius:14px;background:linear-gradient(180deg,var(--neo-green),var(--neo-green-2));display:flex;align-items:center;justify-content:center;box-shadow:0 28px 70px rgba(18,77,51,0.30);cursor:pointer;position:relative;transition:transform .16s}
 .cart-badge{position:absolute;top:-8px;left:-8px;min-width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:999px;background:#ffeb3b;color:#111;font-weight:900;box-shadow:0 8px 20px rgba(0,0,0,0.12);font-size:13px;display:none}
+.cart-total{position:absolute;bottom:-10px;left:6px;background:#fff;padding:6px 10px;border-radius:999px;font-weight:900;color:var(--neo-green);font-size:13px;box-shadow:0 8px 20px rgba(0,0,0,0.08)}
 
 /* cart modal */
 .cart-modal{position:fixed;right:14px;bottom:92px;z-index:2147483646;width:calc(100% - 28px);max-width:420px;background:#fff;border-radius:14px;box-shadow:0 30px 80px rgba(10,20,15,0.2);overflow:hidden;transform-origin:100% 100%;transform:translateY(10px) scale(.98);opacity:0;transition:all .18s}
@@ -77,12 +77,15 @@ img{max-width:100%;display:block}
 .social-tiktok{background:#010101;padding:8px 12px;border-radius:10px;color:#fff}
 .thank{margin-top:12px;font-weight:700;color:var(--neo-green-2);font-size:15px}
 
-/* small animation class for bump */
+/* bump */
 .cart-btn.bump{transform:scale(1.12);box-shadow:0 40px 110px rgba(18,77,51,0.36)}
 
-/* responsive: for mobile single item per row if you later want, keep 2-col for now as requested */
+/* responsive mobile: single column for readability */
 @media (max-width:520px){
-  .grid{grid-template-columns:1fr} /* on small phones show one per row for readability */
+  .grid{grid-template-columns:1fr}
+  .thumb{width:100%;height:160px;flex:0 0 auto;border-radius:10px}
+  .card{flex-direction:column}
+  .cart-float{right:12px;bottom:12px}
 }
 </style>
 </head>
@@ -133,6 +136,7 @@ img{max-width:100%;display:block}
       <path d="M18 18C18.552 18 19 17.552 19 17C19 16.448 18.552 16 18 16C17.448 16 17 16.448 17 17C17 17.552 17.448 18 18 18Z" fill="#fff"/>
     </svg>
     <div id="cartBadge" class="cart-badge">0</div>
+    <div id="cartTotal" class="cart-total">0 ج</div>
   </button>
 </div>
 
@@ -156,33 +160,135 @@ img{max-width:100%;display:block}
 </div>
 
 <script>
-/* === سلوك السلة والسيرفر المحلي (client-side) === */
-
-/* KEY للسلة */
+/* ====== Config & data ====== */
 const CART_KEY = 'neoCafe_cart_v1';
+/* Empty cart on load (as requested earlier) */
+localStorage.removeItem(CART_KEY);
 
-/* عند كل تحميل للصفحة نظف السلة (request) */
-localStorage.removeItem(CART_KEY); // <-- هنا: كل Refresh الصفحة هترجع السلة فاضية
-
-/* داتا المنيو الكامل مع تصنيف الألعاب المجانية */
+/* Full menu (أضفت كل الأصناف اللي بعتهالك) */
 const MENU = [
-  /* -- مشروبات ساخنة (عينة فقط، أكمل/عدل حسب الحاجة) */
-  {id:'h01',cat:'hot',name:'شاي',price:18},
-  {id:'h02',cat:'hot',name:'شاي أخضر',price:22},
-  {id:'h03',cat:'hot',name:'شاي نكهات',price:20},
-  /* -- مشروبات باردة */
-  {id:'c01',cat:'cold',name:'ملك تشيك - أوريو',price:75},
-  {id:'c02',cat:'cold',name:'ملك تشيك - هوهوز',price:75},
-  /* -- سوفت درينك */
-  {id:'sdx1',cat:'soft',name:'V-Cola Soda',price:30},
-  {id:'e01',cat:'soft',name:'ريد بول (Red Bull)',price:65},
-  {id:'e03',cat:'soft',name:'شويبس - Schweppes',price:28},
-  /* -- ديزيرت */
-  {id:'d01',cat:'dessert_dishes',name:'وافل كلاسيك',price:55},
-  {id:'d02',cat:'dessert_dishes',name:'وافل نوتيلا',price:75},
-  /* -- مميز نيو */
+  /* مشروبات ساخنة */
+  {id:'h001',cat:'hot',name:'شاي',price:18},
+  {id:'h002',cat:'hot',name:'شاي أخضر',price:22},
+  {id:'h003',cat:'hot',name:'شاي نكهات',price:20},
+  {id:'h004',cat:'hot',name:'نعناع',price:18},
+  {id:'h005',cat:'hot',name:'ينسون',price:18},
+  {id:'h006',cat:'hot',name:'جنزبيل',price:20},
+  {id:'h007',cat:'hot',name:'اسبريسو',price:25},
+  {id:'h008',cat:'hot',name:'اسبريسو دبل',price:35},
+  {id:'h009',cat:'hot',name:'قهوة تركي سنجل',price:30},
+  {id:'h010',cat:'hot',name:'قهوة تركي دبل',price:45},
+  {id:'h011',cat:'hot',name:'قهوة فرنساوي',price:40},
+  {id:'h012',cat:'hot',name:'قهوة بندق',price:45},
+  {id:'h013',cat:'hot',name:'قهوة نوتيلا',price:55},
+  {id:'h014',cat:'hot',name:'قهوة بستاشيو',price:60},
+  {id:'h015',cat:'hot',name:'لاتيه',price:45},
+  {id:'h016',cat:'hot',name:'اسبانش لاتيه',price:55},
+  {id:'h017',cat:'hot',name:'كابتشينو',price:50},
+  {id:'h018',cat:'hot',name:'نسكافيه',price:30},
+  {id:'h019',cat:'hot',name:'أميركان كوفي',price:35},
+  {id:'h020',cat:'hot',name:'هوت شوكليت',price:45},
+  {id:'h021',cat:'hot',name:'هوت سيدر',price:40},
+  {id:'h022',cat:'hot',name:'سحلب',price:50},
+  {id:'h023',cat:'hot',name:'سحلب مكسرات',price:65},
+  {id:'h024',cat:'hot',name:'سحلب لوتس',price:70},
+  {id:'h025',cat:'hot',name:'سحلب بستاشيو',price:75},
+  {id:'h026',cat:'hot',name:'سحلب نوتيلا',price:75},
+  {id:'h027',cat:'hot',name:'سحلب فواكه',price:80},
+
+  /* مشروبات باردة - ملك تشيك و فربتشينو و ايس و فريش واسموثي */
+  {id:'c001',cat:'cold',name:'ملك تشيك - أوريو',price:75},
+  {id:'c002',cat:'cold',name:'ملك تشيك - هوهوز',price:75},
+  {id:'c003',cat:'cold',name:'ملك تشيك - فانليا',price:75},
+  {id:'c004',cat:'cold',name:'ملك تشيك - كراميل',price:75},
+  {id:'c005',cat:'cold',name:'ملك تشيك - فراولة',price:75},
+  {id:'c006',cat:'cold',name:'ملك تشيك - مانجو',price:75},
+  {id:'c007',cat:'cold',name:'ملك تشيك - اسنيكرز',price:80},
+  {id:'c008',cat:'cold',name:'ملك تشيك - مورو',price:75},
+  {id:'c009',cat:'cold',name:'ملك تشيك - شوكلت',price:75},
+  {id:'c010',cat:'cold',name:'ملك تشيك - نيــو (مورو/هوهوز/أوريو)',price:85},
+
+  /* ايس */
+  {id:'ice01',cat:'cold',name:'آيس لاتيه',price:50},
+  {id:'ice02',cat:'cold',name:'آيس كوفي',price:50},
+  {id:'ice03',cat:'cold',name:'آيس أميركان',price:45},
+  {id:'ice04',cat:'cold',name:'فرابتشينو - شوكليت',price:60},
+  {id:'ice05',cat:'cold',name:'فرابتشينو - كراميل',price:60},
+  {id:'ice06',cat:'cold',name:'فرابتشينو - أوريو',price:60},
+  {id:'ice07',cat:'cold',name:'فرابتشينو - اسنيكرز',price:65},
+  {id:'ice08',cat:'cold',name:'آيس سبانش لاتيه',price:60},
+
+  /* فريش */
+  {id:'f001',cat:'cold',name:'فريش مانجو',price:55},
+  {id:'f002',cat:'cold',name:'فريش فراولة',price:55},
+  {id:'f003',cat:'cold',name:'فراولة لبن',price:55},
+  {id:'f004',cat:'cold',name:'موز لبن',price:55},
+  {id:'f005',cat:'cold',name:'بلح',price:45},
+  {id:'f006',cat:'cold',name:'بطيخ',price:50},
+  {id:'f007',cat:'cold',name:'برتقال',price:45},
+  {id:'f008',cat:'cold',name:'كيوي (موسمي)',price:60},
+  {id:'f009',cat:'cold',name:'أفوغاتوا',price:65},
+  {id:'f010',cat:'cold',name:'جوافة',price:50},
+  {id:'f011',cat:'cold',name:'نيو أفوجاتو/عسل/مكسرات/مانجو/موز',price:70},
+  {id:'f012',cat:'cold',name:'فريش كوكتيل',price:75},
+  {id:'f013',cat:'cold',name:'كوكتيل قطع',price:80},
+
+  /* سموثي */
+  {id:'s001',cat:'cold',name:'سْموزي فراولة',price:65},
+  {id:'s002',cat:'cold',name:'سْموزي مانجو',price:65},
+  {id:'s003',cat:'cold',name:'سْموزي أناناس',price:65},
+  {id:'s004',cat:'cold',name:'سْموزي خوخ',price:65},
+  {id:'s005',cat:'cold',name:'سْموزي كيوي',price:65},
+  {id:'s006',cat:'cold',name:'سْموزي بطيخ',price:65},
+  {id:'s007',cat:'cold',name:'سْموزي بلوبري',price:75},
+
+  /* صودا */
+  {id:'sd01',cat:'soft',name:'بلوبري صودا',price:40},
+  {id:'sd02',cat:'soft',name:'بلو صودا',price:40},
+  {id:'sd03',cat:'soft',name:'برانديت صودا',price:40},
+  {id:'sd04',cat:'soft',name:'فراولة صودا',price:40},
+  {id:'sd05',cat:'soft',name:'أناناس صودا',price:40},
+  {id:'sd06',cat:'soft',name:'خوخ صودا',price:40},
+  {id:'sd07',cat:'soft',name:'موخيتو',price:45},
+  {id:'sd08',cat:'soft',name:'موخيتو أناناس',price:45},
+  {id:'sd09',cat:'soft',name:'موخيتو فراولة',price:45},
+  {id:'sd10',cat:'soft',name:'موخيتو بلوبري',price:45},
+
+  /* سوفت درينك (بما فيها مشروبات طاقة ومعلبات) */
+  {id:'soft01',cat:'soft',name:'V-Cola Soda',price:30},
+  {id:'soft02',cat:'soft',name:'V-Cola Cola',price:30},
+  {id:'soft03',cat:'soft',name:'V-Cola Diet',price:30},
+  {id:'soft04',cat:'soft',name:'Red Bull - ريد بول',price:65},
+  {id:'soft05',cat:'soft',name:'Twist - تويست',price:30},
+  {id:'soft06',cat:'soft',name:'Schweppes - شويبس',price:28},
+  {id:'soft07',cat:'soft',name:'كوكاكولا (معلب)',price:28},
+  {id:'soft08',cat:'soft',name:'كوكاكولا دايت',price:28},
+  {id:'soft09',cat:'soft',name:'بيبسي',price:28},
+  {id:'soft10',cat:'soft',name:'سبرايت',price:28},
+  {id:'soft11',cat:'soft',name:'فانتا',price:28},
+
+  /* ديزيرت */
+  {id:'dess01',cat:'dessert_dishes',name:'وافل كلاسيك',price:55},
+  {id:'dess02',cat:'dessert_dishes',name:'وافل نوتيلا',price:75},
+  {id:'dess03',cat:'dessert_dishes',name:'وافل أوريو',price:70},
+  {id:'dess04',cat:'dessert_dishes',name:'وافل لوتس',price:70},
+  {id:'dess05',cat:'dessert_dishes',name:'وافل بستاشيو',price:80},
+  {id:'dess06',cat:'dessert_dishes',name:'وافل فواكه',price:85},
+  {id:'dess07',cat:'dessert_dishes',name:'مولتن',price:90},
+  {id:'dess08',cat:'dessert_dishes',name:'تشيز كيك',price:95},
+  {id:'dess09',cat:'dessert_dishes',name:'شوكليت كيك',price:95},
+
+  /* مميز نيو */
   {id:'sp01',cat:'special',name:'بطاطا فواكه ومكسرات وعسل',price:65},
-  /* -- دلع نفسك في نيو - مجانًا (ألعاب، السعر 0 => "مجانًا") */
+  {id:'sp02',cat:'special',name:'اندومي بقطع الفراخ بتتبيلة نيو',price:55},
+  {id:'sp03',cat:'special',name:'كوكتيل نيو المميز',price:120},
+
+  /* سوفت درينك اضافي / مشروبات جاهزة في التلاجة */
+  {id:'fr01',cat:'soft',name:'ريد بول (علبة)',price:65},
+  {id:'fr02',cat:'soft',name:'تويست (علبة)',price:30},
+  {id:'fr03',cat:'soft',name:'شويبس (علبة)',price:28},
+
+  /* دلع نفسك في نيو - مجانًا (ألعاب) */
   {id:'g01',cat:'fun',name:'لعبة دومينو',price:0},
   {id:'g02',cat:'fun',name:'كوتشينة (كوتشينه)',price:0},
   {id:'g03',cat:'fun',name:'قول أمِّم',price:0},
@@ -190,27 +296,29 @@ const MENU = [
   {id:'g05',cat:'fun',name:'افتح توبيك',price:0}
 ];
 
-/* تحميل / حفظ السلة */
+/* ====== Storage helpers ====== */
 function loadCart(){ try{ const d = localStorage.getItem(CART_KEY); return d ? JSON.parse(d) : []; } catch(e){ return []; } }
 function saveCart(cart){ try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); renderCartUI(true); } catch(e){ console.error(e); } }
-function setCartSilent(cart){ try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); renderCartUI(false); } catch(e){ console.error(e); } }
 
-/* عناصر DOM */
+/* ====== DOM refs ====== */
 const content = document.getElementById('content');
 const cartBtn = document.getElementById('cartBtn');
 const cartBadge = document.getElementById('cartBadge');
+const cartTotal = document.getElementById('cartTotal');
 const cartModal = document.getElementById('cartModal');
 const cartItemsEl = document.getElementById('cartItems');
 const modalTotal = document.getElementById('modalTotal');
 const closeCartBtn = document.getElementById('closeCartBtn');
 const clearCartBtn = document.getElementById('clearCartBtn');
 const checkoutNowBtn = document.getElementById('checkoutNowBtn');
+const toast = document.getElementById('toast');
 
-/* helpers */
+/* ====== Utility ====== */
 function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
 function calcTotals(cart){ let total=0,count=0; (cart||[]).forEach(i=>{ total += (Number(i.price)||0)*(Number(i.qty)||0); count += Number(i.qty)||0; }); return { total, count }; }
+function showToast(text){ toast.textContent = text; toast.style.opacity = '1'; clearTimeout(toast._h); toast._h = setTimeout(()=> toast.style.opacity='0', 1100); }
 
-/* render category & grid */
+/* ====== Render category & grid ====== */
 function renderCategory(cat){
   content.innerHTML='';
   const title = document.createElement('div'); title.className='section-title';
@@ -220,15 +328,16 @@ function renderCategory(cat){
   content.appendChild(title);
   const grid = document.createElement('div'); grid.className='grid';
   itemsToShow.forEach(it=>{
-    const card = document.createElement('div'); card.className='card';
     const priceLabel = it.price === 0 ? 'مجانًا' : (it.price + ' ج');
+    const card = document.createElement('div'); card.className='card';
     card.innerHTML = `
       <img class="thumb" src="https://via.placeholder.com/600x400?text=${encodeURIComponent(it.name)}" alt="${escapeHtml(it.name)}">
-      <div>
-        <div class="product-title">${escapeHtml(it.name)}</div>
-        <div class="product-desc"></div>
-        <div class="price-row">
-          <div class="price">${priceLabel}</div>
+      <div class="info">
+        <div>
+          <div class="product-title">${escapeHtml(it.name)}</div>
+          <div class="price-row">
+            <div class="price">${priceLabel}</div>
+          </div>
         </div>
         <div class="actions">
           <button class="btn btn-outline view-btn" data-id="${it.id}">عرض</button>
@@ -247,7 +356,7 @@ function renderCategory(cat){
   else { const activeTab = document.querySelector(`.tab[data-cat="${cat}"]`); if(activeTab) activeTab.classList.add('active'); }
 }
 
-/* add/view delegation (بدون تأخير أو lock) */
+/* ====== Add / view handlers (فورية، بدون delay) ====== */
 document.addEventListener('click', function(e){
   const add = e.target.closest('.add-btn');
   if(add){ handleAddById(add.dataset.id); return; }
@@ -255,21 +364,20 @@ document.addEventListener('click', function(e){
   if(view){ viewDetails(view.dataset.id); return; }
 });
 
-/* إضافة المنتج: يسمح بإضافة أي عدد (بدون lock) */
+/* Very fast add: no locks, no blocking alerts (allow unlimited quick taps) */
 function handleAddById(id){
   const item = MENU.find(i=>i.id===id);
-  if(!item) return showToast('المنتج غير موجود');
-  // مباشرة اضف/زد الكمية
+  if(!item){ showToast('المنتج غير موجود'); return; }
   const cart = loadCart();
   const exist = cart.find(x=>x.id===id);
   if(exist){ exist.qty = Number(exist.qty) + 1; }
   else { cart.push({...item, qty:1}); }
   saveCart(cart);
-  renderCartModal();
+  renderCartModal(); // update modal if open
   showToast(`${item.name} اتضاف للسلة`);
 }
 
-/* view details toast */
+/* view details quick toast */
 function viewDetails(id){
   const item = MENU.find(i=>i.id===id);
   if(!item) return showToast('المنتج غير موجود');
@@ -277,28 +385,20 @@ function viewDetails(id){
   showToast(`${item.name} — ${label}`);
 }
 
-/* toast */
-function showToast(text){
-  const t = document.getElementById('toast');
-  t.textContent = text;
-  t.style.opacity = '1';
-  clearTimeout(t._h); t._h = setTimeout(()=>{ t.style.opacity = '0'; }, 1200);
-}
-
-/* render cart UI (badge) */
+/* ====== Cart UI ====== */
 function renderCartUI(wasAdded=false){
   const cart = loadCart();
-  if(!cart || cart.length === 0){ cartBadge.style.display = 'none'; return; }
+  if(!cart || cart.length === 0){ cartBadge.style.display = 'none'; cartTotal.textContent = '0 ج'; return; }
   const { total, count } = calcTotals(cart);
   cartBadge.style.display = 'flex';
   cartBadge.textContent = count;
+  cartTotal.textContent = `${total} ج`;
   if(wasAdded){
     cartBtn.classList.add('bump');
-    setTimeout(()=> cartBtn.classList.remove('bump'), 1200);
+    setTimeout(()=> cartBtn.classList.remove('bump'), 900);
   }
 }
 
-/* render cart modal */
 function renderCartModal(){
   const cart = loadCart();
   cartItemsEl.innerHTML = '';
@@ -337,22 +437,22 @@ function renderCartModal(){
     cartItemsEl.appendChild(row);
   });
 
-  // attach handlers
+  // handlers (فورية)
   cartItemsEl.querySelectorAll('.inc').forEach(b=> b.addEventListener('click', e=>{
     const id = e.currentTarget.dataset.id; let cart = loadCart();
-    const it = cart.find(x=>x.id===id); if(it){ it.qty = Number(it.qty)+1; setCartSilent(cart); renderCartModal(); }
+    const it = cart.find(x=>x.id===id); if(it){ it.qty = Number(it.qty)+1; saveCart(cart); renderCartModal(); }
   }));
   cartItemsEl.querySelectorAll('.dec').forEach(b=> b.addEventListener('click', e=>{
     const id = e.currentTarget.dataset.id; let cart = loadCart();
     const it = cart.find(x=>x.id===id); if(it){
       it.qty = Number(it.qty)-1;
       if(it.qty <= 0) cart = cart.filter(x=>x.id!==id);
-      setCartSilent(cart); renderCartModal();
+      saveCart(cart); renderCartModal();
     }
   }));
   cartItemsEl.querySelectorAll('.remove').forEach(b=> b.addEventListener('click', e=>{
     const id = e.currentTarget.dataset.id; let cart = loadCart();
-    cart = cart.filter(x=>x.id!==id); setCartSilent(cart); renderCartModal();
+    cart = cart.filter(x=>x.id!==id); saveCart(cart); renderCartModal();
   }));
 
   const totals = calcTotals(cart);
@@ -403,6 +503,7 @@ renderCartUI(false);
 
 /* sync across tabs */
 window.addEventListener('storage', (e)=>{ if(e.key===CART_KEY) renderCartUI(); });
+
 </script>
 </body>
 </html>
