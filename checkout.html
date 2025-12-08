@@ -6,30 +6,73 @@
 <title>إتمام الطلب - NEO CAFÉ</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--neo-green:#124d33;--neo-beige:#f6efe6;--muted:#6b6b6b}
-body{margin:0;padding:18px;background:var(--neo-beige);font-family:"Cairo",sans-serif;color:#111}
-.container{max-width:760px;margin:0 auto;background:#fff;padding:14px;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.06)}
-h2{margin:0 0 12px;color:var(--neo-green);font-weight:900}
+:root{
+  --neo-green: #124d33;
+  --neo-green-2: #2f6b46;
+  --neo-beige: #f6efe6;
+  --muted: #6b6b6b;
+  --card-radius: 12px;
+  --shadow: 0 12px 30px rgba(15,40,25,0.06);
+  --accent: #ffd54a;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;padding:0;background:var(--neo-beige);font-family:"Cairo",sans-serif;color:#111}
+.container{max-width:760px;margin:12px auto;padding:14px;background:#fff;border-radius:var(--card-radius);box-shadow:var(--shadow);overflow:hidden}
+h2{margin:0 0 12px;color:var(--neo-green);font-weight:900;text-align:right}
 .field{margin-bottom:12px}
-label{display:block;margin-bottom:6px;font-weight:800}
-input[type="text"],input[type="tel"],select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #eee;font-size:15px}
+label{display:block;margin-bottom:8px;font-weight:800;text-align:right}
+input[type="text"],input[type="tel"],select,textarea{
+  width:100%;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1px solid #eee;
+  font-size:15px;
+  background:#fff;
+  color:#111;
+  outline:none;
+  box-shadow:none;
+}
+input[type="text"]:focus,input[type="tel"]:focus,select:focus,textarea:focus{border-color:rgba(18,77,51,0.14);box-shadow:0 6px 18px rgba(18,77,51,0.06)}
 .row{display:flex;gap:8px;align-items:center}
 .row .col{flex:1}
-.small-select{width:33%}
+.small-select{width:49%}
+.phone-wrap{display:flex;gap:8px;align-items:center}
+.phone-wrap .phone-icon{
+  width:40px;height:40px;border-radius:10px;background:var(--neo-green);display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;flex:0 0 40px;border:2px solid rgba(255,255,255,0.06);
+  box-shadow:0 8px 20px rgba(18,77,51,0.12)
+}
 .btn{background:var(--neo-green);color:#fff;padding:12px 14px;border-radius:10px;border:0;font-weight:900;cursor:pointer}
-.order-summary{margin-top:14px;border-top:1px dashed #eee;padding-top:12px}
-.item-line{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #fafafa}
+.btn-secondary{background:#888;color:#fff;padding:12px 14px;border-radius:10px;border:0;font-weight:900;cursor:pointer}
+
+/* order */
+.order-summary{margin-top:10px;border-top:1px dashed #eee;padding-top:12px}
+.item-line{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #fafafa;font-weight:700}
 .total{display:flex;justify-content:space-between;font-weight:900;color:var(--neo-green);padding-top:8px}
-.note{margin-top:10px;color:var(--muted)}
-.small{font-size:13px;color:var(--muted)}
+.note{margin-top:8px;color:var(--muted);font-size:14px}
+
+/* modal for loyalty info */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px}
+.modal-backdrop.show{display:flex}
+.modal-card{width:100%;max-width:720px;background:#fff;border-radius:12px;padding:16px;box-shadow:0 24px 70px rgba(0,0,0,0.25);direction:rtl}
+.modal-card h3{margin:0 0 10px;color:var(--neo-green);font-weight:900}
+.modal-card p{margin:0;color:#222;line-height:1.6;white-space:pre-wrap}
+
+/* responsive */
+@media (max-width:520px){
+  .container{margin:8px;padding:12px}
+  .small-select{width:48%}
+  .phone-wrap .phone-icon{width:40px;height:40px}
+  .modal-card{padding:14px}
+}
 </style>
 </head>
 <body>
-<div class="container">
+
+<div class="container" role="main">
   <h2>إتمام الطلب — Neo Café</h2>
 
   <div class="field">
-    <label>اسم الشهرة</label>
+    <label for="nickname">اسم الشهرة</label>
     <input id="nickname" type="text" placeholder="اكتب اسم الشهرة">
   </div>
 
@@ -42,78 +85,116 @@ input[type="text"],input[type="tel"],select,textarea{width:100%;padding:10px;bor
       <select id="birth-month" class="small-select" aria-label="الشهر">
         <option value="">الشهر</option>
       </select>
-      <select id="birth-year" class="small-select" aria-label="السنة">
-        <option value="">السنة</option>
-      </select>
     </div>
+    <div style="font-size:13px;color:var(--muted);margin-top:6px;text-align:right">نختار اليوم والشهر فقط للاحتفالات والعروض</div>
   </div>
 
   <div class="field">
-    <label>رقم الطاولة</label>
+    <label for="table-number">رقم الطاولة</label>
     <select id="table-number">
       <option value="">اختر رقم الطاولة</option>
     </select>
   </div>
 
   <div class="field">
-    <label>رقم الهاتف (مهم لنظام الولاء)</label>
-    <input id="phone" type="tel" placeholder="010xxxxxxxx">
+    <label for="phone">رقم الهاتف (مهم لنظام الولاء)</label>
+    <div class="phone-wrap">
+      <input id="phone" type="tel" placeholder="010xxxxxxxx" inputmode="tel" pattern="[0-9]*" aria-describedby="phoneHelp">
+      <div class="phone-icon" id="phoneInfoBtn" title="معلومات نظام الولاء">
+        <!-- simple i icon -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="display:block" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" fill="#fff"/>
+          <path d="M11 10h2v6h-2v-6zm0-4h2v2h-2V6z" fill="#124d33"/>
+        </svg>
+      </div>
+    </div>
+    <div id="phoneHelp" style="font-size:13px;color:var(--muted);margin-top:6px;text-align:right">لمزيد من التفاصيل اضغط على أيقونة المعلومات.</div>
   </div>
 
   <div class="field">
-    <label>ملاحظات إضافية (اختياري)</label>
+    <label for="notes">ملاحظات إضافية (اختياري)</label>
     <textarea id="notes" rows="3" placeholder="ملاحظات..."></textarea>
   </div>
 
-  <div class="order-summary">
-    <div style="font-weight:900;margin-bottom:8px">السلة</div>
-    <div id="itemsList"></div>
+  <div class="order-summary" aria-live="polite">
+    <div style="font-weight:900;margin-bottom:8px;text-align:right">السلة</div>
+    <div id="itemsList" style="min-height:40px;color:var(--muted);text-align:right">جاري جلب محتويات السلة...</div>
+
     <div class="total" style="margin-top:8px">
       <div>الإجمالي</div>
       <div id="grandTotal">0 ج</div>
     </div>
-    <div class="note" id="loyaltyNote"></div>
+
+    <div class="note" id="loyaltyNote" style="text-align:right"></div>
   </div>
 
-  <div style="margin-top:14px;display:flex;gap:8px">
+  <div style="margin-top:14px;display:flex;gap:8px;justify-content:flex-end">
     <button id="sendBtn" class="btn">إرسال الطلب عبر واتساب للمحل</button>
-    <button id="backBtn" class="btn" style="background:#888">العودة للمنيو</button>
+    <button id="backBtn" class="btn-secondary">العودة للمنيو</button>
   </div>
-  <div class="small" style="margin-top:8px">سيتم فتح واتساب على رقم المحل لإكمال الطلب.</div>
+
+  <div class="note" style="text-align:right;margin-top:8px">سيتم فتح واتساب على رقم المحل لإكمال الطلب. تأكد من كتابة رقم الهاتف بشكل صحيح.</div>
+</div>
+
+<!-- modal -->
+<div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-card" role="document">
+    <h3>نظام الولاء - نيو كافية</h3>
+    <p id="loyaltyText"></p>
+    <div style="text-align:left;margin-top:12px">
+      <button id="closeModal" class="btn" style="background:var(--neo-green);padding:10px 14px;border-radius:8px">حسناً</button>
+    </div>
+  </div>
 </div>
 
 <script>
-/* === checkout logic === */
-const CART_KEY = 'neoCafe_cart_v1'; // نفس المفتاح في index.html
-const SHOP_PHONE_WA = '201034311119'; // رقم المحل بصيغة دولية بدون "+"
-/* NOTE: لا يوجد هنا localStorage.removeItem -- عشان السلة تظل متاحة عند الوصول لل checkout */
-
-/* عناصر للتحكم */
+/* ====== إعداد الحقول (يوم/شهر) ورقم الطاولة ====== */
 const dayEl = document.getElementById('birth-day');
 const monthEl = document.getElementById('birth-month');
-const yearEl = document.getElementById('birth-year');
 const tableEl = document.getElementById('table-number');
-const itemsList = document.getElementById('itemsList');
-const grandTotalEl = document.getElementById('grandTotal');
-const loyaltyNote = document.getElementById('loyaltyNote');
-
-/* ملأ قوائم اليوم والشهر والسنة (سنة تبدأ من 1960) */
 for(let d=1; d<=31; d++){ const o = document.createElement('option'); o.value = d; o.textContent = d; dayEl.appendChild(o); }
-for(let m=1; m<=12; m++){ const o=document.createElement('option'); o.value=m; o.textContent=m; monthEl.appendChild(o); }
-const currentYear = new Date().getFullYear();
-for(let y=currentYear; y>=1960; y--){ const o=document.createElement('option'); o.value=y; o.textContent=y; yearEl.appendChild(o); }
-for(let t=1; t<=10; t++){ const o=document.createElement('option'); o.value=t; o.textContent=t; tableEl.appendChild(o); }
+const monthNames = ['1','2','3','4','5','6','7','8','9','10','11','12'];
+for(let i=0;i<12;i++){ const o = document.createElement('option'); o.value = i+1; o.textContent = (i+1); monthEl.appendChild(o); }
+for(let t=1; t<=10; t++){ const o = document.createElement('option'); o.value = t; o.textContent = t; tableEl.appendChild(o); }
 
-/* helpers */
+/* ====== نص نظام الولاء كما طلبته بالضبط ====== */
+const LOYALTY_TEXT = `عشان احنا بنحبكم وبنقدر كل عملاء نيو كافيه المخلصين ، فقررنا كل ما قعدتوا عندنا اكتر كل ماكان ليكم حق في انك تشاركونا النجاح ده فخلال الوقت وعلي مدار قعدتكم لماتعدي اجمالي طلباتكم الف جنيه هايكون ليكم مشروب مجاني من اختياركم ايَا كان ، فاحنا مهتمين تكتبوا ارقامكم صح عشان نقدر نتابع وكل ماتطلب اكتر لازم تبقي مميز عندنا اكتر .. شكرًا علي اختياركم نيو كافيه`;
+
+/* modal handlers */
+const modalBackdrop = document.getElementById('modalBackdrop');
+const phoneInfoBtn = document.getElementById('phoneInfoBtn');
+const closeModal = document.getElementById('closeModal');
+const loyaltyTextEl = document.getElementById('loyaltyText');
+loyaltyTextEl.textContent = LOYALTY_TEXT;
+phoneInfoBtn.addEventListener('click', ()=> {
+  modalBackdrop.classList.add('show');
+  modalBackdrop.setAttribute('aria-hidden','false');
+});
+closeModal.addEventListener('click', ()=> {
+  modalBackdrop.classList.remove('show');
+  modalBackdrop.setAttribute('aria-hidden','true');
+});
+modalBackdrop.addEventListener('click', (e)=>{
+  if(e.target === modalBackdrop){ modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); }
+});
+
+/* ====== cart & render logic (يتطابق مع index.html key) ====== */
+const CART_KEY = 'neoCafe_cart_v1';
+const SHOP_PHONE_WA = '201034311119'; // رقم المحل
+
 function loadCart(){ try{ const d = localStorage.getItem(CART_KEY); return d ? JSON.parse(d) : []; } catch(e){ return []; } }
 function calcTotals(cart){ let total=0; cart.forEach(i=> total += (Number(i.price)||0)*(Number(i.qty)||0)); return total; }
 
 /* render cart */
+const itemsList = document.getElementById('itemsList');
+const grandTotalEl = document.getElementById('grandTotal');
+const loyaltyNote = document.getElementById('loyaltyNote');
+
 function renderCartOnCheckout(){
   const cart = loadCart();
   itemsList.innerHTML = '';
   if(!cart || cart.length===0){
-    itemsList.innerHTML = '<div>السلة فارغة — اذهب للمنيو لإضافة طلبات</div>';
+    itemsList.innerHTML = '<div style="color:var(--muted);text-align:right">السلة فارغة — اذهب للمنيو لإضافة طلبات</div>';
     grandTotalEl.textContent = '0 ج';
     loyaltyNote.textContent = '';
     return;
@@ -121,7 +202,7 @@ function renderCartOnCheckout(){
   cart.forEach((it, idx)=>{
     const div = document.createElement('div');
     div.className = 'item-line';
-    div.innerHTML = `<div>${idx+1}. ${it.name} × ${it.qty}</div><div>${it.price*it.qty} ج</div>`;
+    div.innerHTML = `<div style="text-align:right">${idx+1}. ${it.name} × ${it.qty}</div><div style="text-align:left">${it.price*it.qty} ج</div>`;
     itemsList.appendChild(div);
   });
   const total = calcTotals(cart);
@@ -136,22 +217,21 @@ function renderCartOnCheckout(){
   }
 }
 
-/* init render when page loads */
+/* init render */
 renderCartOnCheckout();
 
-/* send message to shop via wa.me (client opens WhatsApp with prefilled message) */
+/* send via wa.me (كما اتفقنا سابقاً) */
 document.getElementById('sendBtn').addEventListener('click', ()=>{
   const nickname = document.getElementById('nickname').value.trim() || '-';
   const day = document.getElementById('birth-day').value || '-';
   const month = document.getElementById('birth-month').value || '-';
-  const year = document.getElementById('birth-year').value || '-';
   const table = document.getElementById('table-number').value || '-';
   const phone = document.getElementById('phone').value.trim() || '-';
   const notes = document.getElementById('notes').value.trim() || '-';
   const cart = loadCart();
   if(!cart || cart.length===0){ alert('السلة فارغة'); return; }
 
-  let msg = `طلب من Neo Café\nاسم الشهرة: ${nickname}\nتاريخ الميلاد: ${day}/${month}/${year}\nرقم الطاولة: ${table}\nالهاتف: ${phone}\n\nالسلة:\n`;
+  let msg = `طلب من Neo Café\nاسم الشهرة: ${nickname}\nتاريخ الميلاد: ${day}/${month}\nرقم الطاولة: ${table}\nالهاتف: ${phone}\n\nالسلة:\n`;
   cart.forEach((it,idx)=> msg += `${idx+1}. ${it.name} × ${it.qty} = ${it.price*it.qty} ج\n`);
   const total = calcTotals(cart);
   msg += `\nالإجمالي: ${total} ج\nملاحظات: ${notes}\n`;
@@ -162,8 +242,9 @@ document.getElementById('sendBtn').addEventListener('click', ()=>{
   window.open(`https://wa.me/${SHOP_PHONE_WA}?text=${encoded}`, '_blank');
 });
 
-/* back button */
+/* back */
 document.getElementById('backBtn').addEventListener('click', ()=> window.location.href = 'index.html');
 </script>
+
 </body>
 </html>
