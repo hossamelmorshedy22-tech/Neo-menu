@@ -214,23 +214,21 @@ footer{padding:18px 12px;text-align:center;color:var(--muted)}
 <!-- categories: first row (الكل - مشروبات باردة - مشروبات ساخنة),
      second row (سوفت درينك - أطباق ديزيرت - مميز نيو),
      third row (دلع نفسك في نيو مجانًا) -->
-<!-- categories: arranged in 3 rows (removed "الكل") -->
 <div class="cats-grid" aria-label="أقسام المنيو">
   <div class="cats-row">
-    <div class="cat active" data-cat="hot">مشروبات ساخنة</div>
+    <div class="cat active" data-cat="all">الكل</div>
     <div class="cat" data-cat="cold">مشروبات باردة</div>
-    <div class="cat" data-cat="soft">سوفت درينك</div>
+    <div class="cat" data-cat="hot">مشروبات ساخنة</div>
   </div>
   <div class="cats-row">
+    <div class="cat" data-cat="soft">سوفت درينك</div>
     <div class="cat" data-cat="dessert">أطباق ديزيرت</div>
     <div class="cat" data-cat="special">مميز نيو</div>
-    <div class="cat" data-cat="ice">ايس كريم</div>
   </div>
   <div class="cats-row">
     <div class="cat" data-cat="fun">دلع نفسك في نيو - مجانًا</div>
   </div>
 </div>
-
 
 <main class="container" id="mainContent">
   <div id="sections"></div>
@@ -663,25 +661,12 @@ function showToast(txt){
 /* =================== FILTER =================== */
 function filterCategory(cat){
   const sections = document.querySelectorAll('.section');
-  // hide all first
   sections.forEach(s=> s.style.display = 'none');
-
-  // if no category provided, show all
-  if(!cat){
-    sections.forEach(s=> s.style.display = 'block');
-    window.scrollTo({ top:120, behavior:'smooth' });
-    return;
-  }
-
+  if(cat === 'all'){ sections.forEach(s=> s.style.display = 'block'); window.scrollTo({ top:120, behavior:'smooth' }); return; }
   const map = { hot:0, cold:1, soft:2, dessert:3, special:4, ice:5, fun:6 };
   const idx = map[cat];
-  if(typeof idx === 'number' && sections[idx]) {
-    sections[idx].style.display = 'block';
-    // if cold has subcats you may want to show them - they are in same section index 1
-  } else {
-    // fallback: show all
-    sections.forEach(s=> s.style.display = 'block');
-  }
+  const secList = document.querySelectorAll('.section');
+  if(typeof idx === 'number' && secList[idx]) secList[idx].style.display = 'block';
   window.scrollTo({ top:120, behavior:'smooth' });
 }
 
@@ -764,22 +749,6 @@ function init(){
   renderSections();
   renderCartCount(false);
 
-  // set default active: if none, choose first .cat
-  const allCats = document.querySelectorAll('.cat');
-  let defaultCat = document.querySelector('.cat.active');
-  if(!defaultCat) defaultCat = allCats[0];
-  // remove/ensure only one active
-  allCats.forEach(c=> c.classList.remove('active'));
-  if(defaultCat) defaultCat.classList.add('active');
-
-  // apply filter for default
-  if(defaultCat && defaultCat.dataset && defaultCat.dataset.cat){
-    filterCategory(defaultCat.dataset.cat);
-  } else {
-    filterCategory(); // show all if not found
-  }
-
-  // existing handlers
   document.getElementById('closeModal').addEventListener('click',()=>{ modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); });
   modalBackdrop.addEventListener('click',(e)=>{ if(e.target === modalBackdrop){ modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); } });
 
@@ -788,6 +757,8 @@ function init(){
   window.scrollTo(0,0);
 }
 
+init();
+renderCartCount(false);
 
 /* ensure cart count accurate when storage changes (for multi-tab) */
 window.addEventListener('storage', ()=> renderCartCount(false));
