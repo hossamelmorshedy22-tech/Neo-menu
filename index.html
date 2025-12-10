@@ -663,12 +663,25 @@ function showToast(txt){
 /* =================== FILTER =================== */
 function filterCategory(cat){
   const sections = document.querySelectorAll('.section');
+  // hide all first
   sections.forEach(s=> s.style.display = 'none');
-  if(cat === 'all'){ sections.forEach(s=> s.style.display = 'block'); window.scrollTo({ top:120, behavior:'smooth' }); return; }
+
+  // if no category provided, show all
+  if(!cat){
+    sections.forEach(s=> s.style.display = 'block');
+    window.scrollTo({ top:120, behavior:'smooth' });
+    return;
+  }
+
   const map = { hot:0, cold:1, soft:2, dessert:3, special:4, ice:5, fun:6 };
   const idx = map[cat];
-  const secList = document.querySelectorAll('.section');
-  if(typeof idx === 'number' && secList[idx]) secList[idx].style.display = 'block';
+  if(typeof idx === 'number' && sections[idx]) {
+    sections[idx].style.display = 'block';
+    // if cold has subcats you may want to show them - they are in same section index 1
+  } else {
+    // fallback: show all
+    sections.forEach(s=> s.style.display = 'block');
+  }
   window.scrollTo({ top:120, behavior:'smooth' });
 }
 
@@ -751,6 +764,22 @@ function init(){
   renderSections();
   renderCartCount(false);
 
+  // set default active: if none, choose first .cat
+  const allCats = document.querySelectorAll('.cat');
+  let defaultCat = document.querySelector('.cat.active');
+  if(!defaultCat) defaultCat = allCats[0];
+  // remove/ensure only one active
+  allCats.forEach(c=> c.classList.remove('active'));
+  if(defaultCat) defaultCat.classList.add('active');
+
+  // apply filter for default
+  if(defaultCat && defaultCat.dataset && defaultCat.dataset.cat){
+    filterCategory(defaultCat.dataset.cat);
+  } else {
+    filterCategory(); // show all if not found
+  }
+
+  // existing handlers
   document.getElementById('closeModal').addEventListener('click',()=>{ modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); });
   modalBackdrop.addEventListener('click',(e)=>{ if(e.target === modalBackdrop){ modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); } });
 
@@ -759,8 +788,6 @@ function init(){
   window.scrollTo(0,0);
 }
 
-init();
-renderCartCount(false);
 
 /* ensure cart count accurate when storage changes (for multi-tab) */
 window.addEventListener('storage', ()=> renderCartCount(false));
