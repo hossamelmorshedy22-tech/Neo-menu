@@ -214,21 +214,23 @@ footer{padding:18px 12px;text-align:center;color:var(--muted)}
 <!-- categories: first row (الكل - مشروبات باردة - مشروبات ساخنة),
      second row (سوفت درينك - أطباق ديزيرت - مميز نيو),
      third row (دلع نفسك في نيو مجانًا) -->
+<!-- categories: arranged in 3 rows (removed "الكل") -->
 <div class="cats-grid" aria-label="أقسام المنيو">
   <div class="cats-row">
-    <div class="cat active" data-cat="all">الكل</div>
+    <div class="cat active" data-cat="hot">مشروبات ساخنة</div>
     <div class="cat" data-cat="cold">مشروبات باردة</div>
-    <div class="cat" data-cat="hot">مشروبات ساخنة</div>
+    <div class="cat" data-cat="soft">سوفت درينك</div>
   </div>
   <div class="cats-row">
-    <div class="cat" data-cat="soft">سوفت درينك</div>
     <div class="cat" data-cat="dessert">أطباق ديزيرت</div>
     <div class="cat" data-cat="special">مميز نيو</div>
+    <div class="cat" data-cat="ice">ايس كريم</div>
   </div>
   <div class="cats-row">
     <div class="cat" data-cat="fun">دلع نفسك في نيو - مجانًا</div>
   </div>
 </div>
+
 
 <main class="container" id="mainContent">
   <div id="sections"></div>
