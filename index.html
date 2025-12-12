@@ -211,19 +211,17 @@ footer{padding:18px 12px;text-align:center;color:var(--muted)}
   <p>Make It NEO Time</p>
 </header>
 
-<!-- categories: first row (الكل - مشروبات باردة - مشروبات ساخنة),
-     second row (سوفت درينك - أطباق ديزيرت - مميز نيو),
-     third row (دلع نفسك في نيو مجانًا) -->
+<!-- categories: arranged in 3 rows (no "الكل") -->
 <div class="cats-grid" aria-label="أقسام المنيو">
   <div class="cats-row">
-    <div class="cat active" data-cat="all">الكل</div>
+    <div class="cat active" data-cat="hot">مشروبات ساخنة</div>
     <div class="cat" data-cat="cold">مشروبات باردة</div>
-    <div class="cat" data-cat="hot">مشروبات ساخنة</div>
+    <div class="cat" data-cat="soft">سوفت درينك</div>
   </div>
   <div class="cats-row">
-    <div class="cat" data-cat="soft">سوفت درينك</div>
     <div class="cat" data-cat="dessert">أطباق ديزيرت</div>
     <div class="cat" data-cat="special">مميز نيو</div>
+    <div class="cat" data-cat="ice">ايس كريم</div>
   </div>
   <div class="cats-row">
     <div class="cat" data-cat="fun">دلع نفسك في نيو - مجانًا</div>
@@ -309,7 +307,14 @@ const MENU = {
       {id:'hot_28', name:'سحلب لوتس', desc:'', price:50, img:'assets/images/hot_sahlab_lotus.png'},
       {id:'hot_29', name:'سحلب مونيلا', desc:'', price:50, img:'assets/images/hot_sahlab_monila.png'},
       {id:'hot_30', name:'سحلب فواكهه', desc:'', price:50, img:'assets/images/hot_sahlab_fruits.png'},
-      {id:'hot_31', name:'سحلب نيو', desc:'', price:60, img:'assets/images/hot_sahlab_neo.png'}
+      {id:'hot_31', name:'سحلب نيو', desc:'', price:60, img:'assets/images/hot_sahlab_neo.png'},
+
+      /* NEW items requested */
+      {id:'hot_mac_01', name:'ميكاتو سنجل', desc:'', price:40, img:'assets/images/hot_macchiato_single.png'},
+      {id:'hot_mac_02', name:'ميكاتو دبل', desc:'', price:45, img:'assets/images/hot_macchiato_double.png'},
+      {id:'hot_mocha_01', name:'موكا', desc:'', price:45, img:'assets/images/hot_mocha.png'},
+      {id:'hot_mocha_02', name:'موكا نعناع', desc:'', price:50, img:'assets/images/hot_mocha_mint.png'},
+      {id:'hot_esp_ic01', name:'اسبريسو بالايس كريم', desc:'', price:45, img:'assets/images/hot_espresso_with_icecream.png'}
     ]
   },
 
@@ -340,11 +345,9 @@ const MENU = {
         {id:'ice_02',name:'ايس كوفي',desc:'',price:40,img:'assets/images/ice_coffee.png'},
         {id:'ice_03',name:'ايس امريكان',desc:'',price:50,img:'assets/images/ice_americano.png'},
         {id:'ice_04',name:'ايس سبانش لاتيه',desc:'',price:65,img:'assets/images/ice_spanish_latte.png'},
-        {id:'ice_05',name:'ايس موكا',desc:'',price:60,img:'assets/images/ice_mocha.png'},
+        {id:'ice_05',name:'ايس موكا',desc:'',price:55,img:'assets/images/ice_mocha.png'}, /* updated to 55 */
         {id:'ice_06',name:'ايس لوتس',desc:'',price:40,img:'assets/images/ice_lotus.png'},
         {id:'ice_07',name:'ايس كراميل',desc:'',price:40,img:'assets/images/ice_caramel.png'}
-        {id:'ice_08',name:'ايس موكا',desc:'',price:45,img:'assets/images/ice_Mokka.png'},
-
       ]},
       { key:'fresh', title:'فريش', items:[
         {id:'frs_01',name:'مانجو',desc:'',price:50,img:'assets/images/fresh_mango.png'},
@@ -385,14 +388,12 @@ const MENU = {
       ]},
       { key:'softc', title:'مشروبات غازية', items:[
         {id:'softc_01',name:'V-Cola',desc:'',price:20,img:'assets/images/soft_vcola.png'},
-        {id:'softc_02',name:'ريد بول',desc:'',price:65,img:'assets/images/soft_redbull.png'},
+        {id:'softc_02',name:'ريد بول',desc:'',price:65,img:'assets/images/soft_redbull.png'}, /* price updated to 65 */
         {id:'softc_03',name:'تويست',desc:'',price:35,img:'assets/images/soft_twist.png'},
         {id:'softc_04',name:'شويبس',desc:'',price:30,img:'assets/images/soft_schweppes.png'},
         {id:'softc_05',name:'فيروز',desc:'',price:30,img:'assets/images/soft_fayrouz.png'},
         {id:'softc_06',name:'جهينة عصير طبيعي (مانجو، تفاح، برتقال)',desc:'',price:15,img:'assets/images/soft_juhayna_natural.png'},
         {id:'softc_07',name:'جهينة ميكس فراولة حليب',desc:'',price:20,img:'assets/images/soft_juhayna_mix.png'}
-        {id:'softc_08',name:'Twist',desc:'',price:20,img:'assets/images/soft_Twist.png'},
-
       ]}
     ]
   },
@@ -497,7 +498,7 @@ function createGrid(items){
   return grid;
 }
 
-/* initial render of all sections (default: all visible) */
+/* initial render of all sections (default: hot active) */
 function renderSections(){
   sectionsEl.innerHTML = '';
 
@@ -665,12 +666,23 @@ function showToast(txt){
 /* =================== FILTER =================== */
 function filterCategory(cat){
   const sections = document.querySelectorAll('.section');
+  // hide all first
   sections.forEach(s=> s.style.display = 'none');
-  if(cat === 'all'){ sections.forEach(s=> s.style.display = 'block'); window.scrollTo({ top:120, behavior:'smooth' }); return; }
+
+  // if no category provided, show all
+  if(!cat){
+    sections.forEach(s=> s.style.display = 'block');
+    window.scrollTo({ top:120, behavior:'smooth' });
+    return;
+  }
+
   const map = { hot:0, cold:1, soft:2, dessert:3, special:4, ice:5, fun:6 };
   const idx = map[cat];
-  const secList = document.querySelectorAll('.section');
-  if(typeof idx === 'number' && secList[idx]) secList[idx].style.display = 'block';
+  if(typeof idx === 'number' && sections[idx]) {
+    sections[idx].style.display = 'block';
+  } else {
+    sections.forEach(s=> s.style.display = 'block');
+  }
   window.scrollTo({ top:120, behavior:'smooth' });
 }
 
@@ -752,6 +764,20 @@ function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll(
 function init(){
   renderSections();
   renderCartCount(false);
+
+  // set default active: if none, choose first .cat
+  const allCats = document.querySelectorAll('.cat');
+  let defaultCat = document.querySelector('.cat.active');
+  if(!defaultCat) defaultCat = allCats[0];
+  allCats.forEach(c=> c.classList.remove('active'));
+  if(defaultCat) defaultCat.classList.add('active');
+
+  // apply filter for default
+  if(defaultCat && defaultCat.dataset && defaultCat.dataset.cat){
+    filterCategory(defaultCat.dataset.cat);
+  } else {
+    filterCategory(); // show all if not found
+  }
 
   document.getElementById('closeModal').addEventListener('click',()=>{ modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); });
   modalBackdrop.addEventListener('click',(e)=>{ if(e.target === modalBackdrop){ modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); } });
