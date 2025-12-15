@@ -306,8 +306,8 @@ const MENU = {
       {id:'hot_27', name:'سحلب مكسرات', desc:'', price:45, img:'assets/images/hot_sahlab_nuts.png'},
       {id:'hot_28', name:'سحلب لوتس', desc:'', price:50, img:'assets/images/hot_sahlab_lotus.png'},
       {id:'hot_29', name:'سحلب مونيلا', desc:'', price:50, img:'assets/images/hot_sahlab_monila.png'},
-      {id:'hot_30', name:'سحلب فواكهه', desc:'', price:50, img:'assets/images/hot_sahlab_fruits.png'},
-      {id:'hot_31', name:'سحلب نيو', desc:'', price:60, img:'assets/images/hot_sahlab_neo.png'},
+      {id:'hot_30', name:'سحلب فواكهه', desc:'', price:55, img:'assets/images/hot_sahlab_fruits.png'},
+      {id:'hot_31', name:'سحلب نيو', desc:'', price:65, img:'assets/images/hot_sahlab_neo.png'},
 
       /* NEW items requested */
       {id:'hot_mac_01', name:'ميكاتو سنجل', desc:'', price:40, img:'assets/images/hot_macchiato_single.png'},
@@ -366,7 +366,7 @@ const MENU = {
         {id:'frs_14',name:'جوافة',desc:'',price:40,img:'assets/images/fresh_guava.png'},
         {id:'frs_15',name:'كوكتيل',desc:'',price:50,img:'assets/images/fresh_cocktail.png'},
         {id:'frs_16',name:'كوكتيل قطع',desc:'',price:65,img:'assets/images/fresh_cocktail_chunks.png'},
-        {id:'frs_17',name:'نيو افوجاتو (عسل، مكسرات، مانجو، موز)',desc:'',price:130,img:'assets/images/fresh_neo_affogato.png'}
+        {id:'frs_17',name:'نيو ميكس (عسل، مكسرات، مانجو، موز)',desc:'',price:95,img:'assets/images/fresh_neo_affogato.png'}
       ]},
       { key:'smoothie', title:'سموزي', items:[
         {id:'smz_01',name:'سموزي فراولة',desc:'',price:45,img:'assets/images/smz_strawberry.png'},
@@ -406,29 +406,40 @@ const MENU = {
       {id:'dess_03',name:'وافل أوريو',desc:'',price:65,img:'assets/images/dess_waffle_oreo.png'},
       {id:'dess_04',name:'وافل لوتس',desc:'',price:65,img:'assets/images/dess_waffle_lotus.png'},
       {id:'dess_05',name:'وافل بستاشيو',desc:'',price:75,img:'assets/images/dess_waffle_pistachio.png'},
-      {id:'dess_06',name:'وافل فواكه',desc:'',price:80,img:'assets/images/dess_waffle_fruits.png'},
-      {id:'dess_07',name:'مولتن كيك',desc:'',price:60,img:'assets/images/dess_molten.png'},
-      {id:'dess_08',name:'تشيز كيك',desc:'',price:60,img:'assets/images/dess_cheesecake.png'},
-      {id:'dess_09',name:'شوكليت كيك',desc:'',price:70,img:'assets/images/dess_chocolate_cake.png'}
+      {id:'dess_06',name:'وافل كراميل',desc:'',price:75,img:'assets/images/dess_waffle_Cramel.png'},
+      {id:'dess_07',name:'وافل فواكه',desc:'',price:80,img:'assets/images/dess_waffle_fruits.png'},
+      {id:'dess_08',name:'مولتن كيك',desc:'',price:60,img:'assets/images/dess_molten.png'},
+      {id:'dess_09',name:'تشيز كيك',desc:'',price:85,img:'assets/images/dess_cheesecake.png'},
+      {id:'dess_10',name:'شوكليت كيك',desc:'',price:70,img:'assets/images/dess_chocolate_cake.png'}
+      {id:'dess_11',name:'سينابون',desc:'',price:60,img:'assets/images/dess_Cinnabon_cake.png'}
+      {id:'dess_12',name:'دونتس',desc:'',price:40,img:'assets/images/dess_Donuts_cake.png'}
+      {id:'dess_13',name:'كوكيز نوتيلا',desc:'',price:25,img:'assets/images/dess_Cookies_cake.png'}
+      {id:'dess_14',name:'بروفتيرول',desc:'',price:35,img:'assets/images/dess_Profiterole_cake.png'}
+      {id:'dess_15',name:'بامبوليني',desc:'',price:45,img:'assets/images/dess_Bomboloni_cake.png'}
+      
+      
     ]
   },
 
   special: {
     title: 'مميز نيو',
     items: [
-      {id:'sp_01',name:'بطاطا عسل + فواكه + مكسرات',desc:'',price:50,img:'assets/images/sp_potato_fruit_nuts.png'},
+      {id:'sp_01',name:'بطاطا عسل + فواكه + مكسرات',desc:'',price:60,img:'assets/images/sp_potato_chocolate_Nutella_nuts.png'},
+      {id:'sp_02',name:'بطاطا شوكلاته + نوتيلا + مكسرات',desc:'',price:50,img:'assets/images/sp_potato_fruit_nuts.png'},
       {id:'sp_02',name:'اندومي فراخ قطع طبيعية بتتبيلة نيو المميزة',desc:'',price:40,img:'assets/images/sp_noodles_chicken.png'},
       {id:'sp_03',name:'كوكتيل نيو المميز',desc:'فاكهة فاخرة + سموزي + عسل + مكسرات + هوهوز + مورو',price:100,img:'assets/images/sp_cocktail_neo.png'}
+      {id:'sp_04',name:'Neo Hot',desc:'هوت شوكليت نيو المميز مع شوت اسبريسو معاهم ايس كريم',price:90,img:'assets/images/sp_Hot_neo.png'}
+      {id:'sp_05',name:'Neo Cold',desc:'مشروب نيو السحري البارد والمميز مع إضافات خطيره وطعم لا يُقاوم',price:95,img:'assets/images/sp_Cold_neo.png'}
     ]
   },
 
   icecream: {
     title: 'ايس كريم',
     items: [
-      {id:'ic_01',name:'بسكوته',desc:'',price:20,img:'assets/images/ic_biscuit.png'},
-      {id:'ic_02',name:'كوب صغير',desc:'',price:20,img:'assets/images/ic_small.png'},
-      {id:'ic_03',name:'كوب وسط',desc:'',price:25,img:'assets/images/ic_medium.png'},
-      {id:'ic_04',name:'كوب كبير',desc:'',price:35,img:'assets/images/ic_large.png'}
+      {id:'ic_01',name:'بسكوته',desc:'',price:25,img:'assets/images/ic_biscuit.png'},
+      {id:'ic_02',name:'كوب صغير',desc:'',price:30,img:'assets/images/ic_small.png'},
+      {id:'ic_03',name:'كوب وسط',desc:'',price:35,img:'assets/images/ic_medium.png'},
+      {id:'ic_04',name:'كوب كبير',desc:'',price:40,img:'assets/images/ic_large.png'}
     ]
   },
 
