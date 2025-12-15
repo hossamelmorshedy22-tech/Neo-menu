@@ -2,122 +2,276 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>NEO CAFE Menu</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>نيو كافية منيو - NEO CAFE</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-/* ====== نفس الستايل القديم بدون أي تغيير ====== */
 :root{
   --neo-green:#124d33;
   --neo-green-2:#21593f;
   --neo-beige:#f6efe6;
   --neo-cream:#fbf4e9;
   --muted:#6b6b6b;
-  --shadow:0 18px 40px rgba(18,77,51,.08);
+  --card-radius:14px;
+  --shadow: 0 18px 40px rgba(18,77,51,0.06);
 }
+
+/* reset */
 *{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
 body{
-  font-family:Cairo,sans-serif;
   background:var(--neo-beige);
+  font-family:"Cairo",sans-serif;
+  color:#0b0b0b;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.4;
+  -webkit-tap-highlight-color: transparent;
 }
-.header{text-align:center;padding:20px;background:var(--neo-cream)}
-.logo{position:absolute;right:16px;top:10px;width:90px}
-.cats-grid{padding:12px}
-.cats-row{display:flex;gap:8px;justify-content:center;margin-bottom:6px}
-.cat{
-  background:#fff;
-  padding:8px 14px;
-  border-radius:999px;
+
+/* header */
+.header{
+  background: linear-gradient(180deg,var(--neo-cream),var(--neo-beige));
+  padding:22px 14px 8px;
+  text-align:center;
+  position:relative;
+}
+.header h1{
+  color:var(--neo-green);
   font-weight:800;
+  font-size:20px;
+  margin-bottom:6px;
+}
+.header p{
+  color:var(--neo-green-2);
+  font-weight:700;
+  margin-bottom:6px;
+}
+
+/* logo top-right - bigger */
+.logo{
+  position:absolute;
+  right:16px;
+  top:6px;
+  width:110px;  /* doubled more than previous */
+  height:auto;
+  object-fit:contain;
+  border-radius:50%;
+  background:transparent;
+  padding:6px;
+}
+
+/* categories organized into 3 rows and centered */
+.cats-grid{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  padding:12px;
+  align-items:center; /* center everything */
+}
+.cats-row{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  justify-content:center; /* center row contents */
+}
+.cat{
+  flex:0 0 auto;
+  background:#fff;
+  border-radius:999px;
+  padding:10px 14px;
+  border:1px solid rgba(18,77,51,0.06);
+  font-weight:800;
+  color:var(--neo-green);
   cursor:pointer;
+  white-space:nowrap;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.03);
 }
 .cat.active{
-  background:var(--neo-green);
-  color:#fff;
+  background:linear-gradient(180deg,var(--neo-green),var(--neo-green-2));
+  color:white;
+  box-shadow:0 20px 50px rgba(18,77,51,0.14);
 }
-.container{max-width:1100px;margin:auto;padding:12px 12px 160px}
+
+/* container */
+.container{max-width:980px;margin:8px auto;padding:6px 12px 160px}
+
+/* section title */
 .section-title{
-  margin:20px 0 10px;
+  color:var(--neo-green-2);
   font-weight:900;
-  color:var(--neo-green);
+  font-size:18px;
+  margin:8px 0 12px;
+  text-align:right;
 }
+
+/* product grid 2 columns */
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap:12px;
 }
+
+/* each card */
 .product-card{
   background:#fff;
   border-radius:12px;
+  padding:8px;
   box-shadow:var(--shadow);
   overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  transition: transform .14s ease, box-shadow .14s ease;
 }
-.product-img{width:100%;height:150px;object-fit:cover}
-.product-body{padding:10px}
-.row-title{display:flex;justify-content:space-between;font-weight:900}
-.price{color:var(--neo-green)}
-.add-btn{
-  margin-top:10px;
+.product-card:hover{ transform: translateY(-6px); box-shadow: 0 30px 80px rgba(18,77,51,0.12); }
+.product-img{
   width:100%;
+  height:140px;
+  object-fit:cover;
+  border-radius:10px;
+  background:#f2f2f2;
+}
+.product-body{padding:10px 6px;display:flex;flex-direction:column;gap:8px}
+.row-title{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.product-name{font-weight:900;color:var(--neo-green);font-size:15px;line-height:1.1}
+.product-desc{color:var(--muted);font-size:13px;min-height:36px}
+.product-footer{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.price{color:var(--neo-green);font-weight:900}
+.add-btn{
   background:var(--neo-green);
   color:#fff;
+  padding:8px 12px;
+  border-radius:10px;
   border:0;
-  padding:8px;
-  border-radius:8px;
   font-weight:900;
   cursor:pointer;
+  box-shadow:0 8px 20px rgba(18,77,51,0.12);
 }
-.cart-float{position:fixed;bottom:14px;right:14px}
+
+/* floating cart - fixed on bottom-right */
+.cart-float{position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;align-items:center;gap:10px}
 .cart-btn{
   background:var(--neo-green);
   color:#fff;
-  padding:12px 16px;
+  padding:12px 14px;
   border-radius:14px;
-  font-weight:900;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  box-shadow:0 30px 80px rgba(18,77,51,0.24);
+  cursor:pointer;
+  transform-origin:center;
 }
-.cart-count{
-  background:#ffeb3b;
-  color:#000;
-  border-radius:50%;
-  padding:4px 10px;
-  margin-left:6px;
+.cart-count{background:#ffeb3b;color:#111;padding:6px 10px;border-radius:999px;font-weight:900;min-width:26px;text-align:center;}
+
+/* toast */
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:160px;background:rgba(0,0,0,0.78);color:#fff;padding:10px 14px;border-radius:10px;font-weight:900;z-index:99999;opacity:0;transition:opacity .2s}
+
+/* modal */
+.modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:flex-end;justify-content:center;padding:12px;z-index:9998}
+.modal-back.show{display:flex}
+.modal{width:100%;max-width:760px;background:#fff;border-radius:12px;padding:12px;box-shadow:0 30px 80px rgba(0,0,0,0.25);direction:rtl}
+.modal h3{margin:0 0 8px;color:var(--neo-green);font-weight:900}
+.modal .list{max-height:60vh;overflow:auto;padding-right:6px}
+.modal .list .item{display:flex;align-items:center;justify-content:space-between;padding:10px 6px;border-bottom:1px solid #f3f3f3}
+
+/* footer */
+footer{padding:18px 12px;text-align:center;color:var(--muted)}
+.footer-socials{display:flex;gap:10px;justify-content:center;margin-bottom:10px}
+.footer-socials a{padding:10px 14px;border-radius:12px;color:#fff;font-weight:900;text-decoration:none}
+.fb{background:#1877F2}
+.ig{background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af)}
+.tt{background:#010101}
+
+/* small/mobile adjustments */
+@media (max-width:420px){
+  .product-img{height:150px}
+  .logo{width:86px; top:6px}
+  .cat{padding:8px 10px}
+  .grid{gap:10px; grid-template-columns: 1fr;} /* mobile: 1 column for better readability as requested */
+  .container{padding-bottom:200px}
 }
+
+/* ensure long product names wrap */
+.product-name{word-break:break-word}
+
+/* accessibility focus */
+.add-btn:focus,.cat:focus,.cart-btn:focus{outline:3px solid rgba(18,77,51,0.12)}
 </style>
 </head>
-
 <body>
 
 <header class="header">
-  <img src="assets/images/logo.png" class="logo">
-  <h1>NEO CAFE MENU</h1>
+  <!-- updated logo (user will add file assets/images/logo.png) -->
+  <img src="assets/images/logo.png" alt="NEO Cafe" class="logo" id="topLogo" onerror="this.style.display='none'">
+  <h1>نيو كافية منيو - NEO CAFÉ</h1>
+  <p>Make It NEO Time</p>
 </header>
 
-<!-- الأقسام -->
-<div class="cats-grid">
+<!-- categories: arranged in 3 rows (no "الكل") -->
+<div class="cats-grid" aria-label="أقسام المنيو">
   <div class="cats-row">
     <div class="cat active" data-cat="hot">مشروبات ساخنة</div>
     <div class="cat" data-cat="cold">مشروبات باردة</div>
-    <div class="cat" data-cat="dessert">ديزيرت</div>
+    <div class="cat" data-cat="soft">سوفت درينك</div>
   </div>
   <div class="cats-row">
+    <div class="cat" data-cat="dessert">أطباق ديزيرت</div>
     <div class="cat" data-cat="special">مميز نيو</div>
-    <div class="cat" data-cat="icecream">ايس كريم</div>
-    <div class="cat" data-cat="fun">مجانًا</div>
+    <div class="cat" data-cat="ice">ايس كريم</div>
+  </div>
+  <div class="cats-row">
+    <div class="cat" data-cat="fun">دلع نفسك في نيو - مجانًا</div>
   </div>
 </div>
 
-<main class="container" id="content"></main>
+<main class="container" id="mainContent">
+  <div id="sections"></div>
+</main>
 
-<!-- السلة -->
-<div class="cart-float">
-  <div class="cart-btn">
-    السلة <span class="cart-count" id="cartCount">0</span>
+<!-- floating cart -->
+<div class="cart-float" aria-hidden="false">
+  <div id="cartBtn" class="cart-btn" role="button" aria-label="افتح السلة">
+    <div class="cart-count" id="cartCount">0</div>
+    <div style="font-weight:900">السلة</div>
   </div>
 </div>
+
+<!-- modal backdrop -->
+<div id="modalBackdrop" class="modal-back" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" id="modalContent">
+    <h3 id="modalTitle">قائمة</h3>
+    <div class="list" id="modalList"></div>
+    <div style="display:flex;justify-content:space-between;margin-top:8px">
+      <button id="closeModal" class="add-btn" style="background:#888">إغلاق</button>
+      <button id="checkoutNow" class="add-btn" style="background:var(--neo-green)">اطلب دلوقتي</button>
+    </div>
+  </div>
+</div>
+
+<div id="miniToast" class="toast" role="status" aria-live="polite"></div>
+
+<footer>
+  <div style="font-weight:800;margin-bottom:8px">تابعنا على السوشيال</div>
+  <div class="footer-socials">
+    <a class="fb" href="https://facebook.com/neo.cafe.eg" target="_blank">Facebook</a>
+    <a class="ig" href="https://instagram.com/neocafe.eg" target="_blank">Instagram</a>
+    <a class="tt" href="https://tiktok.com/@neo.cafe.eg" target="_blank">TikTok</a>
+  </div>
+  <div style="font-weight:700;color:var(--neo-green)">❤️ شكراً لاختياركم نيو كافية — حب وتمييز لعملاء نيو دائماً</div>
+</footer>
 
 <script>
+/* =================== SETTINGS =================== */
+const CART_KEY = 'neoCafe_cart_v1';
+
+/* reset cart on refresh as requested: clear storage at load */
+try{ localStorage.removeItem(CART_KEY); } catch(e){}
+
+
 /* ================== DATA ================== */
 const MENU = {
   hot: {
