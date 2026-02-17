@@ -67,7 +67,7 @@ body{
 /* header */
 .header{
   background: linear-gradient(180deg, var(--neo-dark), var(--neo-green));
-  padding: 25px 14px 15px;
+  padding: 25px 14px 15px; /* مساحات متوازنة */
   text-align:center;
   position:relative;
   border-bottom-left-radius: 25px;
@@ -75,6 +75,10 @@ body{
   box-shadow: 0 10px 20px rgba(18,77,51,0.2);
   color: #fff;
   overflow: hidden;
+  min-height: 120px; /* ضمان ارتفاع مناسب */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .header h1{
   color:var(--neo-gold);
@@ -82,7 +86,7 @@ body{
   font-size:22px;
   margin-bottom:4px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  padding: 0 60px;
+  padding: 0 60px; /* عشان الكلام ميدخلش في اللوجو */
 }
 .header p{
   color:#fff;
@@ -100,15 +104,16 @@ body{
   font-weight: 700;
   margin-top: 5px;
   border: 1px solid var(--neo-gold);
+  align-self: center;
 }
 
-/* LOGO WITH MOON */
+/* LOGO - Fixed Top Right */
 .logo-container {
   position: absolute;
-  right: 12px;
-  top: 10px;
-  width: 65px;
-  height: 65px;
+  right: 15px;
+  top: 15px;
+  width: 60px; /* حجم مثالي للموبايل */
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -117,7 +122,7 @@ body{
 .logo-container::before {
   content: '';
   position: absolute;
-  inset: -4px;
+  inset: -3px;
   border-radius: 50%;
   border: 2px solid transparent;
   border-top-color: var(--neo-gold);
@@ -253,7 +258,7 @@ body{
 .cart-count{background:var(--neo-gold);color:#000;padding:6px 10px;border-radius:999px;font-weight:900;min-width:26px;text-align:center;}
 
 /* toast */
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:160px;background:var(--neo-dark);color:var(--neo-gold);padding:10px 14px;border-radius:10px;font-weight:900;z-index:99999;opacity:0;transition:opacity .2s}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:160px;background:var(--neo-dark);color:var(--neo-gold);padding:10px 14px;border-radius:10px;font-weight:700;z-index:99999;opacity:0;transition:opacity .2s}
 
 /* modal */
 .modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:flex-end;justify-content:center;padding:12px;z-index:9998; backdrop-filter: blur(2px);}
@@ -268,9 +273,7 @@ footer{padding:18px 12px;text-align:center;color:#fff; background: var(--neo-dar
 .footer-socials{display:flex;gap:10px;justify-content:center;margin-bottom:10px}
 .footer-socials a{padding:10px 14px;border-radius:12px;color:var(--neo-dark); background:var(--neo-gold); font-weight:900;text-decoration:none}
 
-/* تحسينات للموبايل */
 @media (max-width:420px){
-  .logo-container{width:55px; height:55px; top: 8px; right: 10px;}
   .header h1 { font-size: 18px; }
   .product-img{height:150px}
   .cat{padding:8px 10px}
@@ -323,7 +326,7 @@ footer{padding:18px 12px;text-align:center;color:#fff; background: var(--neo-dar
 <div class="cart-float" aria-hidden="false">
   <div id="cartBtn" class="cart-btn" role="button" aria-label="افتح السلة">
     <div class="cart-count" id="cartCount">0</div>
-    <div style="font-weight:900">السلة</div>
+    <div style="font-weight:900">سلة السحور</div>
   </div>
 </div>
 
@@ -352,7 +355,7 @@ footer{padding:18px 12px;text-align:center;color:#fff; background: var(--neo-dar
 
 <script>
 /* =================== SETTINGS =================== */
-const CART_KEY = 'neoCafe_cart_ramadan_v3';
+const CART_KEY = 'neoCafe_cart_ramadan_v4';
 try{ localStorage.removeItem(CART_KEY); } catch(e){}
 
 /* =================== MENU DATA =================== */
@@ -544,7 +547,8 @@ const MENU = {
     ]
   },
 
-  icecream: {
+  // هام جدا: تم توحيد الاسم هنا ليكون "ice" بدلاً من "icecream"
+  ice: {
     title: 'ايس كريم',
     items: [
       {id:'ic_01',name:'كوب وسط',desc:'',price:25,img:'assets/images/ic_medium.png'},
@@ -578,6 +582,8 @@ function createTitle(text){ const d = document.createElement('div'); d.className
 
 function createGrid(items){
   const grid = document.createElement('div'); grid.className='grid';
+  if(!items || items.length === 0) return grid; // الحماية من الأخطاء
+  
   items.forEach(it=>{
     const card = document.createElement('div'); card.className='product-card';
     card.innerHTML = `
@@ -603,92 +609,103 @@ function renderSections(){
   const sectionsEl = document.getElementById('sections');
   sectionsEl.innerHTML = '';
 
-  // RAMADAN
-  const ram = document.createElement('div'); ram.className='section'; ram.id='sec_ramadan';
-  ram.appendChild(createTitle(MENU.ramadan.title));
-  ram.appendChild(createGrid(MENU.ramadan.items));
-  sectionsEl.appendChild(ram);
+  // Helper to render simple sections
+  const renderSimpleSection = (key, id) => {
+    const data = MENU[key];
+    if(data){
+      const el = document.createElement('div'); el.className='section'; el.id=id;
+      el.appendChild(createTitle(data.title));
+      el.appendChild(createGrid(data.items));
+      sectionsEl.appendChild(el);
+    }
+  };
 
-  // HOT
-  const hot = document.createElement('div'); hot.className='section'; hot.id='sec_hot';
-  hot.appendChild(createTitle(MENU.hot.title));
-  hot.appendChild(createGrid(MENU.hot.items));
-  sectionsEl.appendChild(hot);
+  renderSimpleSection('ramadan', 'sec_ramadan');
+  renderSimpleSection('hot', 'sec_hot');
 
-  // COLD
-  const cold = document.createElement('div'); cold.className='section'; cold.id='sec_cold';
-  cold.appendChild(createTitle(MENU.cold.title));
-  const preview = document.createElement('div'); preview.style.cssText='display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:10px';
-  MENU.cold.subcats.forEach(sc=>{
-    const btn = document.createElement('div'); btn.className='cat'; btn.textContent = sc.title; 
-    btn.onclick = (e)=>{
-      const subGrid = createGrid(sc.items);
-      const existing = cold.querySelector('.grid');
-      if(existing) existing.remove();
-      cold.appendChild(subGrid);
-      cold.querySelectorAll('.cat').forEach(c=>c.style.background='#fff');
-      e.target.style.background='#eee';
-    };
-    preview.appendChild(btn);
-  });
-  cold.appendChild(preview);
-  cold.appendChild(createGrid(MENU.cold.subcats[0].items));
-  sectionsEl.appendChild(cold);
+  // COLD (Custom Logic for Subcats)
+  const coldData = MENU.cold;
+  if(coldData){
+    const cold = document.createElement('div'); cold.className='section'; cold.id='sec_cold';
+    cold.appendChild(createTitle(coldData.title));
+    
+    // Sub-nav container
+    const preview = document.createElement('div'); 
+    preview.style.cssText='display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:10px';
+    
+    coldData.subcats.forEach((sc, idx)=>{
+      const btn = document.createElement('div'); 
+      btn.className='cat'; 
+      btn.textContent = sc.title; 
+      // Activate first one by default visually
+      if(idx===0) btn.style.background='#eee'; 
 
-  // SOFT
-  const soft = document.createElement('div'); soft.className='section'; soft.id='sec_soft';
-  soft.appendChild(createTitle('مشروبات غازية'));
-  const softc = MENU.cold.subcats.find(s=> s.key === 'softc');
-  if(softc) soft.appendChild(createGrid(softc.items));
-  sectionsEl.appendChild(soft);
+      btn.onclick = (e)=>{
+        // Clear existing grid
+        const existing = cold.querySelector('.grid');
+        if(existing) existing.remove();
+        // Add new grid
+        cold.appendChild(createGrid(sc.items));
+        // Update visual state
+        cold.querySelectorAll('.cat').forEach(c=>c.style.background='#fff');
+        e.target.style.background='#eee';
+      };
+      preview.appendChild(btn);
+    });
+    cold.appendChild(preview);
+    
+    // Initial Render of first subcat
+    if(coldData.subcats.length > 0){
+      cold.appendChild(createGrid(coldData.subcats[0].items));
+    }
+    sectionsEl.appendChild(cold);
+  }
 
-  // DESSERT
-  const dessert = document.createElement('div'); dessert.className='section'; dessert.id='sec_dessert';
-  dessert.appendChild(createTitle(MENU.dessert.title));
-  dessert.appendChild(createGrid(MENU.dessert.items));
-  sectionsEl.appendChild(dessert);
+  renderSimpleSection('soft', 'sec_soft'); // Note: mapped to softc data inside MENU but key is softc? No, corrected to MENU.softc
+  // تصحيح: في البيانات فوق سميتها softc، لكن الزر soft.
+  // في دالة renderSimpleSection انا ببعت key.
+  // خليني اعدل renderSimpleSection عشان تاخد الـ Data object مباشرة أضمن.
+  
+  // SOFT FIX:
+  const softData = MENU.softc; // Data Key is softc
+  if(softData){
+     const el = document.createElement('div'); el.className='section'; el.id='sec_soft';
+     el.appendChild(createTitle(softData.title));
+     el.appendChild(createGrid(softData.items));
+     sectionsEl.appendChild(el);
+  }
 
-  // SPECIAL
-  const sp = document.createElement('div'); sp.className='section'; sp.id='sec_special';
-  sp.appendChild(createTitle(MENU.special.title));
-  sp.appendChild(createGrid(MENU.special.items));
-  sectionsEl.appendChild(sp);
-
-  // ICE CREAM
-  const ice = document.createElement('div'); ice.className='section'; ice.id='sec_ice';
-  ice.appendChild(createTitle(MENU.icecream.title));
-  ice.appendChild(createGrid(MENU.icecream.items));
-  sectionsEl.appendChild(ice);
-
-  // EXTRAS
-  const ext = document.createElement('div'); ext.className='section'; ext.id='sec_extras';
-  ext.appendChild(createTitle(MENU.extras.title));
-  ext.appendChild(createGrid(MENU.extras.items));
-  sectionsEl.appendChild(ext);
-
-  // FUN
-  const fun = document.createElement('div'); fun.className='section'; fun.id='sec_fun';
-  fun.appendChild(createTitle(MENU.fun.title));
-  fun.appendChild(createGrid(MENU.fun.items));
-  sectionsEl.appendChild(fun);
+  renderSimpleSection('dessert', 'sec_dessert');
+  renderSimpleSection('special', 'sec_special');
+  renderSimpleSection('ice', 'sec_ice'); // Corrected key matches data
+  renderSimpleSection('extras', 'sec_extras');
+  renderSimpleSection('fun', 'sec_fun');
 }
 
 function filterCategory(cat){
-  // 1. Hide all sections
-  document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-
-  // 2. Show the specific section by ID (robust method)
-  const targetId = 'sec_' + cat;
-  const targetEl = document.getElementById(targetId);
-
-  if(targetEl){
-    targetEl.style.display = 'block';
-  } else {
-    // If not found, show all (fallback)
-    document.querySelectorAll('.section').forEach(s => s.style.display = 'block');
-  }
+  document.querySelectorAll('.section').forEach(s=> s.style.display='none');
   
-  // 3. Scroll to top
+  // Mapping button data-cat to Section ID
+  const map = { 
+    ramadan:'sec_ramadan', 
+    hot:'sec_hot', 
+    cold:'sec_cold', 
+    soft:'sec_soft', 
+    dessert:'sec_dessert', 
+    special:'sec_special', 
+    ice:'sec_ice', 
+    extras:'sec_extras', 
+    fun:'sec_fun' 
+  };
+  
+  const targetId = map[cat];
+  if(targetId){
+    const el = document.getElementById(targetId);
+    if(el) el.style.display='block';
+  } else {
+    // Show all if not found
+    document.querySelectorAll('.section').forEach(s=> s.style.display='block');
+  }
   window.scrollTo({ top:180, behavior:'smooth' });
 }
 
@@ -761,7 +778,6 @@ function showToast(txt){
 
 renderSections();
 renderCartCount(false);
-// Start with Ramadan section active
 filterCategory('ramadan');
 
 </script>
