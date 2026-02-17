@@ -19,14 +19,14 @@
             --text: #2d3436;
             --danger: #c0392b;
             --success: #27ae60;
-            --occupied: #ffe0e0; /* لون الطاولة المشغولة */
-            --selected: #fff8e1; /* لون الطاولة المختارة */
+            --occupied: #ffe0e0;
+            --selected: #fff8e1;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; outline: none; }
         body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
 
-        /* --- Sidebar --- */
+        /* Sidebar */
         .sidebar { width: 260px; background: var(--primary-dark); color: var(--white); display: flex; flex-direction: column; transition: 0.3s; z-index: 100; }
         .brand { padding: 20px; text-align: center; background: var(--primary); border-bottom: 2px solid var(--secondary); }
         .brand h2 { margin: 0; font-weight: 800; color: var(--secondary); }
@@ -36,82 +36,77 @@
         .nav-btn:hover, .nav-btn.active { background: rgba(212, 175, 55, 0.15); color: var(--secondary); font-weight: 700; border-right: 4px solid var(--secondary); }
         .user-panel { padding: 15px; background: rgba(0,0,0,0.2); font-size: 13px; text-align: center; }
 
-        /* --- Main Content --- */
+        /* Main Content */
         .main-content { flex: 1; padding: 15px; overflow-y: auto; position: relative; }
         .page { display: none; animation: fadeIn 0.3s; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- POS LAYOUT (UPDATED) --- */
+        /* POS Styles */
         .pos-layout { display: flex; gap: 15px; height: calc(100vh - 40px); }
         .menu-sec { flex: 2; display: flex; flex-direction: column; overflow: hidden; }
         .cart-sec { flex: 1; background: var(--white); border-radius: 12px; padding: 15px; display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #ddd; }
 
-        /* 1. Tables Grid (New Design) */
-        .tables-wrapper { background: #fff; padding: 15px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow-x: auto; }
-        .tables-grid { display: flex; gap: 12px; padding-bottom: 5px; }
-        .table-card {
-            min-width: 110px; height: 100px;
-            background: var(--white); border: 2px solid #e0e0e0; border-radius: 12px;
-            cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: all 0.2s; position: relative;
-        }
+        .tables-wrapper { background: #fff; padding: 10px; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow-x: auto; }
+        .tables-grid { display: flex; gap: 10px; padding-bottom: 5px; }
+        .table-card { min-width: 100px; height: 90px; background: var(--white); border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.2s; position: relative; }
         .table-card:hover { transform: translateY(-2px); border-color: var(--secondary); }
-        
-        /* Table Status Styles */
         .table-card.occupied { background: var(--occupied); border-color: var(--danger); color: var(--danger); }
         .table-card.selected { background: var(--selected); border-color: var(--secondary); box-shadow: 0 0 0 2px var(--secondary); }
-        
-        .table-icon { font-size: 24px; margin-bottom: 5px; opacity: 0.5; }
-        .table-name { font-weight: 800; font-size: 14px; }
-        .table-total { font-size: 12px; font-weight: bold; margin-top: 5px; background: rgba(255,255,255,0.8); padding: 2px 8px; border-radius: 10px; }
+        .table-name { font-weight: 800; font-size: 13px; }
+        .table-total { font-size: 11px; font-weight: bold; margin-top: 3px; background: rgba(255,255,255,0.8); padding: 2px 6px; border-radius: 10px; }
 
-        /* 2. Categories */
-        .cats-bar { display: flex; gap: 8px; padding-bottom: 10px; overflow-x: auto; }
-        .cat-chip { padding: 10px 20px; background: var(--white); border: 1px solid #ddd; border-radius: 25px; cursor: pointer; font-weight: 700; font-size: 13px; white-space: nowrap; transition: 0.2s; color: var(--primary); }
+        /* Categories Bar */
+        .cats-bar { display: flex; flex-wrap: wrap; gap: 8px; padding-bottom: 10px; }
+        .cat-chip { padding: 10px 15px; background: var(--white); border: 1px solid #ddd; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 13px; white-space: nowrap; transition: 0.2s; color: var(--primary); display: flex; align-items: center; gap: 5px; flex-grow: 1; justify-content: center; }
         .cat-chip:hover { border-color: var(--secondary); }
         .cat-chip.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px rgba(18, 77, 51, 0.2); }
+        
+        /* Sub-Categories Bar */
+        .sub-cats-bar { display: flex; gap: 5px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 5px; border-bottom: 1px solid #eee; display: none; }
+        .sub-cats-bar.show { display: flex; }
+        .sub-cat-chip { padding: 5px 12px; background: #f0f0f0; border-radius: 15px; font-size: 12px; cursor: pointer; color: #555; white-space: nowrap; }
+        .sub-cat-chip.active { background: var(--secondary); color: white; font-weight: bold; }
 
-        /* 3. Products */
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; overflow-y: auto; padding: 5px; align-content: start; }
-        .prod-card { background: var(--white); border-radius: 12px; padding: 12px; text-align: center; cursor: pointer; border: 1px solid #eee; transition: 0.2s; display: flex; flex-direction: column; justify-content: center; min-height: 100px; }
+        /* Products Grid */
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; overflow-y: auto; padding: 5px; align-content: start; }
+        .prod-card { background: var(--white); border-radius: 10px; padding: 10px; text-align: center; cursor: pointer; border: 1px solid #eee; transition: 0.2s; display: flex; flex-direction: column; justify-content: center; min-height: 80px; }
         .prod-card:hover { transform: translateY(-3px); border-color: var(--secondary); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .prod-name { font-weight: 700; font-size: 14px; line-height: 1.3; margin-bottom: 8px; color: var(--text); }
-        .prod-price { color: var(--primary); font-weight: 900; font-size: 15px; background: #f0f7f4; padding: 3px 10px; border-radius: 10px; align-self: center; }
+        .prod-name { font-weight: 700; font-size: 13px; line-height: 1.3; margin-bottom: 5px; color: var(--text); }
+        .prod-price { color: var(--primary); font-weight: 900; font-size: 14px; background: #f0f7f4; padding: 2px 8px; border-radius: 8px; align-self: center; }
 
         /* Cart */
         .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
         .active-table-badge { background: var(--secondary); color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 13px; }
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed #eee; font-size: 14px; }
-        .qty-controls { display: flex; align-items: center; gap: 8px; background: #f8f9fa; padding: 2px 8px; border-radius: 6px; }
-        .qty-btn { width: 24px; height: 24px; border-radius: 50%; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 13px; }
+        .qty-controls { display: flex; align-items: center; gap: 5px; background: #f8f9fa; padding: 2px 5px; border-radius: 6px; }
+        .qty-btn { width: 22px; height: 22px; border-radius: 50%; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; }
         .qty-btn.inc { background: var(--success); color: white; }
         .qty-btn.dec { background: #ddd; }
-        
         .cart-footer { margin-top: auto; padding-top: 15px; border-top: 2px solid #eee; }
-        .total-row { display: flex; justify-content: space-between; font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 15px; }
-        .btn-checkout { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 18px; cursor: pointer; display: flex; justify-content: center; gap: 10px; align-items: center; }
+        .total-row { display: flex; justify-content: space-between; font-size: 18px; font-weight: 800; color: var(--primary); margin-bottom: 10px; }
+        .btn-checkout { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; justify-content: center; gap: 8px; align-items: center; }
         .btn-checkout:hover { background: var(--primary-dark); }
 
-        /* --- Other Pages Styles --- */
+        /* Other Pages */
         .data-panel { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); margin-bottom: 20px; }
-        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px; }
-        .card { background: white; padding: 20px; border-radius: 12px; border-right: 4px solid var(--primary); box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
-        .card h3 { font-size: 13px; color: #777; margin-bottom: 5px; }
-        .card .value { font-size: 24px; font-weight: 800; color: var(--primary-dark); }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { text-align: right; padding: 10px; background: #f9f9f9; color: var(--primary); border-bottom: 2px solid #eee; }
+        td { padding: 10px; border-bottom: 1px solid #eee; }
+        .form-control { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; }
+        .btn-action { padding: 8px 15px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
         
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: right; padding: 12px; background: #f9f9f9; color: var(--primary); border-bottom: 2px solid #eee; }
-        td { padding: 12px; border-bottom: 1px solid #eee; }
-        .form-control { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; }
-        .btn-action { padding: 8px 15px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; }
-
-        /* --- Modal --- */
+        /* Modal */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; }
         .modal.open { display: flex; }
-        .modal-content { background: white; width: 450px; padding: 25px; border-radius: 12px; }
+        .modal-content { background: white; width: 400px; padding: 20px; border-radius: 12px; }
 
-        /* --- PRINT RECEIPT (Ramadan Style) --- */
+        @media (max-width: 768px) {
+            .pos-layout { flex-direction: column; }
+            .sidebar { display: none; } /* Hide sidebar on mobile for now or create toggle */
+        }
+
+        /* PRINT RECEIPT */
         @media print {
             body * { visibility: hidden; }
             #receipt-area, #receipt-area * { visibility: visible; }
@@ -120,15 +115,12 @@
                 width: 78mm; margin: 0 auto; padding: 5px; color: black;
                 font-family: 'Cairo', sans-serif; text-align: center;
             }
-            .r-header img { width: 60px; filter: grayscale(100%); margin-bottom: 5px; }
-            .r-header h2 { font-size: 18px; margin: 2px 0; }
-            .r-slogan { border: 1px solid #000; border-radius: 20px; padding: 2px 10px; display: inline-block; font-size: 12px; font-weight: bold; margin: 5px 0; }
-            .r-meta { font-size: 10px; margin-bottom: 10px; border-bottom: 1px dashed #000; padding-bottom: 5px; }
-            .r-table { width: 100%; font-size: 12px; border-collapse: collapse; margin-bottom: 10px; }
-            .r-table th { border-bottom: 1px solid #000; padding: 2px 0; font-size: 10px; }
-            .r-table td { padding: 4px 0; }
-            .r-total { border: 2px solid #000; padding: 5px; font-weight: 900; font-size: 16px; border-radius: 5px; margin-top: 5px; }
-            .r-footer { font-size: 10px; margin-top: 15px; }
+            .r-header img { width: 50px; filter: grayscale(100%); margin-bottom: 5px; }
+            .r-slogan { border: 1px solid #000; border-radius: 20px; padding: 2px 8px; display: inline-block; font-size: 11px; font-weight: bold; margin: 5px 0; }
+            .r-table { width: 100%; font-size: 11px; border-collapse: collapse; margin-bottom: 5px; }
+            .r-table th { border-bottom: 1px solid #000; padding: 2px 0; }
+            .r-table td { padding: 2px 0; }
+            .r-total { border: 2px solid #000; padding: 5px; font-weight: 900; font-size: 14px; border-radius: 5px; margin-top: 5px; }
         }
     </style>
 </head>
@@ -147,7 +139,7 @@
             <button class="nav-btn" onclick="nav('expenses')"><i class="fas fa-wallet"></i> المصروفات</button>
             <button class="nav-btn" onclick="nav('reports')"><i class="fas fa-file-alt"></i> التقارير</button>
         </div>
-        <div class="user-panel">Admin Logged In</div>
+        <div class="user-panel">Admin</div>
     </div>
 
     <div class="main-content">
@@ -160,6 +152,8 @@
                     </div>
 
                     <div id="posCats" class="cats-bar"></div>
+                    
+                    <div id="posSubCats" class="sub-cats-bar"></div>
 
                     <div id="posProducts" class="products-grid"></div>
                 </div>
@@ -167,15 +161,12 @@
                 <div class="cart-sec">
                     <div class="cart-header">
                         <span id="activeTableLabel" class="active-table-badge">لم يتم اختيار طاولة</span>
-                        <button onclick="clearCart()" style="color:#e74c3c;background:none;border:none;cursor:pointer;font-weight:bold">
-                            <i class="fas fa-trash"></i> مسح
-                        </button>
+                        <button onclick="clearCart()" style="color:#e74c3c;background:none;border:none;cursor:pointer;font-weight:bold"><i class="fas fa-trash"></i> مسح</button>
                     </div>
                     
                     <div id="cartItems" style="flex:1; overflow-y:auto; padding-right:5px;">
                         <div style="text-align:center; color:#ccc; margin-top:50px;">
-                            <i class="fas fa-hand-pointer" style="font-size:30px;margin-bottom:10px"></i><br>
-                            اختر طاولة ثم أضف الطلبات
+                            <i class="fas fa-hand-pointer" style="font-size:24px;margin-bottom:10px"></i><br>اختر طاولة
                         </div>
                     </div>
 
@@ -194,27 +185,20 @@
 
         <div id="dashboard" class="page">
             <div class="data-panel">
-                <h2 style="margin-bottom:20px;border-bottom:2px solid var(--secondary);padding-bottom:10px;">📊 ملخص اليوم</h2>
-                <div class="cards-grid">
-                    <div class="card">
-                        <h3>المبيعات</h3>
-                        <div class="value" id="dash_sales">0 ج</div>
+                <h2>📊 ملخص اليوم</h2>
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:20px; margin-top:15px">
+                    <div style="background:#f9f9f9; padding:15px; border-radius:10px; border-right:4px solid var(--primary)">
+                        <h3>المبيعات</h3> <div style="font-size:24px; font-weight:bold" id="dash_sales">0 ج</div>
                     </div>
-                    <div class="card">
-                        <h3>التكلفة (COGS)</h3>
-                        <div class="value" id="dash_cost" style="color:#e67e22">0 ج</div>
+                    <div style="background:#f9f9f9; padding:15px; border-radius:10px; border-right:4px solid var(--danger)">
+                        <h3>المصروفات</h3> <div style="font-size:24px; font-weight:bold" id="dash_exp">0 ج</div>
                     </div>
-                    <div class="card">
-                        <h3>المصروفات</h3>
-                        <div class="value" id="dash_exp" style="color:#c0392b">0 ج</div>
-                    </div>
-                    <div class="card" style="border-right-color:var(--success)">
-                        <h3>صافي الربح</h3>
-                        <div class="value" id="dash_profit" style="color:var(--success)">0 ج</div>
+                    <div style="background:#f9f9f9; padding:15px; border-radius:10px; border-right:4px solid var(--success)">
+                        <h3>صافي الربح</h3> <div style="font-size:24px; font-weight:bold" id="dash_profit">0 ج</div>
                     </div>
                 </div>
-                <h3>سجل الفواتير</h3>
-                <table style="width:100%;margin-top:10px;">
+                <h3 style="margin-top:20px">آخر الفواتير</h3>
+                <table style="margin-top:10px">
                     <thead><tr><th>#</th><th>الوقت</th><th>الطاولة</th><th>الإجمالي</th></tr></thead>
                     <tbody id="salesLogTable"></tbody>
                 </table>
@@ -224,8 +208,8 @@
         <div id="inventory" class="page">
             <div class="data-panel">
                 <div style="display:flex;justify-content:space-between;margin-bottom:15px">
-                    <h2>📦 إدارة المخزن</h2>
-                    <button class="btn-action" onclick="openModal('modal_inv')">+ إضافة صنف</button>
+                    <h2>📦 المخزن</h2>
+                    <button class="btn-action" onclick="openModal('modal_inv')">+ صنف جديد</button>
                 </div>
                 <input type="text" placeholder="بحث..." class="form-control" onkeyup="renderInventory()" id="invSearch">
                 <table>
@@ -237,20 +221,17 @@
 
         <div id="recipes" class="page">
             <div class="data-panel">
-                <h2>⚙️ ربط المنتجات بالخامات</h2>
-                <p style="color:#666;font-size:13px;margin-bottom:15px">اختر المنتج وحدد الخامات التي تُخصم عند بيعه.</p>
-                
-                <div style="display:flex;gap:10px;margin-bottom:15px">
+                <h2>⚙️ التكلفة (Recipe)</h2>
+                <div style="display:flex;gap:10px;margin:15px 0">
                     <select id="recipeProdSelect" class="form-control" onchange="loadRecipe()">
                         <option value="">-- اختر المنتج --</option>
                     </select>
                 </div>
-
                 <div id="recipeEditor" style="display:none;background:#f9f9f9;padding:15px;border-radius:10px">
                     <h4 id="recipeProdName" style="color:var(--primary);margin-bottom:10px"></h4>
                     <div id="recipeIngsContainer"></div>
                     <button class="btn-action" style="background:#7f8c8d;margin-top:10px" onclick="addRecipeRow()">+ مكون</button>
-                    <button class="btn-action" style="margin-top:10px" onclick="saveRecipe()">حفظ التعديلات</button>
+                    <button class="btn-action" style="margin-top:10px" onclick="saveRecipe()">حفظ</button>
                 </div>
             </div>
         </div>
@@ -259,7 +240,7 @@
             <div class="data-panel">
                 <div style="display:flex;justify-content:space-between;margin-bottom:15px">
                     <h2>💸 المصروفات</h2>
-                    <button class="btn-action" onclick="openModal('modal_exp')">+ تسجيل مصروف</button>
+                    <button class="btn-action" onclick="openModal('modal_exp')">+ مصروف</button>
                 </div>
                 <table>
                     <thead><tr><th>التاريخ</th><th>البند</th><th>القيمة</th><th>ملاحظات</th></tr></thead>
@@ -270,11 +251,11 @@
 
         <div id="reports" class="page">
             <div class="data-panel">
-                <h2>📈 تقارير الأرباح</h2>
+                <h2>📈 التقارير</h2>
                 <div style="display:flex;gap:10px;margin:15px 0;">
                     <input type="date" id="repStart" class="form-control">
                     <input type="date" id="repEnd" class="form-control">
-                    <button class="btn-action" onclick="genReport()">عرض</button>
+                    <button class="btn-action" onclick="genReport()">عرض التقرير</button>
                 </div>
                 <div id="repResult" style="display:none;padding:15px;background:#f8f9fa;border-radius:10px">
                     <table style="font-weight:bold">
@@ -291,11 +272,11 @@
 
     <div id="modal_inv" class="modal">
         <div class="modal-content">
-            <h3>إضافة خامة / منتج</h3>
+            <h3>إضافة خامة</h3>
             <input type="text" id="new_inv_name" placeholder="اسم الصنف" class="form-control">
             <select id="new_inv_type" class="form-control">
-                <option value="raw">خامة (سكر، بن)</option>
-                <option value="ready">منتج جاهز (كانز، مياه)</option>
+                <option value="raw">خامة</option>
+                <option value="ready">منتج جاهز</option>
             </select>
             <div style="display:flex;gap:10px">
                 <input type="number" id="new_inv_qty" placeholder="الكمية" class="form-control">
@@ -306,24 +287,20 @@
                     <option value="kg">كيلو</option>
                 </select>
             </div>
-            <input type="number" id="new_inv_cost" placeholder="سعر الشراء الإجمالي" class="form-control">
-            <div style="text-align:left;margin-top:10px">
-                <button class="btn-action" onclick="saveInventory()">حفظ</button>
-                <button class="btn-action" style="background:#777" onclick="closeModal()">إلغاء</button>
-            </div>
+            <input type="number" id="new_inv_cost" placeholder="التكلفة الإجمالية" class="form-control">
+            <button class="btn-action" onclick="saveInventory()">حفظ</button>
+            <button class="btn-action" style="background:#777" onclick="closeModal()">إلغاء</button>
         </div>
     </div>
 
     <div id="modal_exp" class="modal">
         <div class="modal-content">
             <h3>تسجيل مصروف</h3>
-            <input type="text" id="new_exp_title" placeholder="بند المصروف" class="form-control">
+            <input type="text" id="new_exp_title" placeholder="البند" class="form-control">
             <input type="number" id="new_exp_val" placeholder="القيمة" class="form-control">
             <input type="text" id="new_exp_note" placeholder="ملاحظات" class="form-control">
-            <div style="text-align:left;margin-top:10px">
-                <button class="btn-action" onclick="saveExpense()">حفظ</button>
-                <button class="btn-action" style="background:#777" onclick="closeModal()">إلغاء</button>
-            </div>
+            <button class="btn-action" onclick="saveExpense()">حفظ</button>
+            <button class="btn-action" style="background:#777" onclick="closeModal()">إلغاء</button>
         </div>
     </div>
 
@@ -332,8 +309,8 @@
             <img src="assets/images/logo.png" alt="NEO">
             <h2>NEO Cafe</h2>
             <div class="r-slogan">✨ رمضانك جميل في نيو ✨</div>
-            <div class="r-meta">
-                Date: <span id="p_date"></span> | Order: <span id="p_id"></span>
+            <div style="font-size:10px; margin-bottom:5px; border-bottom:1px dashed #000; padding-bottom:5px">
+                <span id="p_date"></span> <br> Order: <span id="p_id" style="font-weight:bold"></span>
             </div>
         </div>
         <table class="r-table">
@@ -343,151 +320,196 @@
         <div class="r-total">
             الإجمالي: <span id="p_total">0.00</span> ج
         </div>
-        <div class="r-footer">
-            شكراً لزيارتكم NEO Cafe ❤️<br>
-            Password: 12345678
+        <div style="font-size:10px; margin-top:10px">
+            شكراً لزيارتكم ❤️<br> Wifi: 12345678
         </div>
     </div>
 
 <script>
-/* ================= DATA INITIALIZATION (FULL MENU) ================= */
-const DB = {
-    menu: {
-        ramadan: { 
-            title: '🌙 رمضان', 
-            items: [
-                {id:'r1', name:'رز بلبن مكسرات', price:40}, {id:'r2', name:'رز بلبن كراميل', price:45},
-                {id:'r3', name:'رز بلبن شوكليت', price:45}, {id:'r4', name:'رز بلبن نوتيلا', price:55},
-                {id:'r5', name:'رز بلبن بستاشيو', price:60}, {id:'r6', name:'رز بلبن لوتس', price:55},
-                {id:'r7', name:'رز بلبن ميكس', price:75}, {id:'r8', name:'رز بلبن قنبلة', price:85},
-                {id:'r9', name:'كب كنافة لوتس', price:85}, {id:'r10', name:'كب كنافة نوتيلا', price:85},
-                {id:'r11', name:'فادج كرانشي', price:95}, {id:'r12', name:'فادج بستاشيو', price:110}
-            ]
-        },
-        hot: {
-            title: '☕ ساخن',
-            items: [
-                {id:'h1', name:'شاي', price:15}, {id:'h2', name:'شاي ليبتون', price:20}, {id:'h3', name:'شاي أخضر', price:20},
-                {id:'h4', name:'شاي حليب', price:20}, {id:'h5', name:'شاي نكهات', price:20}, {id:'h6', name:'نعناع', price:15},
-                {id:'h7', name:'ينسون', price:15}, {id:'h8', name:'جنزبيل', price:15}, {id:'h9', name:'اسبريسو سنجل', price:35},
-                {id:'h10', name:'اسبريسو دبل', price:40}, {id:'h11', name:'قهوة تركي', price:25}, {id:'h12', name:'تركي دبل', price:30},
-                {id:'h13', name:'قهوة فرنساوي', price:35}, {id:'h14', name:'قهوة بندق', price:35}, {id:'h15', name:'قهوة نوتيلا', price:40},
-                {id:'h16', name:'قهوة بستاشيو', price:40}, {id:'h17', name:'لاتيه', price:50}, {id:'h18', name:'لاتيه فلفر', price:60},
-                {id:'h19', name:'سبانش لاتيه', price:65}, {id:'h20', name:'كابتشينو', price:55}, {id:'h21', name:'نسكافيه حليب', price:45},
-                {id:'h22', name:'نسكافيه بلاك', price:35}, {id:'h23', name:'امريكانو', price:50}, {id:'h24', name:'هوت شوكليت', price:50},
-                {id:'h25', name:'هوت سيدر', price:45}, {id:'h26', name:'سحلب', price:40}, {id:'h27', name:'سحلب مكسرات', price:45},
-                {id:'h28', name:'سحلب لوتس', price:50}, {id:'h29', name:'سحلب نيو', price:65}, {id:'h30', name:'ميكاتو', price:40},
-                {id:'h31', name:'موكا', price:45}
-            ]
-        },
-        cold_coffee: {
-            title: '🧊 آيس كوفي',
-            items: [
-                {id:'ice1', name:'ايس لاتيه', price:50}, {id:'ice2', name:'ايس كوفي', price:45}, {id:'ice3', name:'ايس امريكانو', price:55},
-                {id:'ice4', name:'ايس سبانش', price:65}, {id:'ice5', name:'ايس موكا', price:55}, {id:'ice6', name:'ايس لوتس', price:50},
-                {id:'ice7', name:'ايس كراميل', price:50}
-            ]
-        },
-        milkshake: {
-            title: '🥤 ميلك شيك',
-            items: [
-                {id:'ms1', name:'فانيلا', price:50}, {id:'ms2', name:'اوريو', price:55}, {id:'ms3', name:'هوهوز', price:55},
-                {id:'ms4', name:'كراميل', price:55}, {id:'ms5', name:'فراولة', price:60}, {id:'ms6', name:'مانجو', price:65},
-                {id:'ms7', name:'سنيكرز', price:75}, {id:'ms8', name:'مورو', price:75}, {id:'ms9', name:'شوكليت', price:55},
-                {id:'ms10', name:'كندر', price:65}, {id:'ms11', name:'نسكافيه', price:50}, {id:'ms12', name:'موز نوتيلا', price:65}
-            ]
-        },
-        frapp: {
-            title: '❄️ فرباتشينو',
-            items: [
-                {id:'fr1', name:'شوكليت', price:50}, {id:'fr2', name:'كراميل', price:55}, {id:'fr3', name:'بندق', price:55},
-                {id:'fr4', name:'كوكيز', price:55}, {id:'fr5', name:'نوتيلا', price:65}, {id:'fr6', name:'بستاشيو', price:75},
-                {id:'fr7', name:'أوريو', price:65}, {id:'fr8', name:'لوتس', price:75}
-            ]
-        },
-        fresh: {
-            title: '🍹 فريش',
-            items: [
-                {id:'frs1', name:'مانجو', price:50}, {id:'frs2', name:'فراولة', price:45}, {id:'frs3', name:'فراولة حليب', price:50},
-                {id:'frs4', name:'موز حليب', price:50}, {id:'frs5', name:'بلح حليب', price:55}, {id:'frs6', name:'ليمون', price:30},
-                {id:'frs7', name:'ليمون نعناع', price:35}, {id:'frs8', name:'بطيخ', price:40}, {id:'frs9', name:'برتقال', price:40},
-                {id:'frs10', name:'كيوي', price:60}, {id:'frs11', name:'كيوي حليب', price:70}, {id:'frs12', name:'افوجاتو عسل', price:100},
-                {id:'frs13', name:'افوجاتو مكسرات', price:120}, {id:'frs14', name:'جوافة', price:45}, {id:'frs15', name:'كوكتيل', price:55},
-                {id:'frs16', name:'كوكتيل قطع', price:65}, {id:'frs17', name:'نيو افوجاتو', price:105}
-            ]
-        },
-        smoothie: {
-            title: '🍧 سموزي',
-            items: [
-                {id:'sm1', name:'فراولة', price:45}, {id:'sm2', name:'مانجو', price:45}, {id:'sm3', name:'أناناس', price:45},
-                {id:'sm4', name:'خوخ', price:45}, {id:'sm5', name:'كيوي', price:45}, {id:'sm6', name:'بطيخ', price:45},
-                {id:'sm7', name:'بلوبيري', price:45}
-            ]
-        },
-        soda: {
-            title: '🍸 صودا',
-            items: [
-                {id:'sd1', name:'بلوبيري', price:50}, {id:'sd2', name:'بلو صودا', price:50}, {id:'sd3', name:'برانديت', price:50},
-                {id:'sd4', name:'فراولة', price:50}, {id:'sd5', name:'أناناس', price:50}, {id:'sd6', name:'خوخ', price:50},
-                {id:'sd7', name:'موهيتو', price:55}
-            ]
-        },
-        soft: {
-            title: '🥤 سوفت',
-            items: [
-                {id:'sc1', name:'V-Cola', price:20}, {id:'sc2', name:'V-Cola نكهات', price:25}, {id:'sc3', name:'ريد بول', price:65},
-                {id:'sc4', name:'ريد بول نكهات', price:75}, {id:'sc5', name:'تويست', price:25}, {id:'sc6', name:'شويبس', price:30},
-                {id:'sc7', name:'فيروز', price:30}, {id:'sc8', name:'عصير جهينة', price:15}, {id:'sc9', name:'جهينة ميكس', price:20}
-            ]
-        },
-        dessert: {
-            title: '🍰 ديزيرت',
-            items: [
-                {id:'ds1', name:'وافل شوكليت', price:65}, {id:'ds2', name:'وافل كراميل', price:65}, {id:'ds3', name:'وافل نوتيلا', price:75},
-                {id:'ds4', name:'وافل أوريو', price:75}, {id:'ds5', name:'وافل لوتس', price:75}, {id:'ds6', name:'وافل بستاشيو', price:85},
-                {id:'ds7', name:'وافل فواكه', price:90}, {id:'ds8', name:'مولتن كيك', price:75}, {id:'ds9', name:'تشيز كيك', price:85},
-                {id:'ds10', name:'شوكليت كيك', price:70}, {id:'ds11', name:'سينابون', price:65}, {id:'ds12', name:'دوناتس', price:50},
-                {id:'ds13', name:'براونيز', price:60}, {id:'ds14', name:'ميني كوكيز', price:30}, {id:'ds15', name:'بروفيترول', price:35},
-                {id:'ds16', name:'بامبوليني', price:55}, {id:'ds17', name:'فولكانو', price:75}, {id:'ds18', name:'كرواسون', price:45},
-                {id:'ds19', name:'تيراميسو', price:65}, {id:'ds20', name:'تشيز مادنس', price:95}
-            ]
-        },
-        special: {
-            title: '🌟 مميز',
-            items: [
-                {id:'sp1', name:'بطاطا عسل', price:50}, {id:'sp2', name:'اندومي', price:20},
-                {id:'sp3', name:'اندومي نيو', price:40}, {id:'sp4', name:'كوكتيل نيو', price:100}
-            ]
-        },
-        ice: { title: '🍦 ايس كريم', items: [{id:'ic1', name:'كوب وسط', price:25}, {id:'ic2', name:'كوب كبير', price:35}] },
-        extras: { title: '➕ إضافات', items: [{id:'ex1', name:'تغليف', price:10}, {id:'ex2', name:'مياه', price:10}, {id:'ex3', name:'إضافة', price:10}] },
-        fun: { title: '🎲 ألعاب', items: [{id:'fn1', name:'كوتشينة', price:0}, {id:'fn2', name:'شطرنج', price:0}, {id:'fn3', name:'أميم', price:0}, {id:'fn4', name:'توبيك', price:0}] }
+function escapeHtml(text) {
+  return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+}
+
+/* ================= FULL MENU DATA ================= */
+const MENU = {
+    ramadan: { 
+        title: '🌙 رمضان في نيو', 
+        items: [
+            {id:'r1', name:'رز بلبن مكسرات', price:40}, {id:'r2', name:'رز بلبن كراميل', price:45},
+            {id:'r3', name:'رز بلبن شوكليت', price:45}, {id:'r4', name:'رز بلبن نوتيلا', price:55},
+            {id:'r5', name:'رز بلبن بستاشيو', price:60}, {id:'r6', name:'رز بلبن لوتس', price:55},
+            {id:'r7', name:'رز بلبن ميكس صوص', price:75}, {id:'r8', name:'رز بلبن قنبلة', price:85},
+            {id:'r9', name:'كب كنافة لوتس', price:85}, {id:'r10', name:'كب كنافة نوتيلا', price:85},
+            {id:'r11', name:'فادج كرانشي', price:95}, {id:'r12', name:'فادج بستاشيو', price:110}
+        ]
     },
-    getData: (k) => JSON.parse(localStorage.getItem(k)) || [],
-    saveData: (k,v) => localStorage.setItem(k, JSON.stringify(v))
+    hot: {
+        title: '☕ مشروبات ساخنة',
+        items: [
+            {id:'h1', name:'شاي', price:15}, {id:'h2', name:'شاي أحمد تي', price:20}, {id:'h3', name:'شاي أخضر', price:20},
+            {id:'h4', name:'شاي حليب', price:20}, {id:'h5', name:'شاي نكهات', price:20}, {id:'h6', name:'نعناع', price:15},
+            {id:'h7', name:'ينسون', price:15}, {id:'h8', name:'جنزبيل', price:15}, {id:'h9', name:'اسبريسو سنجل', price:35},
+            {id:'h10', name:'اسبريسو دبل', price:40}, {id:'h11', name:'قهوة تركي', price:25}, {id:'h12', name:'تركي دبل', price:30},
+            {id:'h13', name:'قهوة فرنساوي', price:35}, {id:'h14', name:'قهوة بندق', price:35}, {id:'h15', name:'قهوة نوتيلا', price:40},
+            {id:'h16', name:'قهوة بستاشيو', price:40}, {id:'h17', name:'لاتيه', price:50}, {id:'h18', name:'لاتيه فلفر', price:60},
+            {id:'h19', name:'سبانش لاتيه', price:65}, {id:'h20', name:'كابتشينو', price:55}, {id:'h21', name:'نسكافيه حليب', price:45},
+            {id:'h22', name:'نسكافيه بلاك', price:35}, {id:'h23', name:'امريكانو', price:50}, {id:'h24', name:'هوت شوكليت', price:50},
+            {id:'h25', name:'هوت سيدر', price:45}, {id:'h26', name:'سحلب', price:40}, {id:'h27', name:'سحلب مكسرات', price:45},
+            {id:'h28', name:'سحلب لوتس', price:50}, {id:'h29', name:'سحلب نيو', price:65}, {id:'h30', name:'ميكاتو', price:40},
+            {id:'h31', name:'موكا', price:45}
+        ]
+    },
+    // COLD DRINKS (COMPLEX CATEGORY)
+    cold: {
+        title: '🥤 مشروبات باردة',
+        isComplex: true,
+        subcats: [
+            { title:'ميلك شيك', items: [
+                {id:'ms1', name:'ميلك شيك فانيلا', price:50}, {id:'ms2', name:'ميلك شيك اوريو', price:55},
+                {id:'ms3', name:'ميلك شيك هوهوز', price:55}, {id:'ms4', name:'ميلك شيك كراميل', price:55},
+                {id:'ms5', name:'ميلك شيك فراولة', price:60}, {id:'ms6', name:'ميلك شيك مانجو', price:65},
+                {id:'ms7', name:'ميلك شيك سنيكرز', price:75}, {id:'ms8', name:'ميلك شيك مورو', price:75},
+                {id:'ms9', name:'ميلك شيك شوكليت', price:55}, {id:'ms10', name:'ميلك شيك كندر', price:65},
+                {id:'ms11', name:'ميلك شيك نسكافيه', price:50}, {id:'ms12', name:'ميلك شيك موز نوتيلا', price:65}
+            ]},
+            { title:'فرباتشينو', items: [
+                {id:'fr1', name:'فرباتشينو شوكليت', price:50}, {id:'fr2', name:'فرباتشينو كراميل', price:55},
+                {id:'fr3', name:'فرباتشينو بندق', price:55}, {id:'fr4', name:'فرباتشينو كوكيز', price:55},
+                {id:'fr5', name:'فرباتشينو نوتيلا', price:65}, {id:'fr6', name:'فرباتشينو بستاشيو', price:75},
+                {id:'fr7', name:'فرباتشينو أوريو', price:65}, {id:'fr8', name:'فرباتشينو لوتس', price:75}
+            ]},
+            { title:'آيس كوفي', items: [
+                {id:'ice1', name:'ايس لاتيه', price:50}, {id:'ice2', name:'ايس كوفي', price:45},
+                {id:'ice3', name:'ايس امريكانو', price:55}, {id:'ice4', name:'ايس سبانش', price:65},
+                {id:'ice5', name:'ايس موكا', price:55}, {id:'ice6', name:'ايس لوتس', price:50},
+                {id:'ice7', name:'ايس كراميل', price:50}
+            ]},
+            { title:'فريش', items: [
+                {id:'frs1', name:'مانجو', price:50}, {id:'frs2', name:'فراولة', price:45},
+                {id:'frs3', name:'فراولة حليب', price:50}, {id:'frs4', name:'موز حليب', price:50},
+                {id:'frs5', name:'بلح حليب', price:55}, {id:'frs6', name:'ليمون', price:30},
+                {id:'frs7', name:'ليمون نعناع', price:35}, {id:'frs8', name:'بطيخ', price:40},
+                {id:'frs9', name:'برتقال', price:40}, {id:'frs10', name:'كيوي', price:60},
+                {id:'frs11', name:'كيوي حليب', price:70}, {id:'frs12', name:'افوجاتو عسل', price:100},
+                {id:'frs13', name:'افوجاتو مكسرات', price:120}, {id:'frs14', name:'جوافة', price:45},
+                {id:'frs15', name:'كوكتيل', price:55}, {id:'frs16', name:'كوكتيل قطع', price:65},
+                {id:'frs17', name:'نيو افوجاتو', price:105}
+            ]},
+            { title:'سموزي', items: [
+                {id:'sm1', name:'سموزي فراولة', price:45}, {id:'sm2', name:'سموزي مانجو', price:45},
+                {id:'sm3', name:'سموزي أناناس', price:45}, {id:'sm4', name:'سموزي خوخ', price:45},
+                {id:'sm5', name:'سموزي كيوي', price:45}, {id:'sm6', name:'سموزي بطيخ', price:45},
+                {id:'sm7', name:'سموزي بلوبيري', price:45}
+            ]},
+            { title:'صودا', items: [
+                {id:'sd1', name:'بلوبيري صودا', price:50}, {id:'sd2', name:'بلو صودا', price:50},
+                {id:'sd3', name:'برانديت', price:50}, {id:'sd4', name:'فراولة صودا', price:50},
+                {id:'sd5', name:'أناناس صودا', price:50}, {id:'sd6', name:'خوخ صودا', price:50},
+                {id:'sd7', name:'موهيتو', price:55}
+            ]}
+        ]
+    },
+    soft: {
+        title: '🍾 سوفت درينك',
+        items: [
+            {id:'sc1', name:'V-Cola كلاسيك', price:20}, {id:'sc2', name:'V-Cola نكهات', price:25},
+            {id:'sc3', name:'ريد بول', price:65}, {id:'sc4', name:'ريد بول نكهات', price:75},
+            {id:'sc5', name:'تويست', price:25}, {id:'sc6', name:'شويبس', price:30},
+            {id:'sc7', name:'فيروز', price:30}, {id:'sc8', name:'عصير جهينة', price:15},
+            {id:'sc9', name:'جهينة ميكس', price:20}
+        ]
+    },
+    dessert: {
+        title: '🍰 أطباق ديزيرت',
+        items: [
+            {id:'ds1', name:'وافل شوكليت', price:65}, {id:'ds2', name:'وافل كراميل', price:65},
+            {id:'ds3', name:'وافل نوتيلا', price:75}, {id:'ds4', name:'وافل أوريو', price:75},
+            {id:'ds5', name:'وافل لوتس', price:75}, {id:'ds6', name:'وافل بستاشيو', price:85},
+            {id:'ds7', name:'وافل فواكه', price:90}, {id:'ds8', name:'مولتن كيك', price:75},
+            {id:'ds9', name:'تشيز كيك', price:85}, {id:'ds10', name:'شوكليت كيك', price:70},
+            {id:'ds11', name:'سينابون', price:65}, {id:'ds12', name:'دوناتس', price:50},
+            {id:'ds13', name:'براونيز', price:60}, {id:'ds14', name:'ميني كوكيز', price:30},
+            {id:'ds15', name:'بروفيترول', price:35}, {id:'ds16', name:'بامبوليني', price:55},
+            {id:'ds17', name:'فولكانو', price:75}, {id:'ds18', name:'كرواسون', price:45},
+            {id:'ds19', name:'تيراميسو', price:65}, {id:'ds20', name:'تشيز مادنس', price:95}
+        ]
+    },
+    special: {
+        title: '🌟 مميز نيو',
+        items: [
+            {id:'sp1', name:'بطاطا عسل مكسرات', price:50}, {id:'sp2', name:'اندومي', price:20},
+            {id:'sp3', name:'اندومي نيو', price:40}, {id:'sp4', name:'كوكتيل نيو', price:100}
+        ]
+    },
+    ice: {
+        title: '🍦 ايس كريم',
+        items: [
+            {id:'ic1', name:'كوب وسط', price:25}, {id:'ic2', name:'كوب كبير', price:35}
+        ]
+    },
+    extras: {
+        title: '➕ إضافات',
+        items: [
+            {id:'ex1', name:'تغليف', price:10}, {id:'ex2', name:'مياه', price:10}, {id:'ex3', name:'إضافة', price:10}
+        ]
+    },
+    fun: {
+        title: '🎲 العاب مجانية',
+        items: [
+            {id:'fn1', name:'كوتشينة', price:0}, {id:'fn2', name:'شطرنج', price:0},
+            {id:'fn3', name:'أميم', price:0}, {id:'fn4', name:'توبيك', price:0}
+        ]
+    }
 };
 
-// Global Vars
-let tablesOrder = JSON.parse(localStorage.getItem('neo_tables')) || {};
+/* ================= DATABASE ================= */
+const DB = {
+    keys: { inv:'neo_inv', exp:'neo_exp', sales:'neo_sales', recipes:'neo_recipes', tables:'neo_tables' },
+    getData: (key) => JSON.parse(localStorage.getItem(key)) || [],
+    saveData: (key, data) => localStorage.setItem(key, JSON.stringify(data)),
+    getTable: () => JSON.parse(localStorage.getItem('neo_tables')) || {}
+};
+
+// GLOBAL VARS
+let tablesOrder = DB.getTable();
 let currentTable = null;
 
 // INIT
 function init() {
     renderTables();
     renderCategories();
-    renderProducts('ramadan');
+    changeCat('ramadan'); // Default category
     updateDashboard();
     renderInventory();
     renderExpenses();
     setupRecipeSelect();
 }
 
-/* ================= POS LOGIC ================= */
+/* ================= NAVIGATION ================= */
+function nav(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    
+    if(pageId === 'dashboard') updateDashboard();
+    if(pageId === 'inventory') renderInventory();
+    if(pageId === 'expenses') renderExpenses();
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('open')); }
+
+/* ================= POS SYSTEM ================= */
 function renderTables() {
     const grid = document.getElementById('tablesGrid');
     grid.innerHTML = '';
     
-    // Create 12 Tables (Cards)
     for(let i=1; i<=12; i++) {
         const hasOrder = tablesOrder[i] && tablesOrder[i].length > 0;
         const total = hasOrder ? tablesOrder[i].reduce((a,b)=>a+(b.price*b.qty),0) : 0;
@@ -495,7 +517,7 @@ function renderTables() {
         const card = document.createElement('div');
         card.className = `table-card ${hasOrder?'occupied':''} ${currentTable===i?'selected':''}`;
         card.innerHTML = `
-            <i class="fas fa-couch table-icon"></i>
+            <i class="fas fa-couch fa-lg" style="margin-bottom:5px; opacity:0.6"></i>
             <span class="table-name">طاولة ${i}</span>
             ${hasOrder ? `<span class="table-total">${total} ج</span>` : ''}
         `;
@@ -512,22 +534,49 @@ function renderTables() {
 
 function renderCategories() {
     const bar = document.getElementById('posCats');
-    bar.innerHTML = Object.keys(DB.menu).map(k => 
-        `<div class="cat-chip" onclick="changeCat('${k}', this)">${DB.menu[k].title}</div>`
+    bar.innerHTML = Object.keys(MENU).map(k => 
+        `<div class="cat-chip" id="btn_${k}" onclick="changeCat('${k}')">${MENU[k].title}</div>`
     ).join('');
-    // Active first one visually
-    if(bar.firstChild) bar.firstChild.classList.add('active');
 }
 
-function changeCat(key, el) {
+function changeCat(key) {
+    // 1. Highlight Category
     document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
-    el.classList.add('active');
-    renderProducts(key);
+    const btn = document.getElementById(`btn_${key}`);
+    if(btn) btn.classList.add('active');
+
+    // 2. Handle Subcats
+    const subBar = document.getElementById('posSubCats');
+    const grid = document.getElementById('posProducts');
+    subBar.innerHTML = '';
+    subBar.classList.remove('show');
+    grid.innerHTML = '';
+
+    const catData = MENU[key];
+
+    if(catData.isComplex) {
+        subBar.classList.add('show');
+        catData.subcats.forEach((sub, idx) => {
+            const subBtn = document.createElement('div');
+            subBtn.className = `sub-cat-chip ${idx===0?'active':''}`;
+            subBtn.textContent = sub.title;
+            subBtn.onclick = (e) => {
+                document.querySelectorAll('.sub-cat-chip').forEach(s => s.classList.remove('active'));
+                e.target.classList.add('active');
+                renderProducts(sub.items);
+            };
+            subBar.appendChild(subBtn);
+        });
+        // Render first subcat by default
+        renderProducts(catData.subcats[0].items);
+    } else {
+        renderProducts(catData.items);
+    }
 }
 
-function renderProducts(key) {
+function renderProducts(items) {
     const grid = document.getElementById('posProducts');
-    grid.innerHTML = DB.menu[key].items.map(p => `
+    grid.innerHTML = items.map(p => `
         <div class="prod-card" onclick="addToCart('${p.id}', '${p.name}', ${p.price})">
             <span class="prod-name">${p.name}</span>
             <span class="prod-price">${p.price} ج</span>
@@ -536,7 +585,7 @@ function renderProducts(key) {
 }
 
 function addToCart(id, name, price) {
-    if(!currentTable) return alert('اختار الطاولة الأول!');
+    if(!currentTable) return alert('برجاء اختيار طاولة أولاً');
     if(!tablesOrder[currentTable]) tablesOrder[currentTable] = [];
     
     const existing = tablesOrder[currentTable].find(x => x.id === id);
@@ -550,7 +599,7 @@ function renderCart() {
     const container = document.getElementById('cartItems');
     if(!currentTable || !tablesOrder[currentTable] || !tablesOrder[currentTable].length) {
         container.innerHTML = `<div style="text-align:center;color:#aaa;margin-top:50px">
-            <i class="fas fa-coffee" style="font-size:30px;margin-bottom:10px"></i><br>فارغة
+            <i class="fas fa-mug-hot" style="font-size:30px;margin-bottom:10px"></i><br>فارغة
         </div>`;
         document.getElementById('cartTotal').textContent = "0.00 ج";
         return;
@@ -561,7 +610,7 @@ function renderCart() {
         total += item.price * item.qty;
         return `
         <div class="cart-item">
-            <div style="flex:2">${item.name}</div>
+            <div style="flex:2; font-weight:600">${item.name}</div>
             <div class="qty-controls">
                 <button class="qty-btn dec" onclick="modQty(${idx}, -1)">-</button>
                 <span>${item.qty}</span>
@@ -582,13 +631,13 @@ function modQty(idx, delta) {
 
 function clearCart() {
     if(!currentTable) return;
-    if(confirm('مسح الطلب بالكامل؟')) {
+    if(confirm('مسح الطلب؟')) {
         tablesOrder[currentTable] = [];
         saveTables(); renderCart(); renderTables();
     }
 }
 
-function saveTables() { localStorage.setItem('neo_tables', JSON.stringify(tablesOrder)); }
+function saveTables() { localStorage.setItem(DB.keys.tables, JSON.stringify(tablesOrder)); }
 
 function checkout() {
     if(!currentTable || !tablesOrder[currentTable]?.length) return;
@@ -598,9 +647,9 @@ function checkout() {
     const date = new Date().toLocaleString('ar-EG');
     const id = Date.now();
     
-    // 1. Deduct Stock (Recipe)
-    const recipes = DB.getData('neo_recipes') || {};
-    const inv = DB.getData('neo_inv') || [];
+    // 1. Inventory & Cost Logic
+    const recipes = DB.getData(DB.keys.recipes) || {};
+    const inv = DB.getData(DB.keys.inv) || [];
     let cost = 0;
     
     cart.forEach(item => {
@@ -616,16 +665,15 @@ function checkout() {
             });
         }
     });
-    DB.saveData('neo_inv', inv);
-    renderInventory();
+    DB.saveData(DB.keys.inv, inv);
 
     // 2. Save Sale
-    const sale = { id, date: new Date().toISOString(), items: cart, total, cost };
-    const sales = DB.getData('neo_sales');
+    const sale = { id, date: new Date().toISOString(), items: cart, total, cost, profit: total - cost };
+    const sales = DB.getData(DB.keys.sales);
     sales.push(sale);
-    DB.saveData('neo_sales', sales);
+    DB.saveData(DB.keys.sales, sales);
     
-    // 3. Print
+    // 3. Print Receipt
     document.getElementById('p_date').textContent = date;
     document.getElementById('p_id').textContent = '#'+id.toString().slice(-6);
     document.getElementById('p_items').innerHTML = cart.map(i=>`<tr><td>${i.name}</td><td>${i.qty}</td><td>${i.price}</td></tr>`).join('');
@@ -637,18 +685,10 @@ function checkout() {
     saveTables(); renderCart(); renderTables(); updateDashboard();
 }
 
-/* ================= DASHBOARD & NAV ================= */
-function nav(id) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    event.currentTarget.classList.add('active');
-    if(id === 'dashboard') updateDashboard();
-}
-
+/* ================= DASHBOARD ================= */
 function updateDashboard() {
-    const sales = DB.getData('neo_sales');
-    const exps = DB.getData('neo_exp');
+    const sales = DB.getData(DB.keys.sales);
+    const exps = DB.getData(DB.keys.exp);
     const today = new Date().toISOString().split('T')[0];
     
     const todaySales = sales.filter(s => s.date.startsWith(today));
@@ -668,9 +708,6 @@ function updateDashboard() {
 }
 
 /* ================= INVENTORY & EXPENSES ================= */
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal() { document.querySelectorAll('.modal').forEach(m => m.classList.remove('open')); }
-
 function saveInventory() {
     const name = document.getElementById('new_inv_name').value;
     const qty = parseFloat(document.getElementById('new_inv_qty').value);
@@ -680,7 +717,7 @@ function saveInventory() {
     
     if(!name || !qty) return;
     
-    const inv = DB.getData('neo_inv');
+    const inv = DB.getData(DB.keys.inv);
     const exist = inv.find(i => i.name === name);
     if(exist) {
         const oldVal = exist.stock * exist.avgCost;
@@ -690,24 +727,27 @@ function saveInventory() {
         inv.push({ id: 'inv_'+Date.now(), name, type, unit, stock: qty, avgCost: cost/qty });
     }
     
-    DB.saveData('neo_inv', inv);
+    DB.saveData(DB.keys.inv, inv);
     closeModal(); renderInventory(); setupRecipeSelect();
 }
 
 function renderInventory() {
-    const inv = DB.getData('neo_inv');
-    document.getElementById('inventoryTable').innerHTML = inv.map(i => `
-        <tr><td>${i.name}</td><td>${i.type}</td>
-        <td style="color:${i.stock<5?'red':'inherit'}">${i.stock.toFixed(1)}</td>
+    const inv = DB.getData(DB.keys.inv);
+    const term = document.getElementById('invSearch').value.toLowerCase();
+    const filtered = inv.filter(i => i.name.toLowerCase().includes(term));
+    
+    document.getElementById('inventoryTable').innerHTML = filtered.map(i => `
+        <tr><td>${i.name}</td><td>${i.type=='raw'?'خامة':'جاهز'}</td>
+        <td style="color:${i.stock<5?'red':'inherit'};font-weight:bold">${i.stock.toFixed(1)}</td>
         <td>${i.unit}</td>
-        <td><button style="color:red;border:none;background:none" onclick="delInv('${i.id}')">X</button></td></tr>
+        <td><button style="color:red;border:none;background:none" onclick="delInv('${i.id}')"><i class="fas fa-trash"></i></button></td></tr>
     `).join('');
 }
 
 function delInv(id) {
-    if(confirm('حذف؟')) {
-        const inv = DB.getData('neo_inv').filter(i=>i.id!==id);
-        DB.saveData('neo_inv', inv); renderInventory();
+    if(confirm('حذف هذا الصنف من المخزن؟')) {
+        const inv = DB.getData(DB.keys.inv).filter(i=>i.id!==id);
+        DB.saveData(DB.keys.inv, inv); renderInventory();
     }
 }
 
@@ -718,17 +758,17 @@ function saveExpense() {
     
     if(!title || !amount) return;
     
-    const exp = DB.getData('neo_exp');
+    const exp = DB.getData(DB.keys.exp);
     exp.push({id: Date.now(), date: new Date().toISOString(), title, amount, note});
-    DB.saveData('neo_exp', exp);
+    DB.saveData(DB.keys.exp, exp);
     closeModal(); renderExpenses();
 }
 
 function renderExpenses() {
-    const exp = DB.getData('neo_exp');
+    const exp = DB.getData(DB.keys.exp);
     document.getElementById('expTable').innerHTML = exp.slice(-10).reverse().map(e => `
         <tr><td>${new Date(e.date).toLocaleDateString()}</td><td>${e.title}</td>
-        <td style="color:red">-${e.amount}</td><td>${e.note}</td></tr>
+        <td style="color:red;font-weight:bold">-${e.amount}</td><td>${e.note}</td></tr>
     `).join('');
 }
 
@@ -737,7 +777,10 @@ function setupRecipeSelect() {
     const sel = document.getElementById('recipeProdSelect');
     sel.innerHTML = '<option value="">-- اختر المنتج --</option>';
     let all = [];
-    Object.keys(DB.menu).forEach(k => all.push(...DB.menu[k].items));
+    Object.keys(MENU).forEach(k => {
+        if(MENU[k].isComplex) MENU[k].subcats.forEach(s => all.push(...s.items));
+        else all.push(...MENU[k].items);
+    });
     all.forEach(p => sel.innerHTML += `<option value="${p.id}">${p.name}</option>`);
 }
 
@@ -746,17 +789,17 @@ function loadRecipe() {
     if(!pid) { document.getElementById('recipeEditor').style.display='none'; return; }
     
     document.getElementById('recipeEditor').style.display='block';
-    const prod = document.querySelector(`#recipeProdSelect option[value="${pid}"]`).text;
-    document.getElementById('recipeProdName').textContent = prod;
+    const prodName = document.querySelector(`#recipeProdSelect option[value="${pid}"]`).text;
+    document.getElementById('recipeProdName').textContent = prodName;
     
-    const recipes = DB.getData('neo_recipes');
+    const recipes = DB.getData(DB.keys.recipes);
     const rec = recipes[pid] || [];
     renderRecipeRows(rec);
 }
 
 function renderRecipeRows(rows) {
     const container = document.getElementById('recipeIngsContainer');
-    const inv = DB.getData('neo_inv');
+    const inv = DB.getData(DB.keys.inv);
     container.innerHTML = '';
     
     rows.forEach(r => {
@@ -788,20 +831,20 @@ function getRecipeFromDOM() {
 function saveRecipe() {
     const pid = document.getElementById('recipeProdSelect').value;
     const rec = getRecipeFromDOM();
-    const recipes = DB.getData('neo_recipes');
+    const recipes = DB.getData(DB.keys.recipes);
     recipes[pid] = rec;
-    DB.saveData('neo_recipes', recipes);
-    alert('تم الحفظ');
+    DB.saveData(DB.keys.recipes, recipes);
+    alert('تم حفظ الريسيبي لهذا المنتج');
 }
 
 /* ================= REPORTS ================= */
 function genReport() {
     const s = document.getElementById('repStart').value;
     const e = document.getElementById('repEnd').value;
-    if(!s || !e) return alert('حدد التاريخ');
+    if(!s || !e) return alert('حدد الفترة');
     
-    const sales = DB.getData('neo_sales').filter(x => x.date >= s && x.date <= e+'T23:59');
-    const exps = DB.getData('neo_exp').filter(x => x.date >= s && x.date <= e+'T23:59');
+    const sales = DB.getData(DB.keys.sales).filter(x => x.date >= s && x.date <= e+'T23:59');
+    const exps = DB.getData(DB.keys.exp).filter(x => x.date >= s && x.date <= e+'T23:59');
     
     const tSales = sales.reduce((a,b)=>a+b.total,0);
     const tCost = sales.reduce((a,b)=>a+(b.cost||0),0);
@@ -814,6 +857,7 @@ function genReport() {
     document.getElementById('val_profit').textContent = (tSales - tCost - tExp).toFixed(1) + ' ج';
 }
 
+// Start App
 init();
 </script>
 </body>
