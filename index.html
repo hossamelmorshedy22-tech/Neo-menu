@@ -205,13 +205,11 @@ footer{padding:18px 12px;text-align:center;color:var(--muted)}
 <body>
 
 <header class="header">
-  <!-- updated logo (user will add file assets/images/logo.png) -->
   <img src="assets/images/logo.png" alt="NEO Cafe" class="logo" id="topLogo" onerror="this.style.display='none'">
   <h1>نيو كافية منيو - NEO CAFÉ</h1>
   <p>Make It NEO Time</p>
 </header>
 
-<!-- categories: arranged in 3 rows (no "الكل") -->
 <div class="cats-grid" aria-label="أقسام المنيو">
   <div class="cats-row">
     <div class="cat active" data-cat="hot">مشروبات ساخنة</div>
@@ -224,7 +222,7 @@ footer{padding:18px 12px;text-align:center;color:var(--muted)}
     <div class="cat" data-cat="ice">ايس كريم</div>
   </div>
   <div class="cats-row">
-    <div class="cat" data-cat="fun">دلع نفسك في نيو - مجانًا</div>
+    <div class="cat" data-cat="extras">إضافات</div> <div class="cat" data-cat="fun">دلع نفسك في نيو - مجانًا</div>
   </div>
 </div>
 
@@ -232,7 +230,6 @@ footer{padding:18px 12px;text-align:center;color:var(--muted)}
   <div id="sections"></div>
 </main>
 
-<!-- floating cart -->
 <div class="cart-float" aria-hidden="false">
   <div id="cartBtn" class="cart-btn" role="button" aria-label="افتح السلة">
     <div class="cart-count" id="cartCount">0</div>
@@ -240,7 +237,6 @@ footer{padding:18px 12px;text-align:center;color:var(--muted)}
   </div>
 </div>
 
-<!-- modal backdrop -->
 <div id="modalBackdrop" class="modal-back" aria-hidden="true">
   <div class="modal" role="dialog" aria-modal="true" id="modalContent">
     <h3 id="modalTitle">قائمة</h3>
@@ -421,10 +417,6 @@ const MENU = {
       {id:'dess_Croissant', name:'كرواسون فطار', desc:'', price:45, img:'assets/images/dess_Croissant.png'},
       {id:'dess_donuts', name:'تيراميسو', desc:'', price:65, img:'assets/images/dess_Tiramisu.png'},
       {id:'dess_cheese_madness', name:'تشيز مادنس', desc:'', price:95, img:'assets/images/dess_cheese_madness.png'}
-      
-      
-
-
     ]
   },
 
@@ -444,6 +436,15 @@ const MENU = {
       {id:'ic_02',name:'كوب صغير',desc:'',price:20,img:'assets/images/ic_small.png'},
       {id:'ic_03',name:'كوب وسط',desc:'',price:25,img:'assets/images/ic_medium.png'},
       {id:'ic_04',name:'كوب كبير',desc:'',price:35,img:'assets/images/ic_large.png'}
+    ]
+  },
+
+  /* NEW SECTION: EXTRAS */
+  extras: {
+    title: 'إضافات',
+    items: [
+      {id:'ext_01',name:'تغليف تيكاواي',desc:'',price:10,img:'assets/images/ext_packaging.png'},
+      {id:'ext_02',name:'مياه معدنية',desc:'',price:10,img:'assets/images/ext_water.png'}
     ]
   },
 
@@ -556,6 +557,12 @@ function renderSections(){
   ice.appendChild(createTitle(MENU.icecream.title));
   ice.appendChild(createGrid(MENU.icecream.items));
   sectionsEl.appendChild(ice);
+
+  // EXTRAS (New Section)
+  const ext = document.createElement('div'); ext.className='section';
+  ext.appendChild(createTitle(MENU.extras.title));
+  ext.appendChild(createGrid(MENU.extras.items));
+  sectionsEl.appendChild(ext);
 
   // FUN
   const fun = document.createElement('div'); fun.className='section';
@@ -690,7 +697,8 @@ function filterCategory(cat){
     return;
   }
 
-  const map = { hot:0, cold:1, soft:2, dessert:3, special:4, ice:5, fun:6 };
+  // Updated MAP to include 'extras'
+  const map = { hot:0, cold:1, soft:2, dessert:3, special:4, ice:5, extras:6, fun:7 };
   const idx = map[cat];
   if(typeof idx === 'number' && sections[idx]) {
     sections[idx].style.display = 'block';
