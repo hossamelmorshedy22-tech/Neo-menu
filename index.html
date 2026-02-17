@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>نيو كافية منيو - NEO CAFE</title>
+<title>نيو كافية - منيو رمضان</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 
@@ -11,7 +11,9 @@
 :root{
   --neo-green:#124d33;
   --neo-green-2:#21593f;
-  --neo-beige:#f6efe6;
+  --neo-dark:#0a2e1e; /* لون جديد لرمضان */
+  --neo-gold:#d4af37; /* لون ذهبي لرمضان */
+  --neo-beige:#fdfbf7;
   --neo-cream:#fbf4e9;
   --muted:#6b6b6b;
   --card-radius:14px;
@@ -29,71 +31,146 @@ body{
   -moz-osx-font-smoothing:grayscale;
   line-height:1.4;
   -webkit-tap-highlight-color: transparent;
+  /* خلفية رمضانية خفيفة */
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
+
+/* RAMADAN DECORATIONS (LANTERNS) */
+.lantern-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+}
+.lantern {
+  position: absolute;
+  top: -20px;
+  width: 30px;
+  height: 40px;
+  background: var(--neo-gold);
+  border-radius: 5px;
+  box-shadow: 0 0 15px var(--neo-gold);
+  animation: swing 3s infinite ease-in-out alternate;
+  transform-origin: top center;
+}
+.lantern::before { content:''; position:absolute; top:-100px; left:14px; width:2px; height:100px; background:var(--neo-dark); }
+.l1 { left: 10%; animation-delay: 0s; transform: scale(0.8); }
+.l2 { left: 85%; animation-delay: 1.5s; transform: scale(0.9); }
+.l3 { left: 20%; top: -10px; animation-delay: 0.5s; background: var(--neo-green); }
+
+@keyframes swing { 0% { transform: rotate(5deg); } 100% { transform: rotate(-5deg); } }
 
 /* header */
 .header{
-  background: linear-gradient(180deg,var(--neo-cream),var(--neo-beige));
-  padding:22px 14px 8px;
+  background: linear-gradient(180deg, var(--neo-dark), var(--neo-green));
+  padding:40px 14px 15px;
   text-align:center;
   position:relative;
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+  box-shadow: 0 10px 20px rgba(18,77,51,0.2);
+  color: #fff;
+  overflow: hidden;
 }
 .header h1{
-  color:var(--neo-green);
+  color:var(--neo-gold);
   font-weight:800;
-  font-size:20px;
-  margin-bottom:6px;
+  font-size:22px;
+  margin-bottom:4px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 .header p{
-  color:var(--neo-green-2);
-  font-weight:700;
-  margin-bottom:6px;
+  color:#fff;
+  font-weight:600;
+  font-size: 13px;
+  opacity: 0.9;
+}
+.ramadan-slogan {
+  background: rgba(212, 175, 55, 0.2);
+  color: var(--neo-gold);
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-top: 5px;
+  border: 1px solid var(--neo-gold);
 }
 
-/* logo top-right - bigger */
+/* LOGO WITH MOON */
+.logo-container {
+  position: absolute;
+  right: 16px;
+  top: 15px;
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+.logo-container::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: var(--neo-gold);
+  border-right-color: var(--neo-gold);
+  box-shadow: 0 0 15px var(--neo-gold), inset 0 0 10px var(--neo-gold);
+  transform: rotate(-45deg);
+  animation: pulseGlow 2s infinite alternate;
+}
+@keyframes pulseGlow { 0% { opacity: 0.7; box-shadow: 0 0 10px var(--neo-gold); } 100% { opacity: 1; box-shadow: 0 0 25px var(--neo-gold); } }
 .logo{
-  position:absolute;
-  right:16px;
-  top:6px;
-  width:110px;  /* doubled more than previous */
-  height:auto;
-  object-fit:contain;
-  border-radius:50%;
-  background:transparent;
-  padding:6px;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+  background: #fff;
+  padding: 5px;
+  position: relative;
+  z-index: 2;
 }
 
-/* categories organized into 3 rows and centered */
+/* categories */
 .cats-grid{
   display:flex;
   flex-direction:column;
   gap:8px;
-  padding:12px;
-  align-items:center; /* center everything */
+  padding:15px 12px;
+  align-items:center;
 }
 .cats-row{
   display:flex;
   gap:10px;
   overflow-x:auto;
   -webkit-overflow-scrolling:touch;
-  justify-content:center; /* center row contents */
+  justify-content:center;
   width: 100%;
+  padding-bottom: 5px;
 }
 .cat{
   flex:0 0 auto;
   background:#fff;
   border-radius:999px;
   padding:10px 14px;
-  border:1px solid rgba(18,77,51,0.06);
+  border:1px solid var(--neo-gold); /* حدود ذهبية */
   font-weight:800;
   color:var(--neo-green);
   cursor:pointer;
   white-space:nowrap;
   box-shadow: 0 6px 20px rgba(0,0,0,0.03);
+  transition: 0.3s;
 }
 .cat.active{
-  background:linear-gradient(180deg,var(--neo-green),var(--neo-green-2));
-  color:white;
+  background:linear-gradient(45deg,var(--neo-green),var(--neo-dark));
+  color:var(--neo-gold);
+  border-color: var(--neo-dark);
   box-shadow:0 20px 50px rgba(18,77,51,0.14);
 }
 
@@ -102,14 +179,18 @@ body{
 
 /* section title */
 .section-title{
-  color:var(--neo-green-2);
+  color:var(--neo-green);
   font-weight:900;
-  font-size:18px;
-  margin:8px 0 12px;
+  font-size:20px;
+  margin:15px 0 12px;
   text-align:right;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
+.section-title::before { content: '🌙'; font-size: 16px; }
 
-/* product grid 2 columns */
+/* product grid */
 .grid{
   display:grid;
   grid-template-columns: repeat(2, 1fr);
@@ -125,9 +206,10 @@ body{
   overflow:hidden;
   display:flex;
   flex-direction:column;
+  border: 1px solid rgba(212, 175, 55, 0.15); /* حدود ذهبية خفيفة */
   transition: transform .14s ease, box-shadow .14s ease;
 }
-.product-card:hover{ transform: translateY(-6px); box-shadow: 0 30px 80px rgba(18,77,51,0.12); }
+.product-card:hover{ transform: translateY(-6px); border-color: var(--neo-gold); }
 .product-img{
   width:100%;
   height:140px;
@@ -137,13 +219,13 @@ body{
 }
 .product-body{padding:10px 6px;display:flex;flex-direction:column;gap:8px}
 .row-title{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.product-name{font-weight:900;color:var(--neo-green);font-size:15px;line-height:1.1}
+.product-name{font-weight:900;color:var(--neo-dark);font-size:15px;line-height:1.1}
 .product-desc{color:var(--muted);font-size:13px;min-height:36px}
 .product-footer{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .price{color:var(--neo-green);font-weight:900}
 .add-btn{
   background:var(--neo-green);
-  color:#fff;
+  color:var(--neo-gold);
   padding:8px 12px;
   border-radius:10px;
   border:0;
@@ -152,11 +234,11 @@ body{
   box-shadow:0 8px 20px rgba(18,77,51,0.12);
 }
 
-/* floating cart - fixed on bottom-right */
+/* floating cart */
 .cart-float{position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;align-items:center;gap:10px}
 .cart-btn{
   background:var(--neo-green);
-  color:#fff;
+  color:var(--neo-gold);
   padding:12px 14px;
   border-radius:14px;
   display:flex;
@@ -164,15 +246,16 @@ body{
   gap:10px;
   box-shadow:0 30px 80px rgba(18,77,51,0.24);
   cursor:pointer;
+  border: 2px solid var(--neo-gold);
   transform-origin:center;
 }
-.cart-count{background:#ffeb3b;color:#111;padding:6px 10px;border-radius:999px;font-weight:900;min-width:26px;text-align:center;}
+.cart-count{background:var(--neo-gold);color:#000;padding:6px 10px;border-radius:999px;font-weight:900;min-width:26px;text-align:center;}
 
 /* toast */
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:160px;background:rgba(0,0,0,0.78);color:#fff;padding:10px 14px;border-radius:10px;font-weight:900;z-index:99999;opacity:0;transition:opacity .2s}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:160px;background:var(--neo-dark);color:var(--neo-gold);padding:10px 14px;border-radius:10px;font-weight:900;z-index:99999;opacity:0;transition:opacity .2s}
 
 /* modal */
-.modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:flex-end;justify-content:center;padding:12px;z-index:9998}
+.modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:flex-end;justify-content:center;padding:12px;z-index:9998; backdrop-filter: blur(2px);}
 .modal-back.show{display:flex}
 .modal{width:100%;max-width:760px;background:#fff;border-radius:12px;padding:12px;box-shadow:0 30px 80px rgba(0,0,0,0.25);direction:rtl}
 .modal h3{margin:0 0 8px;color:var(--neo-green);font-weight:900}
@@ -180,50 +263,56 @@ body{
 .modal .list .item{display:flex;align-items:center;justify-content:space-between;padding:10px 6px;border-bottom:1px solid #f3f3f3}
 
 /* footer */
-footer{padding:18px 12px;text-align:center;color:var(--muted)}
+footer{padding:18px 12px;text-align:center;color:#fff; background: var(--neo-dark); border-top-left-radius: 20px; border-top-right-radius: 20px; margin-top: 20px;}
 .footer-socials{display:flex;gap:10px;justify-content:center;margin-bottom:10px}
-.footer-socials a{padding:10px 14px;border-radius:12px;color:#fff;font-weight:900;text-decoration:none}
-.fb{background:#1877F2}
-.ig{background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af)}
-.tt{background:#010101}
+.footer-socials a{padding:10px 14px;border-radius:12px;color:var(--neo-dark); background:var(--neo-gold); font-weight:900;text-decoration:none}
 
-/* small/mobile adjustments */
 @media (max-width:420px){
+  .logo-container{width:80px; height:80px; top: 20px;}
+  .header h1 { margin-right: 60px; text-align: right; font-size: 18px; }
+  .header p { margin-right: 60px; text-align: right; }
+  .ramadan-slogan { margin-right: 60px; display: block; width: fit-content; margin-left: auto; }
   .product-img{height:150px}
-  .logo{width:86px; top:6px}
   .cat{padding:8px 10px}
-  .grid{gap:10px; grid-template-columns: 1fr;} /* mobile: 1 column for better readability as requested */
+  .grid{gap:10px; grid-template-columns: 1fr;} 
   .container{padding-bottom:200px}
 }
-
-/* ensure long product names wrap */
 .product-name{word-break:break-word}
-
-/* accessibility focus */
 .add-btn:focus,.cat:focus,.cart-btn:focus{outline:3px solid rgba(18,77,51,0.12)}
 </style>
 </head>
 <body>
 
+<div class="lantern-container">
+  <div class="lantern l1"></div>
+  <div class="lantern l2"></div>
+  <div class="lantern l3"></div>
+</div>
+
 <header class="header">
-  <img src="assets/images/logo.png" alt="NEO Cafe" class="logo" id="topLogo" onerror="this.style.display='none'">
-  <h1>نيو كافية منيو - NEO CAFÉ</h1>
+  <div class="logo-container">
+    <img src="assets/images/logo.png" alt="NEO Cafe" class="logo" id="topLogo" onerror="this.style.display='none'">
+  </div>
+  <h1>نيو كافية - منيو رمضان</h1>
   <p>Make It NEO Time</p>
+  <div class="ramadan-slogan">✨ رمضانك جميل في نيو ✨</div>
 </header>
 
 <div class="cats-grid" aria-label="أقسام المنيو">
   <div class="cats-row">
-    <div class="cat active" data-cat="hot">مشروبات ساخنة</div>
+    <div class="cat active" data-cat="ramadan" style="border-color:var(--neo-gold); background:#fff9e6; color:var(--neo-dark)">🌙 رمضان في نيو</div>
+    <div class="cat" data-cat="hot">مشروبات ساخنة</div>
     <div class="cat" data-cat="cold">مشروبات باردة</div>
-    <div class="cat" data-cat="soft">سوفت درينك</div>
   </div>
   <div class="cats-row">
+    <div class="cat" data-cat="soft">سوفت درينك</div>
     <div class="cat" data-cat="dessert">أطباق ديزيرت</div>
     <div class="cat" data-cat="special">مميز نيو</div>
-    <div class="cat" data-cat="ice">ايس كريم</div>
-    <div class="cat" data-cat="extras">إضافات</div> </div>
+  </div>
   <div class="cats-row">
-    <div class="cat" data-cat="fun">دلع نفسك في نيو - مجانًا</div>
+    <div class="cat" data-cat="ice">ايس كريم</div>
+    <div class="cat" data-cat="extras">إضافات</div>
+    <div class="cat" data-cat="fun">ألعاب مجانية</div>
   </div>
 </div>
 
@@ -234,7 +323,7 @@ footer{padding:18px 12px;text-align:center;color:var(--muted)}
 <div class="cart-float" aria-hidden="false">
   <div id="cartBtn" class="cart-btn" role="button" aria-label="افتح السلة">
     <div class="cart-count" id="cartCount">0</div>
-    <div style="font-weight:900">السلة</div>
+    <div style="font-weight:900">سلة السحور</div>
   </div>
 </div>
 
@@ -243,8 +332,8 @@ footer{padding:18px 12px;text-align:center;color:var(--muted)}
     <h3 id="modalTitle">قائمة</h3>
     <div class="list" id="modalList"></div>
     <div style="display:flex;justify-content:space-between;margin-top:8px">
-      <button id="closeModal" class="add-btn" style="background:#888">إغلاق</button>
-      <button id="checkoutNow" class="add-btn" style="background:var(--neo-green)">اطلب دلوقتي</button>
+      <button id="closeModal" class="add-btn" style="background:#888; color:#fff;">إغلاق</button>
+      <button id="checkoutNow" class="add-btn" style="background:var(--neo-green)">اطلب واتساب 🟢</button>
     </div>
   </div>
 </div>
@@ -252,24 +341,42 @@ footer{padding:18px 12px;text-align:center;color:var(--muted)}
 <div id="miniToast" class="toast" role="status" aria-live="polite"></div>
 
 <footer>
-  <div style="font-weight:800;margin-bottom:8px">تابعنا على السوشيال</div>
+  <div style="font-weight:800;margin-bottom:8px;color:var(--neo-gold)">تابعنا في رمضان</div>
   <div class="footer-socials">
     <a class="fb" href="https://facebook.com/neo.cafe.eg" target="_blank">Facebook</a>
     <a class="ig" href="https://instagram.com/neocafe.eg" target="_blank">Instagram</a>
     <a class="tt" href="https://tiktok.com/@neo.cafe.eg" target="_blank">TikTok</a>
   </div>
-  <div style="font-weight:700;color:var(--neo-green)">❤️ شكراً لاختياركم نيو كافية — حب وتمييز لعملاء نيو دائماً</div>
+  <div style="font-weight:700;">❤️ شكراً لاختياركم نيو كافية — حب وتمييز لعملاء نيو دائماً</div>
 </footer>
 
 <script>
 /* =================== SETTINGS =================== */
-const CART_KEY = 'neoCafe_cart_v1';
-
-/* reset cart on refresh as requested: clear storage at load */
+const CART_KEY = 'neoCafe_cart_ramadan_v2';
 try{ localStorage.removeItem(CART_KEY); } catch(e){}
 
 /* =================== MENU DATA =================== */
 const MENU = {
+  // 1. قسم رمضان الجديد (تمت إضافته)
+  ramadan: {
+    title: '✨ رمضان في نيو ✨',
+    items: [
+      {id:'ram_01', name:'رز بلبن مكسرات', desc:'أرز باللبن فاخر مع مكسرات مشكلة', price:40, img:'assets/images/ram_rice_nuts.png'},
+      {id:'ram_02', name:'رز بلبن مكسرات وكراميل', desc:'', price:45, img:'assets/images/ram_rice_caramel.png'},
+      {id:'ram_03', name:'رز بلبن مكسرات وشوكلاته', desc:'', price:45, img:'assets/images/ram_rice_choco.png'},
+      {id:'ram_04', name:'رز بلبن مكسرات نوتيلا', desc:'', price:55, img:'assets/images/ram_rice_nutella.png'},
+      {id:'ram_05', name:'رز بلبن مكسرات بستاشيو', desc:'', price:60, img:'assets/images/ram_rice_pistachio.png'},
+      {id:'ram_06', name:'رز بلبن مكسرات لوتس', desc:'', price:55, img:'assets/images/ram_rice_lotus.png'},
+      {id:'ram_07', name:'رز بلبن مكسرات ميكس صوص', desc:'مكسرات + تشكيلة صوصات نيو', price:75, img:'assets/images/ram_rice_mix.png'},
+      {id:'ram_08', name:'رز بلبن مكسرات + فواكه + صوص', desc:'قنبلة نيو الرمضانية', price:85, img:'assets/images/ram_rice_fruit.png'},
+      {id:'ram_09', name:'كَب كنافه لوتس', desc:'', price:85, img:'assets/images/ram_cup_lotus.png'},
+      {id:'ram_10', name:'كَب كنافه نوتيلا', desc:'', price:85, img:'assets/images/ram_cup_nutella.png'},
+      {id:'ram_11', name:'فادج كرانشي نوتيلا', desc:'', price:95, img:'assets/images/ram_fudge_crunchy.png'},
+      {id:'ram_12', name:'فادج كنافة نوتيلا بستاشيو', desc:'', price:110, img:'assets/images/ram_fudge_pistachio.png'}
+    ]
+  },
+
+  // باقي الأقسام كما هي في الكود الذي أرسلته (بنفس الأسعار)
   hot: {
     title: 'المشروبات الساخنة',
     items: [
@@ -401,9 +508,9 @@ const MENU = {
   dessert: {
     title: 'حلويات / أطباق ديزيرت',
     items: [
-      /* REMOVED waffle classic */
-      {id:'dess_waffle_choc',name:'وافل شوكليت',desc:'',price:65,img:'assets/images/waffle_chocolate.png'}, /* ADDED */
-      {id:'dess_waffle_caramel',name:'وافل كراميل',desc:'',price:65,img:'assets/images/waffle_caramel.png'}, /* ADDED */
+      /* REMOVED waffle classic (تم إزالته كما طلبت سابقاً) */
+      {id:'dess_waffle_choc',name:'وافل شوكليت',desc:'',price:65,img:'assets/images/waffle_chocolate.png'},
+      {id:'dess_waffle_caramel',name:'وافل كراميل',desc:'',price:65,img:'assets/images/waffle_caramel.png'},
       {id:'dess_02',name:'وافل نوتيلا',desc:'',price:75,img:'assets/images/dess_waffle_nutella.png'},
       {id:'dess_03',name:'وافل أوريو',desc:'',price:75,img:'assets/images/dess_waffle_oreo.png'},
       {id:'dess_04',name:'وافل لوتس',desc:'',price:75,img:'assets/images/dess_waffle_lotus.png'},
@@ -448,7 +555,6 @@ const MENU = {
       {id:'ext_01',name:'تغليف تيكاواي',desc:'',price:10,img:'assets/images/ext_packaging.png'},
       {id:'ext_02',name:'مياه معدنية',desc:'',price:10,img:'assets/images/ext_water.png'},
       {id:'ext_03',name:'إضافة',desc:'',price:10,img:'assets/images/ext_add.png'}
-
     ]
   },
 
@@ -518,6 +624,12 @@ function createGrid(items){
 
 function renderSections(){
   sectionsEl.innerHTML = '';
+
+  // RAMADAN (NEW)
+  const ram = document.createElement('div'); ram.className='section';
+  ram.appendChild(createTitle(MENU.ramadan.title)); // Title already has emojis from data? No, lets add manually here
+  ram.appendChild(createGrid(MENU.ramadan.items));
+  sectionsEl.appendChild(ram);
 
   // HOT
   const hot = document.createElement('div'); hot.className='section';
@@ -604,7 +716,16 @@ function openSubcat(key){
 
 closeModal.addEventListener('click', ()=> { modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); });
 modalBackdrop.addEventListener('click',(e)=>{ if(e.target === modalBackdrop){ modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); } });
-checkoutNow.addEventListener('click', ()=> { window.location.href = 'checkout.html'; });
+/* تم تحديث رابط الواتساب */
+checkoutNow.addEventListener('click', ()=> {
+  const cart = getCart();
+  if(!cart.length) return;
+  let msg = "أوردر رمضان من نيو:%0a";
+  let total = 0;
+  cart.forEach(i=>{ msg+=`▪️ ${i.name} (${i.qty})%0a`; total+=i.price*i.qty; });
+  msg+=`%0a💰 الإجمالي: ${total} جنيه%0a🌙 رمضان كريم!`;
+  window.open(`https://wa.me/20103431119?text=${msg}`, '_blank');
+});
 
 /* =================== CLICK DELEGATION =================== */
 const __neo_last_clicks = {}; 
@@ -692,8 +813,8 @@ function filterCategory(cat){
     return;
   }
 
-  /* تم إضافة extras للقائمة */
-  const map = { hot:0, cold:1, soft:2, dessert:3, special:4, ice:5, extras:6, fun:7 };
+  /* تم إضافة ramadan للقائمة */
+  const map = { ramadan:0, hot:1, cold:2, soft:3, dessert:4, special:5, ice:6, extras:7, fun:8 };
   const idx = map[cat];
   if(typeof idx === 'number' && sections[idx]) {
     sections[idx].style.display = 'block';
