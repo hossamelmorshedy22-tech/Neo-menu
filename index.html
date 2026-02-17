@@ -11,8 +11,8 @@
 :root{
   --neo-green:#124d33;
   --neo-green-2:#21593f;
-  --neo-dark:#0a2e1e; /* لون جديد لرمضان */
-  --neo-gold:#d4af37; /* لون ذهبي لرمضان */
+  --neo-dark:#0a2e1e;
+  --neo-gold:#d4af37; 
   --neo-beige:#fdfbf7;
   --neo-cream:#fbf4e9;
   --muted:#6b6b6b;
@@ -101,15 +101,38 @@ body{
   border: 1px solid var(--neo-gold);
 }
 
-
+/* LOGO WITH MOON */
+.logo-container {
+  position: absolute;
+  right: 16px;
+  top: 15px;
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+.logo-container::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: var(--neo-gold);
+  border-right-color: var(--neo-gold);
+  box-shadow: 0 0 15px var(--neo-gold), inset 0 0 10px var(--neo-gold);
+  transform: rotate(-45deg);
+  animation: pulseGlow 2s infinite alternate;
+}
 @keyframes pulseGlow { 0% { opacity: 0.7; box-shadow: 0 0 10px var(--neo-gold); } 100% { opacity: 1; box-shadow: 0 0 25px var(--neo-gold); } }
 .logo{
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover; /* تم التعديل ليناسب اللوجو الجديد */
   border-radius: 50%;
   background: #fff;
-  padding: 5px;
+  padding: 2px;
   position: relative;
   z-index: 2;
 }
@@ -136,7 +159,7 @@ body{
   background:#fff;
   border-radius:999px;
   padding:10px 14px;
-  border:1px solid var(--neo-gold); /* حدود ذهبية */
+  border:1px solid var(--neo-gold); 
   font-weight:800;
   color:var(--neo-green);
   cursor:pointer;
@@ -183,7 +206,7 @@ body{
   overflow:hidden;
   display:flex;
   flex-direction:column;
-  border: 1px solid rgba(212, 175, 55, 0.15); /* حدود ذهبية خفيفة */
+  border: 1px solid rgba(212, 175, 55, 0.15); 
   transition: transform .14s ease, box-shadow .14s ease;
 }
 .product-card:hover{ transform: translateY(-6px); border-color: var(--neo-gold); }
@@ -334,7 +357,7 @@ try{ localStorage.removeItem(CART_KEY); } catch(e){}
 
 /* =================== MENU DATA =================== */
 const MENU = {
-  // 1. قسم رمضان الجديد (تمت إضافته)
+  // 1. قسم رمضان الجديد (كما هو مطلوب)
   ramadan: {
     title: '✨ رمضان في نيو ✨',
     items: [
@@ -353,7 +376,7 @@ const MENU = {
     ]
   },
 
-  // باقي الأقسام كما هي في الكود الذي أرسلته (بنفس الأسعار)
+  // 2. المشروبات الساخنة (بنفس أسعارك)
   hot: {
     title: 'المشروبات الساخنة',
     items: [
@@ -397,6 +420,7 @@ const MENU = {
     ]
   },
 
+  // 3. المشروبات الباردة
   cold: {
     title: 'المشروبات الباردة',
     subcats: [
@@ -485,7 +509,7 @@ const MENU = {
   dessert: {
     title: 'حلويات / أطباق ديزيرت',
     items: [
-      /* REMOVED waffle classic (تم إزالته كما طلبت سابقاً) */
+      /* REMOVED waffle classic */
       {id:'dess_waffle_choc',name:'وافل شوكليت',desc:'',price:65,img:'assets/images/waffle_chocolate.png'},
       {id:'dess_waffle_caramel',name:'وافل كراميل',desc:'',price:65,img:'assets/images/waffle_caramel.png'},
       {id:'dess_02',name:'وافل نوتيلا',desc:'',price:75,img:'assets/images/dess_waffle_nutella.png'},
@@ -546,33 +570,7 @@ const MENU = {
   }
 };
 
-/* =================== STORAGE HELPERS =================== */
-function getCart(){
-  try{ const d = localStorage.getItem(CART_KEY); return d ? JSON.parse(d) : []; } catch(e){ return []; }
-}
-function setCart(cart){
-  try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); renderCartCount(true); } catch(e){ console.error(e); }
-}
-function calcCartTotals(cart){
-  let qty=0, total=0;
-  (cart||[]).forEach(i=>{ qty += Number(i.qty||0); total += Number(i.qty||0) * Number(i.price||0); });
-  return {qty, total};
-}
-
-/* =================== ADD TO CART =================== */
-function addToCart(id, name, price){
-  const cart = getCart();
-  const found = cart.find(x=> x.id === id);
-  if(found){
-    found.qty = Number(found.qty) + 1;
-  } else {
-    cart.push({ id, name, price: Number(price||0), qty: 1 });
-  }
-  setCart(cart);
-}
-
-/* =================== RENDER UI =================== */
-const sectionsEl = document.getElementById('sections');
+/* =================== LOGIC & FUNCTIONS =================== */
 
 function createTitle(text){ const d = document.createElement('div'); d.className='section-title'; d.textContent = text; return d; }
 
@@ -600,101 +598,111 @@ function createGrid(items){
 }
 
 function renderSections(){
+  const sectionsEl = document.getElementById('sections');
   sectionsEl.innerHTML = '';
 
-  // RAMADAN (NEW)
-  const ram = document.createElement('div'); ram.className='section';
-  ram.appendChild(createTitle(MENU.ramadan.title)); // Title already has emojis from data? No, lets add manually here
+  // RAMADAN
+  const ram = document.createElement('div'); ram.className='section'; ram.id='sec_ramadan';
+  ram.appendChild(createTitle(MENU.ramadan.title));
   ram.appendChild(createGrid(MENU.ramadan.items));
   sectionsEl.appendChild(ram);
 
   // HOT
-  const hot = document.createElement('div'); hot.className='section';
+  const hot = document.createElement('div'); hot.className='section'; hot.id='sec_hot';
   hot.appendChild(createTitle(MENU.hot.title));
   hot.appendChild(createGrid(MENU.hot.items));
   sectionsEl.appendChild(hot);
 
   // COLD
-  const cold = document.createElement('div'); cold.className='section';
+  const cold = document.createElement('div'); cold.className='section'; cold.id='sec_cold';
   cold.appendChild(createTitle(MENU.cold.title));
-  const preview = document.createElement('div'); preview.style.display='flex'; preview.style.flexWrap='wrap'; preview.style.gap='10px'; preview.style.justifyContent='center';
+  const preview = document.createElement('div'); preview.style.cssText='display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:10px';
   MENU.cold.subcats.forEach(sc=>{
-    const btn = document.createElement('div'); btn.className='cat'; btn.textContent = sc.title; btn.dataset.sub = sc.key; preview.appendChild(btn);
+    const btn = document.createElement('div'); btn.className='cat'; btn.textContent = sc.title; 
+    btn.onclick = (e)=>{
+      // simple inner toggle for subcats
+      const subGrid = createGrid(sc.items);
+      const existing = cold.querySelector('.grid');
+      if(existing) existing.remove();
+      cold.appendChild(subGrid);
+      // visual feedback
+      cold.querySelectorAll('.cat').forEach(c=>c.style.background='#fff');
+      e.target.style.background='#eee';
+    };
+    preview.appendChild(btn);
   });
   cold.appendChild(preview);
+  // default show first subcat
+  cold.appendChild(createGrid(MENU.cold.subcats[0].items));
   sectionsEl.appendChild(cold);
 
   // SOFT
-  const soft = document.createElement('div'); soft.className='section';
+  const soft = document.createElement('div'); soft.className='section'; soft.id='sec_soft';
   soft.appendChild(createTitle('مشروبات غازية'));
   const softc = MENU.cold.subcats.find(s=> s.key === 'softc');
   if(softc) soft.appendChild(createGrid(softc.items));
   sectionsEl.appendChild(soft);
 
   // DESSERT
-  const dessert = document.createElement('div'); dessert.className='section';
+  const dessert = document.createElement('div'); dessert.className='section'; dessert.id='sec_dessert';
   dessert.appendChild(createTitle(MENU.dessert.title));
   dessert.appendChild(createGrid(MENU.dessert.items));
   sectionsEl.appendChild(dessert);
 
   // SPECIAL
-  const sp = document.createElement('div'); sp.className='section';
+  const sp = document.createElement('div'); sp.className='section'; sp.id='sec_special';
   sp.appendChild(createTitle(MENU.special.title));
   sp.appendChild(createGrid(MENU.special.items));
   sectionsEl.appendChild(sp);
 
   // ICE CREAM
-  const ice = document.createElement('div'); ice.className='section';
+  const ice = document.createElement('div'); ice.className='section'; ice.id='sec_ice';
   ice.appendChild(createTitle(MENU.icecream.title));
   ice.appendChild(createGrid(MENU.icecream.items));
   sectionsEl.appendChild(ice);
 
   // EXTRAS
-  const ext = document.createElement('div'); ext.className='section';
+  const ext = document.createElement('div'); ext.className='section'; ext.id='sec_extras';
   ext.appendChild(createTitle(MENU.extras.title));
   ext.appendChild(createGrid(MENU.extras.items));
   sectionsEl.appendChild(ext);
 
   // FUN
-  const fun = document.createElement('div'); fun.className='section';
+  const fun = document.createElement('div'); fun.className='section'; fun.id='sec_fun';
   fun.appendChild(createTitle(MENU.fun.title));
   fun.appendChild(createGrid(MENU.fun.items));
   sectionsEl.appendChild(fun);
 }
 
-/* =================== MODAL =================== */
-const modalBackdrop = document.getElementById('modalBackdrop');
-const modalTitle = document.getElementById('modalTitle');
-const modalList  = document.getElementById('modalList');
-const closeModal = document.getElementById('closeModal');
-const checkoutNow = document.getElementById('checkoutNow');
-
-function openSubcat(key){
-  const sc = MENU.cold.subcats.find(s=> s.key === key);
-  if(!sc) return;
-  modalTitle.textContent = sc.title;
-  modalList.innerHTML = '';
-  sc.items.forEach(it=>{
-    const row = document.createElement('div'); row.className='item';
-    row.innerHTML = `
-      <div style="flex:1">
-        <div style="font-weight:900">${escapeHtml(it.name)}</div>
-        <div style="color:var(--muted);font-size:13px">${escapeHtml(it.desc || '')}</div>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-        <div style="font-weight:900;color:var(--neo-green)">${it.price===0 ? 'مجانًا' : it.price + ' ج'}</div>
-        <button class="add-btn" data-id="${it.id}" data-name="${escapeHtml(it.name)}" data-price="${it.price}">أضف</button>
-      </div>`;
-    modalList.appendChild(row);
-  });
-  modalBackdrop.classList.add('show');
-  modalBackdrop.setAttribute('aria-hidden','false');
+function filterCategory(cat){
+  document.querySelectorAll('.section').forEach(s=> s.style.display='none');
+  const map = { ramadan:'sec_ramadan', hot:'sec_hot', cold:'sec_cold', soft:'sec_soft', dessert:'sec_dessert', special:'sec_special', ice:'sec_ice', extras:'sec_extras', fun:'sec_fun' };
+  const targetId = map[cat];
+  if(targetId){
+    const el = document.getElementById(targetId);
+    if(el) el.style.display='block';
+  } else {
+    // show all if not found
+    document.querySelectorAll('.section').forEach(s=> s.style.display='block');
+  }
+  window.scrollTo({ top:180, behavior:'smooth' });
 }
 
-closeModal.addEventListener('click', ()=> { modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); });
-modalBackdrop.addEventListener('click',(e)=>{ if(e.target === modalBackdrop){ modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); } });
-/* تم تحديث رابط الواتساب */
-checkoutNow.addEventListener('click', ()=> {
+/* =================== INIT =================== */
+document.querySelectorAll('.cat[data-cat]').forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll('.cats-grid .cat').forEach(c=>c.classList.remove('active'));
+    b.classList.add('active');
+    filterCategory(b.dataset.cat);
+  }
+});
+
+// Cart & Modal Logic
+const modal = document.getElementById('modalBackdrop');
+const modalList = document.getElementById('modalList');
+document.getElementById('cartBtn').onclick = updateModal;
+document.getElementById('closeModal').onclick = ()=> modal.classList.remove('show');
+document.getElementById('checkoutNow').onclick = ()=>{
   const cart = getCart();
   if(!cart.length) return;
   let msg = "أوردر رمضان من نيو:%0a";
@@ -702,203 +710,60 @@ checkoutNow.addEventListener('click', ()=> {
   cart.forEach(i=>{ msg+=`▪️ ${i.name} (${i.qty})%0a`; total+=i.price*i.qty; });
   msg+=`%0a💰 الإجمالي: ${total} جنيه%0a🌙 رمضان كريم!`;
   window.open(`https://wa.me/20103431119?text=${msg}`, '_blank');
-});
+};
 
-/* =================== CLICK DELEGATION =================== */
+function updateModal(){
+  const cart = getCart();
+  modalList.innerHTML = cart.length ? cart.map(i=>`
+    <div class="item">
+      <div><b>${escapeHtml(i.name)}</b> <small>${i.price}x${i.qty}</small></div>
+      <button onclick="removeFromCart('${i.id}')" style="color:red;background:none;border:none;font-weight:bold">حذف</button>
+    </div>`).join('') + `<div style="padding:10px;font-weight:bold;text-align:center;color:var(--neo-green)">الإجمالي: ${calcCartTotals(cart).total} ج</div>` 
+    : '<div style="padding:20px;text-align:center">السلة فارغة</div>';
+  modal.classList.add('show');
+}
+
+function removeFromCart(id){
+  const cart = getCart().filter(x=>x.id!==id);
+  setCart(cart);
+  updateModal();
+}
+
+// Global Click for Add-to-Cart
 const __neo_last_clicks = {}; 
 const __NEO_GUARD_MS = 500;
-
 document.addEventListener('click', function(e){
   const addBtn = e.target.closest('.add-btn');
   if(addBtn && addBtn.dataset && addBtn.dataset.id){
     e.preventDefault(); e.stopPropagation();
     const id = String(addBtn.dataset.id);
-    const name = addBtn.dataset.name || (addBtn.closest('.product-card')?.querySelector('.product-name')?.textContent || 'منتج');
+    const name = addBtn.dataset.name;
     const price = Number(addBtn.dataset.price || 0);
     const now = Date.now();
     if(__neo_last_clicks[id] && (now - __neo_last_clicks[id] < __NEO_GUARD_MS)) return;
     __neo_last_clicks[id] = now;
     setTimeout(()=> { __neo_last_clicks[id] = 0; }, __NEO_GUARD_MS + 50);
     addToCart(id, name, price);
-    showToast(`${name} اتضاف للسلة`);
-    animateCartPulse();
-    return;
-  }
-
-  const subBtn = e.target.closest('.cat[data-sub]');
-  if(subBtn && subBtn.dataset.sub){
-    e.preventDefault(); e.stopPropagation();
-    openSubcat(subBtn.dataset.sub);
-    return;
-  }
-
-  const catBtn = e.target.closest('.cat[data-cat]');
-  if(catBtn && catBtn.dataset.cat){
-    e.preventDefault(); e.stopPropagation();
-    document.querySelectorAll('.cat').forEach(c=>c.classList.remove('active'));
-    catBtn.classList.add('active');
-    filterCategory(catBtn.dataset.cat);
-    return;
-  }
-
-  const cartBtn = e.target.closest('#cartBtn');
-  if(cartBtn){
-    e.preventDefault(); e.stopPropagation();
-    openCartPreview();
-    return;
+    showToast(`${name} انضاف للسلة`);
+    
+    // animate cart
+    const cb = document.querySelector('.cart-btn');
+    cb.style.transform = 'scale(1.2)';
+    setTimeout(()=> cb.style.transform='scale(1)', 200);
   }
 });
 
-/* =================== CART UI =================== */
-function renderCartCount(animate=false){
-  const el = document.getElementById('cartCount');
-  const cart = getCart();
-  const totals = calcCartTotals(cart);
-  el.textContent = totals.qty;
-  if(animate){
-    el.animate([{ transform: 'scale(1)' }, { transform:'scale(1.18)' }, { transform:'scale(1)' }], { duration: 700 });
-  }
-}
-let cartPulseTimeout = null;
-function animateCartPulse(){
-  const btn = document.querySelector('.cart-btn');
-  if(!btn) return;
-  btn.style.transition = 'transform .18s';
-  btn.style.transform = 'scale(1.18)';
-  clearTimeout(cartPulseTimeout);
-  cartPulseTimeout = setTimeout(()=> { btn.style.transform = 'scale(1)'; }, 2000);
-}
-
-/* =================== TOAST =================== */
-let toastTimer = null;
 function showToast(txt){
-  const el = document.getElementById('miniToast');
-  el.textContent = txt;
-  el.style.opacity = '1';
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=> { el.style.opacity = '0'; }, 1200);
+  const t = document.getElementById('miniToast');
+  t.textContent = txt; t.style.opacity=1;
+  setTimeout(()=>t.style.opacity=0, 2000);
 }
 
-/* =================== FILTER =================== */
-function filterCategory(cat){
-  const sections = document.querySelectorAll('.section');
-  sections.forEach(s=> s.style.display = 'none');
-
-  if(!cat){
-    sections.forEach(s=> s.style.display = 'block');
-    window.scrollTo({ top:120, behavior:'smooth' });
-    return;
-  }
-
-  /* تم إضافة ramadan للقائمة */
-  const map = { ramadan:0, hot:1, cold:2, soft:3, dessert:4, special:5, ice:6, extras:7, fun:8 };
-  const idx = map[cat];
-  if(typeof idx === 'number' && sections[idx]) {
-    sections[idx].style.display = 'block';
-  } else {
-    sections.forEach(s=> s.style.display = 'block');
-  }
-  window.scrollTo({ top:120, behavior:'smooth' });
-}
-
-/* =================== OPEN CART PREVIEW =================== */
-function openCartPreview(){
-  const cart = getCart();
-  modalTitle.textContent = 'السلة';
-  modalList.innerHTML = '';
-  if(!cart.length){
-    modalList.innerHTML = '<div style="padding:12px;color:var(--muted)">السلة فارغة — اذهب للمنيو لإضافة طلبات</div>';
-  } else {
-    cart.forEach((it, idx)=>{
-      const row = document.createElement('div'); row.className='item';
-      row.innerHTML = `
-        <div style="flex:1">
-          <div style="font-weight:900">${escapeHtml(it.name)}</div>
-          <div style="color:var(--muted);font-size:13px">${it.price} ج لكل وحدة</div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
-          <div style="display:flex;gap:6px;align-items:center">
-            <button class="qty-btn" data-action="inc" data-id="${it.id}" style="background:#eee;border-radius:6px;padding:6px 8px;border:0">+</button>
-            <div style="min-width:28px;text-align:center;font-weight:900">${it.qty}</div>
-            <button class="qty-btn" data-action="dec" data-id="${it.id}" style="background:#eee;border-radius:6px;padding:6px 8px;border:0">-</button>
-          </div>
-          <button class="remove-btn" data-id="${it.id}" style="background:transparent;border:0;color:#d9534f;font-weight:900">حذف</button>
-        </div>
-      `;
-      modalList.appendChild(row);
-    });
-    const totals = calcCartTotals(cart);
-    const totRow = document.createElement('div');
-    totRow.style.padding = '10px 6px';
-    totRow.innerHTML = `<div style="font-weight:900;color:var(--neo-green)">الإجمالي: ${totals.total} ج</div>`;
-    modalList.appendChild(totRow);
-  }
-  modalBackdrop.classList.add('show');
-  modalBackdrop.setAttribute('aria-hidden','false');
-}
-
-modalList.addEventListener('click', function(e){
-  const btn = e.target.closest('.qty-btn');
-  if(btn){
-    e.preventDefault(); e.stopPropagation();
-    const id = btn.dataset.id;
-    const action = btn.dataset.action;
-    changeQty(id, action === 'inc' ? 1 : -1);
-    openCartPreview();
-    return;
-  }
-  const rem = e.target.closest('.remove-btn');
-  if(rem){
-    e.preventDefault(); e.stopPropagation();
-    const id = rem.dataset.id;
-    removeFromCart(id);
-    openCartPreview();
-    return;
-  }
-});
-
-function changeQty(id, delta){
-  const cart = getCart();
-  const found = cart.find(x=>x.id===id);
-  if(!found) return;
-  found.qty = Math.max(0, Number(found.qty) + Number(delta));
-  const newCart = cart.filter(x=> Number(x.qty) > 0);
-  setCart(newCart);
-}
-function removeFromCart(id){
-  const cart = getCart().filter(x=> x.id !== id);
-  setCart(cart);
-}
-
-function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
-
-function init(){
-  renderSections();
-  renderCartCount(false);
-
-  const allCats = document.querySelectorAll('.cat');
-  let defaultCat = document.querySelector('.cat.active');
-  if(!defaultCat) defaultCat = allCats[0];
-  allCats.forEach(c=> c.classList.remove('active'));
-  if(defaultCat) defaultCat.classList.add('active');
-
-  if(defaultCat && defaultCat.dataset && defaultCat.dataset.cat){
-    filterCategory(defaultCat.dataset.cat);
-  } else {
-    filterCategory();
-  }
-
-  document.getElementById('closeModal').addEventListener('click',()=>{ modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); });
-  modalBackdrop.addEventListener('click',(e)=>{ if(e.target === modalBackdrop){ modalBackdrop.classList.remove('show'); modalBackdrop.setAttribute('aria-hidden','true'); } });
-
-  document.getElementById('cartBtn').addEventListener('click', (e)=>{ e.preventDefault(); openCartPreview(); });
-
-  window.scrollTo(0,0);
-}
-
-init();
+// Start
+renderSections();
 renderCartCount(false);
-window.addEventListener('storage', ()=> renderCartCount(false));
+filterCategory('ramadan'); // Start with Ramadan
+
 </script>
 </body>
 </html>
