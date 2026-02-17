@@ -67,7 +67,6 @@ body{
 /* header */
 .header{
   background: linear-gradient(180deg, var(--neo-dark), var(--neo-green));
-  /* تم تعديل البادينج عشان الهيدر ميكونش عالي اوي */
   padding: 25px 14px 15px;
   text-align:center;
   position:relative;
@@ -83,7 +82,6 @@ body{
   font-size:22px;
   margin-bottom:4px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  /* إضافة حواف عشان النص ميركبش عاللوجو */
   padding: 0 60px;
 }
 .header p{
@@ -104,12 +102,12 @@ body{
   border: 1px solid var(--neo-gold);
 }
 
-/* LOGO WITH MOON - تم تعديل الحجم والمكان */
+/* LOGO WITH MOON */
 .logo-container {
   position: absolute;
-  right: 12px; /* مكان مناسب في اليمين */
-  top: 10px;   /* قريب من السقف */
-  width: 65px; /* حجم متوسط مناسب */
+  right: 12px;
+  top: 10px;
+  width: 65px;
   height: 65px;
   display: flex;
   align-items: center;
@@ -119,7 +117,7 @@ body{
 .logo-container::before {
   content: '';
   position: absolute;
-  inset: -4px; /* تأثير التوهج */
+  inset: -4px;
   border-radius: 50%;
   border: 2px solid transparent;
   border-top-color: var(--neo-gold);
@@ -272,11 +270,8 @@ footer{padding:18px 12px;text-align:center;color:#fff; background: var(--neo-dar
 
 /* تحسينات للموبايل */
 @media (max-width:420px){
-  /* حجم مناسب جداً للموبايل في الركن */
   .logo-container{width:55px; height:55px; top: 8px; right: 10px;}
-  
   .header h1 { font-size: 18px; }
-  
   .product-img{height:150px}
   .cat{padding:8px 10px}
   .grid{gap:10px; grid-template-columns: 1fr;} 
@@ -357,7 +352,7 @@ footer{padding:18px 12px;text-align:center;color:#fff; background: var(--neo-dar
 
 <script>
 /* =================== SETTINGS =================== */
-const CART_KEY = 'neoCafe_cart_ramadan_v2';
+const CART_KEY = 'neoCafe_cart_ramadan_v3';
 try{ localStorage.removeItem(CART_KEY); } catch(e){}
 
 /* =================== MENU DATA =================== */
@@ -679,15 +674,21 @@ function renderSections(){
 }
 
 function filterCategory(cat){
-  document.querySelectorAll('.section').forEach(s=> s.style.display='none');
-  const map = { ramadan:'sec_ramadan', hot:'sec_hot', cold:'sec_cold', soft:'sec_soft', dessert:'sec_dessert', special:'sec_special', ice:'sec_ice', extras:'sec_extras', fun:'sec_fun' };
-  const targetId = map[cat];
-  if(targetId){
-    const el = document.getElementById(targetId);
-    if(el) el.style.display='block';
+  // 1. Hide all sections
+  document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+
+  // 2. Show the specific section by ID (robust method)
+  const targetId = 'sec_' + cat;
+  const targetEl = document.getElementById(targetId);
+
+  if(targetEl){
+    targetEl.style.display = 'block';
   } else {
-    document.querySelectorAll('.section').forEach(s=> s.style.display='block');
+    // If not found, show all (fallback)
+    document.querySelectorAll('.section').forEach(s => s.style.display = 'block');
   }
+  
+  // 3. Scroll to top
   window.scrollTo({ top:180, behavior:'smooth' });
 }
 
@@ -760,6 +761,7 @@ function showToast(txt){
 
 renderSections();
 renderCartCount(false);
+// Start with Ramadan section active
 filterCategory('ramadan');
 
 </script>
