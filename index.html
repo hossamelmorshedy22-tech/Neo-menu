@@ -67,7 +67,8 @@ body{
 /* header */
 .header{
   background: linear-gradient(180deg, var(--neo-dark), var(--neo-green));
-  padding:40px 14px 15px;
+  /* تم تعديل البادينج عشان الهيدر ميكونش عالي اوي */
+  padding: 25px 14px 15px;
   text-align:center;
   position:relative;
   border-bottom-left-radius: 25px;
@@ -82,6 +83,8 @@ body{
   font-size:22px;
   margin-bottom:4px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  /* إضافة حواف عشان النص ميركبش عاللوجو */
+  padding: 0 60px;
 }
 .header p{
   color:#fff;
@@ -101,13 +104,13 @@ body{
   border: 1px solid var(--neo-gold);
 }
 
-/* LOGO WITH MOON */
+/* LOGO WITH MOON - تم تعديل الحجم والمكان */
 .logo-container {
   position: absolute;
-  right: 16px;
-  top: 15px;
-  width: 90px;
-  height: 90px;
+  right: 12px; /* مكان مناسب في اليمين */
+  top: 10px;   /* قريب من السقف */
+  width: 65px; /* حجم متوسط مناسب */
+  height: 65px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -116,20 +119,20 @@ body{
 .logo-container::before {
   content: '';
   position: absolute;
-  inset: -5px;
+  inset: -4px; /* تأثير التوهج */
   border-radius: 50%;
-  border: 3px solid transparent;
+  border: 2px solid transparent;
   border-top-color: var(--neo-gold);
   border-right-color: var(--neo-gold);
-  box-shadow: 0 0 15px var(--neo-gold), inset 0 0 10px var(--neo-gold);
+  box-shadow: 0 0 10px var(--neo-gold), inset 0 0 5px var(--neo-gold);
   transform: rotate(-45deg);
   animation: pulseGlow 2s infinite alternate;
 }
-@keyframes pulseGlow { 0% { opacity: 0.7; box-shadow: 0 0 10px var(--neo-gold); } 100% { opacity: 1; box-shadow: 0 0 25px var(--neo-gold); } }
+@keyframes pulseGlow { 0% { opacity: 0.7; box-shadow: 0 0 8px var(--neo-gold); } 100% { opacity: 1; box-shadow: 0 0 20px var(--neo-gold); } }
 .logo{
   width: 100%;
   height: 100%;
-  object-fit: cover; /* تم التعديل ليناسب اللوجو الجديد */
+  object-fit: cover;
   border-radius: 50%;
   background: #fff;
   padding: 2px;
@@ -267,11 +270,13 @@ footer{padding:18px 12px;text-align:center;color:#fff; background: var(--neo-dar
 .footer-socials{display:flex;gap:10px;justify-content:center;margin-bottom:10px}
 .footer-socials a{padding:10px 14px;border-radius:12px;color:var(--neo-dark); background:var(--neo-gold); font-weight:900;text-decoration:none}
 
+/* تحسينات للموبايل */
 @media (max-width:420px){
-  .logo-container{width:80px; height:80px; top: 20px;}
-  .header h1 { margin-right: 60px; text-align: right; font-size: 18px; }
-  .header p { margin-right: 60px; text-align: right; }
-  .ramadan-slogan { margin-right: 60px; display: block; width: fit-content; margin-left: auto; }
+  /* حجم مناسب جداً للموبايل في الركن */
+  .logo-container{width:55px; height:55px; top: 8px; right: 10px;}
+  
+  .header h1 { font-size: 18px; }
+  
   .product-img{height:150px}
   .cat{padding:8px 10px}
   .grid{gap:10px; grid-template-columns: 1fr;} 
@@ -357,7 +362,7 @@ try{ localStorage.removeItem(CART_KEY); } catch(e){}
 
 /* =================== MENU DATA =================== */
 const MENU = {
-  // 1. قسم رمضان الجديد (كما هو مطلوب)
+  // 1. قسم رمضان الجديد
   ramadan: {
     title: '✨ رمضان في نيو ✨',
     items: [
@@ -376,7 +381,7 @@ const MENU = {
     ]
   },
 
-  // 2. المشروبات الساخنة (بنفس أسعارك)
+  // 2. المشروبات الساخنة
   hot: {
     title: 'المشروبات الساخنة',
     items: [
@@ -495,13 +500,15 @@ const MENU = {
         {id:'sod_07',name:'موهيتو',desc:'',price:55,img:'assets/images/soda_mojito.png'}
       ]},
       { key:'softc', title:'مشروبات غازية', items:[
-        {id:'softc_01',name:'V-Cola',desc:'',price:20,img:'assets/images/soft_vcola.png'},
-        {id:'softc_02',name:'ريد بول',desc:'',price:65,img:'assets/images/soft_redbull.png'},
-        {id:'softc_03',name:'تويست',desc:'',price:25,img:'assets/images/soft_twist.png'},
-        {id:'softc_04',name:'شويبس',desc:'',price:30,img:'assets/images/soft_schweppes.png'},
-        {id:'softc_05',name:'فيروز',desc:'',price:30,img:'assets/images/soft_fayrouz.png'},
-        {id:'softc_06',name:'جهينة عصير طبيعي (مانجو، تفاح، برتقال)',desc:'',price:15,img:'assets/images/soft_juhayna_natural.png'},
-        {id:'softc_07',name:'جهينة ميكس فراولة حليب',desc:'',price:20,img:'assets/images/soft_juhayna_mix.png'}
+        {id:'softc_01',name:'V-Cola كلاسيك',desc:'',price:20,img:'assets/images/soft_vcola.png'},
+        {id:'softc_02',name:'V-Cola نكهات',desc:'',price:25,img:'assets/images/soft_vcola_flavor.png'},
+        {id:'softc_03',name:' ريد بول كلاسيك',desc:'',price:65,img:'assets/images/soft_redbull.png'},
+        {id:'softc_05',name:' ريد بول نكهات',desc:'',price:75,img:'assets/images/soft_redbull_flavor.png'},
+        {id:'softc_06',name:'تويست',desc:'',price:25,img:'assets/images/soft_twist.png'},
+        {id:'softc_07',name:'شويبس',desc:'',price:30,img:'assets/images/soft_schweppes.png'},
+        {id:'softc_08',name:'فيروز',desc:'',price:30,img:'assets/images/soft_fayrouz.png'},
+        {id:'softc_09',name:'جهينة عصير طبيعي (مانجو، تفاح، برتقال)',desc:'',price:15,img:'assets/images/soft_juhayna_natural.png'},
+        {id:'softc_10',name:'جهينة ميكس فراولة حليب',desc:'',price:20,img:'assets/images/soft_juhayna_mix.png'}
       ]}
     ]
   },
@@ -509,7 +516,6 @@ const MENU = {
   dessert: {
     title: 'حلويات / أطباق ديزيرت',
     items: [
-      /* REMOVED waffle classic */
       {id:'dess_waffle_choc',name:'وافل شوكليت',desc:'',price:65,img:'assets/images/waffle_chocolate.png'},
       {id:'dess_waffle_caramel',name:'وافل كراميل',desc:'',price:65,img:'assets/images/waffle_caramel.png'},
       {id:'dess_02',name:'وافل نوتيلا',desc:'',price:75,img:'assets/images/dess_waffle_nutella.png'},
@@ -537,8 +543,9 @@ const MENU = {
     title: 'مميز نيو',
     items: [
       {id:'sp_01',name:'بطاطا عسل + فواكه + مكسرات',desc:'',price:50,img:'assets/images/sp_potato_fruit_nuts.png'},
-      {id:'sp_02',name:'اندومي فراخ قطع طبيعية بتتبيلة نيو المميزة',desc:'',price:40,img:'assets/images/sp_noodles_chicken.png'},
-      {id:'sp_03',name:'كوكتيل نيو المميز',desc:'فاكهة فاخرة + سموزي + عسل + مكسرات + هوهوز + مورو',price:100,img:'assets/images/sp_cocktail_neo.png'}
+      {id:'sp_02',name:'اندومي',desc:'',price:20,img:'assets/images/sp_noodles.png'},
+      {id:'sp_03',name:'اندومي فراخ قطع طبيعية بتتبيلة نيو المميزة',desc:'',price:40,img:'assets/images/sp_noodles_chicken.png'},
+      {id:'sp_04',name:'كوكتيل نيو المميز',desc:'فاكهة فاخرة + سموزي + عسل + مكسرات + هوهوز + مورو',price:100,img:'assets/images/sp_cocktail_neo.png'}
     ]
   },
 
@@ -620,19 +627,16 @@ function renderSections(){
   MENU.cold.subcats.forEach(sc=>{
     const btn = document.createElement('div'); btn.className='cat'; btn.textContent = sc.title; 
     btn.onclick = (e)=>{
-      // simple inner toggle for subcats
       const subGrid = createGrid(sc.items);
       const existing = cold.querySelector('.grid');
       if(existing) existing.remove();
       cold.appendChild(subGrid);
-      // visual feedback
       cold.querySelectorAll('.cat').forEach(c=>c.style.background='#fff');
       e.target.style.background='#eee';
     };
     preview.appendChild(btn);
   });
   cold.appendChild(preview);
-  // default show first subcat
   cold.appendChild(createGrid(MENU.cold.subcats[0].items));
   sectionsEl.appendChild(cold);
 
@@ -682,7 +686,6 @@ function filterCategory(cat){
     const el = document.getElementById(targetId);
     if(el) el.style.display='block';
   } else {
-    // show all if not found
     document.querySelectorAll('.section').forEach(s=> s.style.display='block');
   }
   window.scrollTo({ top:180, behavior:'smooth' });
@@ -697,7 +700,6 @@ document.querySelectorAll('.cat[data-cat]').forEach(b=>{
   }
 });
 
-// Cart & Modal Logic
 const modal = document.getElementById('modalBackdrop');
 const modalList = document.getElementById('modalList');
 document.getElementById('cartBtn').onclick = updateModal;
@@ -729,7 +731,6 @@ function removeFromCart(id){
   updateModal();
 }
 
-// Global Click for Add-to-Cart
 const __neo_last_clicks = {}; 
 const __NEO_GUARD_MS = 500;
 document.addEventListener('click', function(e){
@@ -745,8 +746,6 @@ document.addEventListener('click', function(e){
     setTimeout(()=> { __neo_last_clicks[id] = 0; }, __NEO_GUARD_MS + 50);
     addToCart(id, name, price);
     showToast(`${name} انضاف للسلة`);
-    
-    // animate cart
     const cb = document.querySelector('.cart-btn');
     cb.style.transform = 'scale(1.2)';
     setTimeout(()=> cb.style.transform='scale(1)', 200);
@@ -759,10 +758,9 @@ function showToast(txt){
   setTimeout(()=>t.style.opacity=0, 2000);
 }
 
-// Start
 renderSections();
 renderCartCount(false);
-filterCategory('ramadan'); // Start with Ramadan
+filterCategory('ramadan');
 
 </script>
 </body>
