@@ -11,14 +11,16 @@
 
     <style>
         :root {
-            --primary: #124d33; /* NEO Green */
+            --primary: #124d33;
             --primary-dark: #0a2e1e;
             --secondary: #d4af37;
+            --gold-light: #fef9e7; /* دهبي فاتح للخلفية */
+            --gold-border: #d4af37;
             --bg: #f3f4f6;
             --white: #ffffff;
             --text: #2d3436;
             --danger: #c0392b;
-            --gray: #95a5a6; /* لون الترابيزات الفاضية */
+            --success: #27ae60;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; outline: none; }
@@ -38,140 +40,168 @@
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* POS LAYOUT */
+        /* POS Styles */
         .pos-layout { display: flex; gap: 15px; height: calc(100vh - 40px); }
         .menu-sec { flex: 2; display: flex; flex-direction: column; overflow: hidden; }
         .cart-sec { flex: 1; background: var(--white); border-radius: 12px; padding: 15px; display: flex; flex-direction: column; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #ddd; }
 
-        /* ==================== MAP SYSTEM (NEW) ==================== */
+        /* ==================== 1. MAP SYSTEM (ROTATED) ==================== */
         .map-container {
-            background: #e8e8e8; /* لون أرضية المحل */
-            border: 4px solid #333; /* حوائط المحل */
+            background: #e8e8e8; /* لون الأرضية */
+            border: 4px solid #444; 
             border-radius: 8px;
-            padding: 15px;
+            padding: 20px;
             margin-bottom: 15px;
             overflow-x: auto;
-            /* LTR Direction to match your description physically (Left is Left) */
-            direction: ltr; 
+            direction: ltr; /* مهم عشان الترتيب يكون من الشمال لليمين زي الوصف */
+            display: flex;
+            justify-content: center;
         }
 
         .cafe-grid {
             display: grid;
-            /* 3 Columns: Left Wall (Tables), Aisle, Right Wall (Tables) */
+            /* الأعمدة: حائط يسار - ممر - حائط يمين */
             grid-template-columns: 100px 60px 100px; 
-            /* Rows: Cashier/Back -> Front -> Street */
-            grid-template-rows: repeat(9, 70px); 
-            gap: 10px;
-            justify-content: center;
+            /* الصفوف: الشارع فوق -> الكاشير تحت */
+            grid-template-rows: repeat(9, 65px); 
+            gap: 12px;
             
-            /* Visual Map Areas */
+            /* رسم الخريطة (مقلوبة حسب طلبك: الشارع فوق والكاشير تحت) */
             grid-template-areas:
-                "cashier  .      t10"
-                "t1       .      t9"
-                "t2       .      t8"
-                "t3       .      t7"
+                "out_l    .      out_r"   /* الشارع في الأول (فوق) */
+                ".        .      ."       /* مسافة فاضية */
+                "bar_b    door   ."       /* البار الكبير والباب */
+                "t5       .      bar_s"   /* ترابيزة 5 والبار الصغير */
                 "t4       .      t6"
-                "t5       .      bar_s"
-                "bar_b    door   ."
-                ".        .      ."   /* Space before street */
-                "out_l    .      out_r"; /* Street */
+                "t3       .      t7"
+                "t2       .      t8"
+                "t1       .      t9"
+                "cashier  .      t10";    /* الكاشير في الآخر (تحت) */
         }
 
-        /* Table Card Styling */
+        /* تنسيق كارت الترابيزة */
         .table-card {
-            background: var(--gray);
-            color: white;
-            border-radius: 8px;
+            background: var(--gold-light); /* دهبي فاتح وهي فاضية */
+            border: 2px solid var(--gold-border);
+            color: #7f6000; /* نص دهبي غامق */
+            border-radius: 10px;
             cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 12px;
-            text-align: center;
-            box-shadow: 0 3px 0 rgba(0,0,0,0.2);
-            transition: 0.1s;
-            position: relative;
-            padding: 5px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 13px; text-align: center;
+            box-shadow: 0 3px 0 rgba(212, 175, 55, 0.4);
+            transition: 0.15s; position: relative; padding: 2px;
         }
         
-        .table-card:active { transform: translateY(3px); box-shadow: none; }
+        .table-card:active { transform: translateY(2px); box-shadow: none; }
         
-        /* States */
-        .table-card.selected { background: var(--primary); border: 2px solid var(--secondary); }
-        .table-card.occupied { background: var(--danger); }
+        /* حالات الترابيزة */
+        .table-card.selected {
+            background: var(--primary) !important; /* زيتي نيو */
+            color: white !important;
+            border-color: var(--primary-dark) !important;
+            box-shadow: 0 0 0 3px rgba(18, 77, 51, 0.3);
+        }
         
-        /* Special Objects */
-        .obj-cashier { grid-area: cashier; background: #2c3e50; cursor: default; border:none; box-shadow:none; color:#ccc; }
-        .obj-door { grid-area: door; border-bottom: 4px solid #333; display: flex; align-items: end; justify-content: center; font-size: 10px; color: #555; font-weight: bold; }
+        .table-card.occupied {
+            background: var(--danger) !important; /* أحمر */
+            color: white !important;
+            border-color: #96281b !important;
+            box-shadow: 0 3px 0 #96281b;
+        }
+
+        /* عناصر ثابتة */
+        .obj-cashier { 
+            grid-area: cashier; background: #2c3e50; color: #fff; border:none; box-shadow:none; cursor: default;
+            display: flex; align-items: center; justify-content: center; border-radius: 8px; font-size: 12px;
+        }
+        .obj-door { 
+            grid-area: door; border-top: 4px solid #333; /* الباب من فوق عشان الشارع فوق */
+            display: flex; align-items: start; justify-content: center; 
+            font-size: 11px; color: #555; font-weight: bold; padding-top: 5px;
+        }
+
+        /* ربط الـ Grid Areas */
+        #tbl_1 { grid-area: t1; } #tbl_2 { grid-area: t2; }
+        #tbl_3 { grid-area: t3; } #tbl_4 { grid-area: t4; }
+        #tbl_5 { grid-area: t5; } #tbl_6 { grid-area: t6; }
+        #tbl_7 { grid-area: t7; } #tbl_8 { grid-area: t8; }
+        #tbl_9 { grid-area: t9; } #tbl_10 { grid-area: t10; }
         
-        /* Tables Placement */
-        #tbl_1 { grid-area: t1; }
-        #tbl_2 { grid-area: t2; }
-        #tbl_3 { grid-area: t3; }
-        #tbl_4 { grid-area: t4; }
-        #tbl_5 { grid-area: t5; }
+        #tbl_11 { grid-area: bar_s; border-radius: 50%; } /* البار الصغير مدور */
+        #tbl_12 { grid-area: bar_b; width: 140%; z-index: 2; } /* البار الكبير عريض */
         
-        #tbl_6 { grid-area: t6; }
-        #tbl_7 { grid-area: t7; }
-        #tbl_8 { grid-area: t8; }
-        #tbl_9 { grid-area: t9; }
-        #tbl_10 { grid-area: t10; }
-        
-        #tbl_11 { grid-area: bar_s; border-radius: 50%; } /* Small Bar Round */
-        #tbl_12 { grid-area: bar_b; width: 140%; } /* Big Bar Wide */
-        
-        #tbl_13 { grid-area: out_r; background: #7f8c8d; } /* Street R */
-        #tbl_14 { grid-area: out_l; background: #7f8c8d; } /* Street L */
+        #tbl_13 { grid-area: out_r; background: #95a5a6; border-color: #7f8c8d; color: white; } /* شارع يمين */
+        #tbl_14 { grid-area: out_l; background: #95a5a6; border-color: #7f8c8d; color: white; } /* شارع شمال */
 
         .table-total {
-            font-size: 10px; background: rgba(0,0,0,0.3);
-            padding: 2px 5px; border-radius: 4px; margin-top: 2px;
+            font-size: 11px; background: rgba(0,0,0,0.25); color: white;
+            padding: 1px 6px; border-radius: 4px; margin-top: 2px;
         }
 
-        /* --- Products Grid --- */
+        /* --- Categories Bar --- */
         .cats-bar { display: flex; flex-wrap: wrap; gap: 8px; padding-bottom: 10px; }
-        .cat-chip { padding: 8px 12px; background: var(--white); border: 1px solid #ddd; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 12px; display: flex; align-items: center; gap: 5px; }
-        .cat-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .cat-chip { padding: 10px 15px; background: var(--white); border: 1px solid #ddd; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 13px; white-space: nowrap; transition: 0.2s; color: var(--primary); display: flex; align-items: center; gap: 5px; flex-grow: 1; justify-content: center; }
+        .cat-chip:hover { border-color: var(--secondary); }
+        .cat-chip.active { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 4px 10px rgba(18, 77, 51, 0.2); }
         
-        .sub-cats-bar { display: flex; gap: 5px; margin-bottom: 10px; overflow-x: auto; display: none; }
+        /* Sub-Categories Bar */
+        .sub-cats-bar { display: flex; gap: 5px; margin-bottom: 10px; overflow-x: auto; padding-bottom: 5px; border-bottom: 1px solid #eee; display: none; }
         .sub-cats-bar.show { display: flex; }
-        .sub-cat-chip { padding: 5px 12px; background: #eee; border-radius: 15px; font-size: 11px; cursor: pointer; white-space: nowrap; }
-        .sub-cat-chip.active { background: var(--secondary); color: white; }
+        .sub-cat-chip { padding: 5px 12px; background: #f0f0f0; border-radius: 15px; font-size: 12px; cursor: pointer; color: #555; white-space: nowrap; }
+        .sub-cat-chip.active { background: var(--secondary); color: white; font-weight: bold; }
 
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; overflow-y: auto; padding: 2px; }
-        .prod-card { background: var(--white); border-radius: 10px; padding: 10px; text-align: center; cursor: pointer; border: 1px solid #eee; transition: 0.2s; }
-        .prod-card:hover { border-color: var(--secondary); transform: translateY(-2px); }
-        .prod-name { font-weight: 700; font-size: 13px; color: var(--text); }
-        .prod-price { color: var(--primary); font-weight: 900; font-size: 14px; background: #f0f7f4; padding: 2px 8px; border-radius: 8px; margin-top: 5px; display: inline-block; }
+        /* Products Grid */
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; overflow-y: auto; padding: 5px; align-content: start; }
+        .prod-card { background: var(--white); border-radius: 10px; padding: 10px; text-align: center; cursor: pointer; border: 1px solid #eee; transition: 0.2s; display: flex; flex-direction: column; justify-content: center; min-height: 80px; }
+        .prod-card:hover { transform: translateY(-3px); border-color: var(--secondary); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .prod-name { font-weight: 700; font-size: 13px; line-height: 1.3; margin-bottom: 5px; color: var(--text); }
+        .prod-price { color: var(--primary); font-weight: 900; font-size: 14px; background: #f0f7f4; padding: 2px 8px; border-radius: 8px; align-self: center; }
 
-        /* --- Cart --- */
+        /* Cart */
+        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
+        .active-table-badge { background: var(--secondary); color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 13px; }
         .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 13px; }
-        .qty-controls { display: flex; align-items: center; gap: 5px; background: #f8f9fa; padding: 2px; border-radius: 6px; }
-        .qty-btn { width: 22px; height: 22px; border-radius: 50%; border: none; cursor: pointer; font-weight: bold; }
+        .qty-controls { display: flex; align-items: center; gap: 5px; background: #f8f9fa; padding: 2px 5px; border-radius: 6px; }
+        .qty-btn { width: 22px; height: 22px; border-radius: 50%; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; }
         .qty-btn.inc { background: var(--success); color: white; }
-        
-        /* Modal & Others */
+        .qty-btn.dec { background: #ddd; }
+        .cart-footer { margin-top: auto; padding-top: 15px; border-top: 2px solid #eee; }
+        .total-row { display: flex; justify-content: space-between; font-size: 18px; font-weight: 800; color: var(--primary); margin-bottom: 10px; }
+        .btn-checkout { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; display: flex; justify-content: center; gap: 8px; align-items: center; }
+        .btn-checkout:hover { background: #0a2e1e; }
+
+        /* Other Pages */
         .data-panel { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 10px; border-bottom: 1px solid #eee; text-align: right; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th { text-align: right; padding: 10px; background: #f9f9f9; color: var(--primary); border-bottom: 2px solid #eee; }
+        td { padding: 10px; border-bottom: 1px solid #eee; }
         .form-control { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; }
-        .btn-action { padding: 8px 15px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; }
+        .btn-action { padding: 8px 15px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
         
+        /* Modal */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; }
         .modal.open { display: flex; }
         .modal-content { background: white; width: 400px; padding: 20px; border-radius: 12px; }
 
+        /* PRINT RECEIPT */
         @media print {
             body * { visibility: hidden; }
             #receipt-area, #receipt-area * { visibility: visible; }
-            #receipt-area { position: absolute; left: 0; top: 0; width: 100%; width: 78mm; margin: 0 auto; text-align: center; }
-            .r-header img { width: 60px; filter: grayscale(100%); }
-            .r-slogan { border: 1px solid #000; border-radius: 20px; padding: 2px 10px; display: inline-block; font-size: 12px; font-weight: bold; margin: 5px 0; }
-            .r-table { width: 100%; font-size: 12px; border-collapse: collapse; margin-bottom: 10px; }
+            #receipt-area {
+                position: absolute; left: 0; top: 0; width: 100%;
+                width: 78mm; margin: 0 auto; padding: 5px; color: black;
+                font-family: 'Cairo', sans-serif; text-align: center;
+            }
+            .r-header img { width: 50px; filter: grayscale(100%); margin-bottom: 5px; }
+            .r-slogan { border: 1px solid #000; border-radius: 20px; padding: 2px 8px; display: inline-block; font-size: 11px; font-weight: bold; margin: 5px 0; }
+            .r-table { width: 100%; font-size: 11px; border-collapse: collapse; margin-bottom: 5px; }
             .r-table th { border-bottom: 1px solid #000; padding: 2px 0; }
-            .r-total { border: 2px solid #000; padding: 5px; font-weight: 900; font-size: 16px; margin-top: 5px; }
+            .r-table td { padding: 2px 0; }
+            .r-total { border: 2px solid #000; padding: 5px; font-weight: 900; font-size: 14px; border-radius: 5px; margin-top: 5px; }
+        }
+        @media (max-width: 768px) {
+            .pos-layout { flex-direction: column; }
+            .sidebar { display: none; }
         }
     </style>
 </head>
@@ -209,12 +239,12 @@
 
                 <div class="cart-sec">
                     <div class="cart-header">
-                        <span id="activeTableLabel" style="font-weight:bold;color:var(--primary)">اختر طاولة من الخريطة</span>
+                        <span id="activeTableLabel" class="active-table-badge">لم يتم اختيار طاولة</span>
                         <button onclick="clearCart()" style="color:#e74c3c;border:none;background:none;cursor:pointer"><i class="fas fa-trash"></i></button>
                     </div>
                     <div id="cartItems" style="flex:1; overflow-y:auto;">
                         <div style="text-align:center; color:#ccc; margin-top:50px;">
-                            <i class="fas fa-hand-pointer" style="font-size:24px;margin-bottom:10px"></i><br>الخريطة جاهزة
+                            <i class="fas fa-hand-pointer" style="font-size:24px;margin-bottom:10px"></i><br>اختر طاولة من الخريطة
                         </div>
                     </div>
                     <div style="margin-top:auto; border-top:2px solid #eee; padding-top:15px;">
@@ -283,7 +313,6 @@
                     <h2>💸 المصروفات</h2>
                     <button class="btn-action" onclick="openModal('modal_exp')">+ مصروف</button>
                 </div>
-                <tbody id="expTable"></tbody>
                 <table><thead><tr><th>التاريخ</th><th>البند</th><th>القيمة</th></tr></thead><tbody id="expTableBody"></tbody></table>
             </div>
         </div>
@@ -516,25 +545,30 @@ function nav(pageId) {
     if(pageId === 'expenses') renderExpenses();
 }
 
-/* ================= MAP SYSTEM ================= */
+/* ================= MAP SYSTEM (ROTATED 180) ================= */
 function renderMap() {
     const map = document.getElementById('cafeMap');
     map.innerHTML = '';
     
-    // Map Config: ID, Label, GridArea, Type
     const layout = [
-        {id:'cashier', label:'الكاشير', area:'cashier', type:'static'},
+        // STREET AT TOP (Far from Cashier)
+        {id:14, label:'شارع شمال', area:'out_l'}, {id:13, label:'شارع يمين', area:'out_r'},
+        
+        // BARS
+        {id:12, label:'البار الكبير', area:'bar_b'}, 
         {id:'door', label:'الباب', area:'door', type:'static'},
+        {id:11, label:'بار صغير', area:'bar_s'},
         
-        {id:10, label:'T-10', area:'t10'}, {id:9, label:'T-9', area:'t9'},
-        {id:8, label:'T-8', area:'t8'}, {id:7, label:'T-7', area:'t7'},
-        {id:6, label:'T-6', area:'t6'}, {id:11, label:'بار صغير', area:'bar_s'},
+        // TABLES (Reversed visual order for user)
+        {id:5, label:'T-5', area:'t5'},
+        {id:4, label:'T-4', area:'t4'}, {id:6, label:'T-6', area:'t6'},
+        {id:3, label:'T-3', area:'t3'}, {id:7, label:'T-7', area:'t7'},
+        {id:2, label:'T-2', area:'t2'}, {id:8, label:'T-8', area:'t8'},
+        {id:1, label:'T-1', area:'t1'}, {id:9, label:'T-9', area:'t9'},
         
-        {id:1, label:'T-1', area:'t1'}, {id:2, label:'T-2', area:'t2'},
-        {id:3, label:'T-3', area:'t3'}, {id:4, label:'T-4', area:'t4'},
-        {id:5, label:'T-5', area:'t5'}, {id:12, label:'البار الكبير', area:'bar_b'},
-        
-        {id:14, label:'شارع شمال', area:'out_l'}, {id:13, label:'شارع يمين', area:'out_r'}
+        // CASHIER AT BOTTOM
+        {id:'cashier', label:'الكاشير', area:'cashier', type:'static'},
+        {id:10, label:'T-10', area:'t10'}
     ];
 
     layout.forEach(obj => {
@@ -553,7 +587,7 @@ function renderMap() {
             div.onclick = () => {
                 currentTable = obj.id;
                 document.getElementById('activeTableLabel').textContent = obj.label;
-                renderMap(); // Refresh highlighting
+                renderMap();
                 renderCart();
             };
         }
@@ -748,7 +782,7 @@ function renderInventory() {
     document.getElementById('inventoryTable').innerHTML = inv.filter(i => i.name.toLowerCase().includes(term)).map(i => `
         <tr><td>${i.name}</td><td>${i.type=='raw'?'خامة':'جاهز'}</td>
         <td style="color:${i.stock<5?'red':'inherit'};font-weight:bold">${i.stock.toFixed(1)}</td>
-        <td><button style="color:red;border:none;background:none" onclick="delInv('${i.id}')">X</button></td></tr>
+        <td><button style="color:red;border:none;background:none" onclick="delInv('${i.id}')"><i class="fas fa-trash"></i></button></td></tr>
     `).join('');
 }
 
