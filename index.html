@@ -101,30 +101,7 @@ body{
   border: 1px solid var(--neo-gold);
 }
 
-/* LOGO WITH MOON */
-.logo-container {
-  position: absolute;
-  right: 16px;
-  top: 15px;
-  width: 90px;
-  height: 90px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-}
-.logo-container::before {
-  content: '';
-  position: absolute;
-  inset: -5px;
-  border-radius: 50%;
-  border: 3px solid transparent;
-  border-top-color: var(--neo-gold);
-  border-right-color: var(--neo-gold);
-  box-shadow: 0 0 15px var(--neo-gold), inset 0 0 10px var(--neo-gold);
-  transform: rotate(-45deg);
-  animation: pulseGlow 2s infinite alternate;
-}
+
 @keyframes pulseGlow { 0% { opacity: 0.7; box-shadow: 0 0 10px var(--neo-gold); } 100% { opacity: 1; box-shadow: 0 0 25px var(--neo-gold); } }
 .logo{
   width: 100%;
