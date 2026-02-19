@@ -3,311 +3,272 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>نيو كافية - منيو رمضان</title>
+<title>نيو كافية - منيو رمضان الشامل</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
   --neo-green:#124d33;
-  --neo-green-2:#21593f;
   --neo-dark:#0a2e1e;
   --neo-gold:#d4af37; 
   --neo-beige:#fdfbf7;
-  --neo-cream:#fbf4e9;
   --muted:#6b6b6b;
-  --card-radius:14px;
   --shadow: 0 18px 40px rgba(18,77,51,0.06);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%}
 body{
   background:var(--neo-beige);
   font-family:"Cairo",sans-serif;
   color:#0b0b0b;
-  -webkit-font-smoothing:antialiased;
   line-height:1.4;
-  -webkit-tap-highlight-color: transparent;
   background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
+
+/* Decorations */
 .lantern-container { position: absolute; top: 0; left: 0; width: 100%; height: 100px; overflow: hidden; z-index: 1; pointer-events: none; }
 .lantern { position: absolute; top: -20px; width: 30px; height: 40px; background: var(--neo-gold); border-radius: 5px; box-shadow: 0 0 15px var(--neo-gold); animation: swing 3s infinite ease-in-out alternate; transform-origin: top center; }
 .lantern::before { content:''; position:absolute; top:-100px; left:14px; width:2px; height:100px; background:var(--neo-dark); }
-.l1 { left: 10%; animation-delay: 0s; transform: scale(0.8); }
-.l2 { left: 85%; animation-delay: 1.5s; transform: scale(0.9); }
-.l3 { left: 20%; top: -10px; animation-delay: 0.5s; background: var(--neo-green); }
+.l1 { left: 10%; } .l2 { left: 85%; animation-delay: 1.5s; }
 @keyframes swing { 0% { transform: rotate(5deg); } 100% { transform: rotate(-5deg); } }
+
+/* Header */
 .header{
   background: linear-gradient(180deg, var(--neo-dark), var(--neo-green));
-  padding: 25px 14px 15px;
-  text-align:center;
-  position:relative;
-  border-bottom-left-radius: 25px;
-  border-bottom-right-radius: 25px;
-  box-shadow: 0 10px 20px rgba(18,77,51,0.2);
-  color: #fff;
+  padding: 30px 14px; text-align:center; color: #fff;
+  border-bottom-left-radius: 25px; border-bottom-right-radius: 25px;
 }
-.header h1{ color:var(--neo-gold); font-weight:800; font-size:22px; margin-bottom:4px; padding: 0 60px;}
-.ramadan-slogan {
-  background: rgba(212, 175, 55, 0.2);
-  color: var(--neo-gold);
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 700;
-  margin-top: 5px;
-  border: 1px solid var(--neo-gold);
+.header h1{ color:var(--neo-gold); font-weight:800; font-size:24px; }
+.logo-container { margin: 10px auto; width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--neo-gold); overflow: hidden; background: #fff;}
+.logo { width: 100%; height: 100%; object-fit: cover; }
+
+/* Categories Navigation */
+.cats-nav {
+  display: flex; gap: 10px; overflow-x: auto; padding: 15px;
+  background: #fff; position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
-.logo-container {
-  position: absolute; right: 12px; top: 10px; width: 65px; height: 65px;
-  display: flex; align-items: center; justify-content: center; z-index: 10;
+.cat-btn {
+  flex: 0 0 auto; padding: 8px 16px; border-radius: 20px;
+  border: 1px solid var(--neo-gold); background: #fff;
+  font-weight: 700; cursor: pointer; white-space: nowrap;
 }
-.logo{ width: 100%; height: 100%; object-fit: cover; border-radius: 50%; background: #fff; padding: 2px; }
-.cats-grid{ display:flex; flex-direction:column; gap:8px; padding:15px 12px; align-items:center; }
-.cats-row{ display:flex; gap:10px; overflow-x:auto; width: 100%; padding-bottom: 5px; justify-content: center; }
-.cat{
-  flex:0 0 auto; background:#fff; border-radius:999px; padding:10px 14px;
-  border:1px solid var(--neo-gold); font-weight:800; color:var(--neo-green);
-  cursor:pointer; white-space:nowrap; transition: 0.3s;
-}
-.cat.active{ background:linear-gradient(45deg,var(--neo-green),var(--neo-dark)); color:var(--neo-gold); }
-.container{max-width:980px;margin:8px auto;padding:6px 12px 160px}
-.section-title{ color:var(--neo-green); font-weight:900; font-size:20px; margin:15px 0 12px; text-align:right; }
-.grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; }
-.product-card{
-  background:#fff; border-radius:12px; padding:8px; box-shadow:var(--shadow);
-  display:flex; flex-direction:column; border: 1px solid rgba(212, 175, 55, 0.15);
-}
-.product-img{ width:100%; height:140px; object-fit:cover; border-radius:10px; background:#f2f2f2; }
-.product-body{padding:10px 6px;display:flex;flex-direction:column;gap:8px}
-.row-title{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.product-name{font-weight:900;color:var(--neo-dark);font-size:15px}
-.price{color:var(--neo-green);font-weight:900}
-.add-btn{
-  background:var(--neo-green); color:var(--neo-gold); padding:8px 12px;
-  border-radius:10px; border:0; font-weight:900; cursor:pointer;
-}
-.cart-float{position:fixed;right:14px;bottom:14px;z-index:9999;}
-.cart-btn{
-  background:var(--neo-green); color:var(--neo-gold); padding:12px 14px;
-  border-radius:14px; display:flex; align-items:center; gap:10px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.2); cursor:pointer; border: 2px solid var(--neo-gold);
-}
-.cart-count{background:var(--neo-gold);color:#000;padding:2px 8px;border-radius:999px;font-weight:900;}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:100px;background:var(--neo-dark);color:var(--neo-gold);padding:10px 20px;border-radius:50px;font-weight:700;z-index:99999;opacity:0;transition:opacity .3s; pointer-events:none;}
-.modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;padding:20px;z-index:9998; backdrop-filter: blur(4px);}
-.modal-back.show{display:flex}
-.modal{width:100%;max-width:500px;background:#fff;border-radius:20px;padding:20px;direction:rtl}
-.modal .item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #eee}
-@media (max-width:480px){ .grid{grid-template-columns: 1fr;} }
+.cat-btn.active { background: var(--neo-green); color: var(--neo-gold); }
+
+/* Grid & Cards */
+.container { max-width: 1000px; margin: auto; padding: 20px 15px 150px; }
+.section-title { color: var(--neo-green); margin: 25px 0 15px; border-right: 4px solid var(--neo-gold); padding-right: 10px; font-weight: 800; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+.card { background: #fff; border-radius: 15px; padding: 10px; box-shadow: var(--shadow); border: 1px solid rgba(212,175,55,0.1); display: flex; flex-direction: column; }
+.card img { width: 100%; height: 130px; object-fit: cover; border-radius: 10px; margin-bottom: 8px; }
+.card-name { font-weight: 700; font-size: 14px; height: 40px; overflow: hidden; }
+.card-price { color: var(--neo-green); font-weight: 800; margin: 5px 0; }
+.add-btn { background: var(--neo-green); color: var(--neo-gold); border: none; padding: 8px; border-radius: 8px; font-weight: 700; cursor: pointer; width: 100%; }
+
+/* Cart UI */
+.cart-float { position: fixed; bottom: 20px; left: 20px; right: 20px; z-index: 1000; }
+.cart-trigger { background: var(--neo-green); color: #fff; padding: 15px; border-radius: 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid var(--neo-gold); cursor: pointer; }
+.modal-back { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; z-index: 2000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+.modal { background: #fff; width: 100%; max-width: 500px; border-radius: 20px; padding: 20px; max-height: 80vh; overflow-y: auto; }
+.cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
+.toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--neo-dark); color: var(--neo-gold); padding: 10px 20px; border-radius: 30px; opacity: 0; transition: 0.3s; z-index: 3000; pointer-events: none; }
 </style>
 </head>
 <body>
 
 <div class="lantern-container">
-  <div class="lantern l1"></div><div class="lantern l2"></div><div class="lantern l3"></div>
+  <div class="lantern l1"></div><div class="lantern l2"></div>
 </div>
 
 <header class="header">
   <div class="logo-container">
-    <img src="assets/images/logo.png" alt="NEO Cafe" class="logo" onerror="this.style.opacity='0'">
+    <img src="assets/images/logo.png" alt="NEO" class="logo" onerror="this.style.display='none'">
   </div>
-  <h1>نيو كافية - رمضانك جميل</h1>
-  <p>Make It NEO Time</p>
-  <div class="ramadan-slogan">✨ رمضانك جميل في نيو ✨</div>
+  <h1>نيو كافية - NEO CAFE</h1>
+  <p>🌙 رمضانك أجمل في نيو 🌙</p>
 </header>
 
-<div class="cats-grid">
-  <div class="cats-row">
-    <div class="cat active" data-cat="ramadan">🌙 رمضان في نيو</div>
-    <div class="cat" data-cat="hot">مشروبات ساخنة</div>
-    <div class="cat" data-cat="cold">مشروبات باردة</div>
-  </div>
-  <div class="cats-row">
-    <div class="cat" data-cat="soft">سوفت درينك</div>
-    <div class="cat" data-cat="dessert">أطباق ديزيرت</div>
-    <div class="cat" data-cat="special">مميز نيو</div>
-  </div>
-</div>
+<nav class="cats-nav" id="catsNav"></nav>
 
-<main class="container" id="mainContent">
-  <div id="sections"></div>
-</main>
+<main class="container" id="menuContent"></main>
 
 <div class="cart-float">
-  <div id="cartBtn" class="cart-btn">
-    <div class="cart-count" id="cartCount">0</div>
-    <div style="font-weight:900">سلة السحور</div>
+  <div class="cart-trigger" onclick="openCart()">
+    <span id="cartCount">0 صنف</span>
+    <span style="font-weight: 800;">سلة السحور 🌙</span>
+    <span id="cartTotal">0 ج</span>
   </div>
 </div>
 
-<div id="modalBackdrop" class="modal-back">
+<div id="cartModal" class="modal-back">
   <div class="modal">
-    <h3 style="margin-bottom:15px; color:var(--neo-green)">سلتك المختارة 🌙</h3>
-    <div id="modalList" style="max-height:300px; overflow-y:auto; margin-bottom:20px"></div>
-    <div id="totalPrice" style="text-align:center; font-weight:800; margin-bottom:15px; font-size:18px"></div>
-    <div style="display:flex;gap:10px">
-      <button id="closeModal" class="add-btn" style="background:#eee; color:#333; flex:1">إغلاق</button>
-      <button id="checkoutNow" class="add-btn" style="flex:2">اطلب واتساب 🟢</button>
+    <h2 style="color:var(--neo-green); margin-bottom:15px">طلباتك 📝</h2>
+    <div id="cartList"></div>
+    <div id="finalTotal" style="text-align:center; font-weight:900; font-size:20px; margin:20px 0"></div>
+    <div style="display:flex; gap:10px">
+      <button onclick="closeCart()" style="flex:1; padding:12px; border-radius:10px; border:1px solid #ccc; background: #eee;">إغلاق</button>
+      <button onclick="sendOrder()" style="flex:2; padding:12px; border-radius:10px; background:var(--neo-green); color:var(--neo-gold); font-weight:800; border:none;">تأكيد عبر واتساب 🟢</button>
     </div>
   </div>
 </div>
 
-<div id="miniToast" class="toast">تم الإضافة للسلة</div>
+<div id="toast" class="toast">تم الإضافة للسلة</div>
 
 <script>
-const CART_KEY = 'neo_cafe_ramadan_cart';
-
-// --- DATA ---
-const MENU = {
-  ramadan: { title: '✨ حلويات رمضان ✨', items: [
+const MENU_DATA = {
+  ramadan: { title: "🌙 رمضان في نيو", items: [
     {id:'r1', name:'رز بلبن مكسرات', price:40, img:'assets/images/ram_rice_nuts.png'},
-    {id:'r2', name:'كَب كنافه نوتيلا', price:85, img:'assets/images/ram_cup_nutella.png'},
-    {id:'r3', name:'فادج كرانشي نوتيلا', price:95, img:'assets/images/ram_fudge_crunchy.png'}
+    {id:'r2', name:'رز بلبن مكسرات وكراميل', price:45, img:'assets/images/ram_rice_caramel.png'},
+    {id:'r3', name:'رز بلبن مكسرات وشوكلاته', price:45, img:'assets/images/ram_rice_choco.png'},
+    {id:'r4', name:'رز بلبن مكسرات نوتيلا', price:55, img:'assets/images/ram_rice_nutella.png'},
+    {id:'r5', name:'رز بلبن مكسرات بستاشيو', price:60, img:'assets/images/ram_rice_pistachio.png'},
+    {id:'r6', name:'رز بلبن مكسرات لوتس', price:55, img:'assets/images/ram_rice_lotus.png'},
+    {id:'r7', name:'رز بلبن مكسرات ميكس صوص', price:75, img:'assets/images/ram_rice_mix.png'},
+    {id:'r8', name:'رز بلبن مكسرات + فواكه + صوص', price:85, img:'assets/images/ram_rice_fruit.png'},
+    {id:'r9', name:'كَب كنافه لوتس', price:85, img:'assets/images/ram_cup_lotus.png'},
+    {id:'r10', name:'كَب كنافه نوتيلا', price:85, img:'assets/images/ram_cup_nutella.png'},
+    {id:'r11', name:'فادج كرانشي نوتيلا', price:95, img:'assets/images/ram_fudge_crunchy.png'},
+    {id:'r12', name:'فادج كنافة نوتيلا بستاشيو', price:110, img:'assets/images/ram_fudge_pistachio.png'}
   ]},
-  hot: { title: '☕ مشروبات ساخنة', items: [
-    {id:'h1', name:'شاي نيو', price:15, img:'assets/images/hot_shai.png'},
-    {id:'h2', name:'قهوة تركي', price:25, img:'assets/images/hot_turkish_single.png'},
-    {id:'h3', name:'سحلب مكسرات', price:45, img:'assets/images/hot_sahlab_nuts.png'}
+  hot: { title: "☕ مشروبات ساخنة", items: [
+    {id:'h1', name:'شاي', price:15, img:'assets/images/hot_shai.png'},
+    {id:'h2', name:'شاي أحمد تي', price:20, img:'assets/images/hot_shai_lipton.png'},
+    {id:'h3', name:'قهوة تركي سنجل', price:25, img:'assets/images/hot_turkish_single.png'},
+    {id:'h4', name:'قهوة فرنساوي', price:35, img:'assets/images/hot_french.png'},
+    {id:'h5', name:'سحلب نيو المميز', price:65, img:'assets/images/hot_sahlab_neo.png'},
+    {id:'h6', name:'هوت شوكليت', price:50, img:'assets/images/hot_hot_chocolate.png'}
   ]},
-  cold: { title: '🍹 مشروبات باردة', items: [
+  cold: { title: "🍹 مشروبات باردة", items: [
     {id:'c1', name:'ميلك شيك اوريو', price:55, img:'assets/images/ms_oreo.png'},
-    {id:'c2', name:'ايس سبانش لاتيه', price:65, img:'assets/images/ice_spanish_latte.png'}
+    {id:'c2', name:'ميلك شيك نوتيلا', price:65, img:'assets/images/ms_chocolate.png'},
+    {id:'c3', name:'فرباتشينو كراميل', price:55, img:'assets/images/fr_cramel.png'},
+    {id:'c4', name:'ايس سبانش لاتيه', price:65, img:'assets/images/ice_spanish_latte.png'},
+    {id:'c5', name:'ليمون نعناع فريش', price:35, img:'assets/images/fresh_lemon_mint.png'},
+    {id:'c6', name:'سموزي مانجو', price:45, img:'assets/images/smz_mango.png'}
+  ]},
+  dessert: { title: "🍰 حلويات ديزيرت", items: [
+    {id:'d1', name:'وافل نوتيلا', price:75, img:'assets/images/dess_waffle_nutella.png'},
+    {id:'d2', name:'مولتن كيك', price:75, img:'assets/images/dess_molten.png'},
+    {id:'d3', name:'سينابون', price:65, img:'assets/images/dess_Cinnabon.png'},
+    {id:'d4', name:'تشيز كيك', price:85, img:'assets/images/dess_cheesecake.png'}
+  ]},
+  special: { title: "⭐ مميز نيو", items: [
+    {id:'s1', name:'بطاطا عسل مكسرات', price:50, img:'assets/images/sp_potato_fruit_nuts.png'},
+    {id:'s2', name:'اندومي نيو بالفراخ', price:40, img:'assets/images/sp_noodles_chicken.png'},
+    {id:'s3', name:'كوكتيل نيو الفاخر', price:100, img:'assets/images/sp_cocktail_neo.png'}
+  ]},
+  fun: { title: "🎮 ألعاب (مجانًا)", items: [
+    {id:'f1', name:'كوتشينة', price:0, img:'assets/images/fun_cards.png'},
+    {id:'f2', name:'شطرنج', price:0, img:'assets/images/fun_chess.png'}
   ]}
 };
 
-// --- CORE FUNCTIONS ---
+let cart = [];
 
-function getCart() {
-  return JSON.parse(localStorage.getItem(CART_KEY)) || [];
-}
+// Initialize Menu
+function initMenu() {
+  const nav = document.getElementById('catsNav');
+  const content = document.getElementById('menuContent');
+  
+  for (let key in MENU_DATA) {
+    // Add Nav Button
+    const btn = document.createElement('button');
+    btn.className = 'cat-btn';
+    btn.textContent = MENU_DATA[key].title;
+    btn.onclick = () => scrollToSection('sec_'+key, btn);
+    nav.appendChild(btn);
 
-function setCart(cart) {
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  updateCartUI();
-}
-
-function addToCart(id, name, price) {
-  let cart = getCart();
-  const existing = cart.find(item => item.id === id);
-  if (existing) {
-    existing.qty += 1;
-  } else {
-    cart.push({ id, name, price, qty: 1 });
+    // Add Section
+    const sec = document.createElement('section');
+    sec.id = 'sec_'+key;
+    sec.innerHTML = `<h2 class="section-title">${MENU_DATA[key].title}</h2>`;
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+    
+    MENU_DATA[key].items.forEach(item => {
+      grid.innerHTML += `
+        <div class="card">
+          <img src="${item.img}" onerror="this.src='https://via.placeholder.com/150?text=NEO'">
+          <div class="card-name">${item.name}</div>
+          <div class="card-price">${item.price === 0 ? 'مجانًا' : item.price + ' ج'}</div>
+          <button class="add-btn" onclick="addToCart('${item.id}', '${item.name}', ${item.price})">أضف للسلة</button>
+        </div>
+      `;
+    });
+    sec.appendChild(grid);
+    content.appendChild(sec);
   }
-  setCart(cart);
-  showToast(name + " انضاف للسلة");
 }
 
-function removeFromCart(id) {
-  let cart = getCart().filter(item => item.id !== id);
-  setCart(cart);
-  renderModal();
+function scrollToSection(id, btn) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-function updateCartUI() {
-  const cart = getCart();
-  const count = cart.reduce((sum, item) => sum + item.qty, 0);
-  document.getElementById('cartCount').textContent = count;
+// Cart Logic
+function addToCart(id, name, price) {
+  const existing = cart.find(i => i.id === id);
+  if(existing) {
+    existing.qty++;
+  } else {
+    cart.push({id, name, price, qty: 1});
+  }
+  updateUI();
+  showToast();
 }
 
-function showToast(msg) {
-  const t = document.getElementById('miniToast');
-  t.textContent = msg;
+function updateUI() {
+  const count = cart.reduce((a, b) => a + b.qty, 0);
+  const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+  document.getElementById('cartCount').textContent = count + " أصناف";
+  document.getElementById('cartTotal').textContent = total + " ج";
+}
+
+function openCart() {
+  const list = document.getElementById('cartList');
+  const totalEl = document.getElementById('finalTotal');
+  list.innerHTML = cart.length === 0 ? '<p style="text-align:center">السلة فارغة</p>' : '';
+  
+  cart.forEach(item => {
+    list.innerHTML += `
+      <div class="cart-item">
+        <div>
+          <b>${item.name}</b><br>
+          <small>${item.price} ج × ${item.qty}</small>
+        </div>
+        <button onclick="removeItem('${item.id}')" style="color:red; background:none; border:none; font-weight:bold">حذف</button>
+      </div>
+    `;
+  });
+  
+  const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+  totalEl.textContent = "الإجمالي: " + total + " جنيه";
+  document.getElementById('cartModal').style.display = 'flex';
+}
+
+function removeItem(id) {
+  cart = cart.filter(i => i.id !== id);
+  updateUI();
+  openCart();
+}
+
+function closeCart() { document.getElementById('cartModal').style.display = 'none'; }
+
+function showToast() {
+  const t = document.getElementById('toast');
   t.style.opacity = 1;
   setTimeout(() => t.style.opacity = 0, 2000);
 }
 
-// --- RENDERING ---
-
-function renderMenu() {
-  const container = document.getElementById('sections');
-  container.innerHTML = '';
-  
-  for (const key in MENU) {
-    const section = MENU[key];
-    const sectionEl = document.createElement('div');
-    sectionEl.className = 'section';
-    sectionEl.id = 'sec_' + key;
-    sectionEl.innerHTML = `<h2 class="section-title">${section.title}</h2>`;
-    
-    const grid = document.createElement('div');
-    grid.className = 'grid';
-    
-    section.items.forEach(item => {
-      grid.innerHTML += `
-        <div class="product-card">
-          <img src="${item.img}" class="product-img" onerror="this.src='https://via.placeholder.com/150'">
-          <div class="product-body">
-            <div class="row-title">
-              <span class="product-name">${item.name}</span>
-              <span class="price">${item.price} ج</span>
-            </div>
-            <button class="add-btn" onclick="addToCart('${item.id}', '${item.name}', ${item.price})">أضف للسلة</button>
-          </div>
-        </div>
-      `;
-    });
-    sectionEl.appendChild(grid);
-    container.appendChild(sectionEl);
-  }
+function sendOrder() {
+  if(cart.length === 0) return;
+  let text = "طلب جديد من منيو نيو كافيه 🌙%0a%0a";
+  cart.forEach(i => text += `• ${i.name} (${i.qty})%0a`);
+  const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+  text += `%0a💰 الإجمالي: ${total} ج`;
+  window.open(`https://wa.me/20103431119?text=${text}`);
 }
 
-function renderModal() {
-  const cart = getCart();
-  const list = document.getElementById('modalList');
-  const totalEl = document.getElementById('totalPrice');
-  
-  if (cart.length === 0) {
-    list.innerHTML = '<p style="text-align:center; padding:20px;">السلة فارغة يا بطل 🌙</p>';
-    totalEl.textContent = "";
-  } else {
-    list.innerHTML = cart.map(item => `
-      <div class="item">
-        <div><b>${item.name}</b> (x${item.qty})</div>
-        <div>
-          <span>${item.price * item.qty} ج</span>
-          <button onclick="removeFromCart('${item.id}')" style="margin-right:10px; color:red; border:none; background:none; cursor:pointer">حذف</button>
-        </div>
-      </div>
-    `).join('');
-    const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-    totalEl.textContent = `الإجمالي: ${total} جنيه`;
-  }
-  document.getElementById('modalBackdrop').classList.add('show');
-}
-
-// --- EVENTS ---
-
-document.getElementById('cartBtn').onclick = renderModal;
-document.getElementById('closeModal').onclick = () => document.getElementById('modalBackdrop').classList.remove('show');
-
-document.getElementById('checkoutNow').onclick = () => {
-  const cart = getCart();
-  if (cart.length === 0) return;
-  let msg = "طلب جديد من نيو كافيه 🌙%0a%0a";
-  cart.forEach(item => msg += `• ${item.name} (عدد ${item.qty})%0a`);
-  const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-  msg += `%0a💰 الإجمالي: ${total} ج`;
-  window.open(`https://wa.me/20103431119?text=${msg}`, '_blank');
-};
-
-// Tabs
-document.querySelectorAll('.cat').forEach(tab => {
-  tab.onclick = () => {
-    document.querySelectorAll('.cat').forEach(c => c.classList.remove('active'));
-    tab.classList.add('active');
-    const cat = tab.dataset.cat;
-    document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-    document.getElementById('sec_' + cat).style.display = 'block';
-  };
-});
-
-// Init
-renderMenu();
-updateCartUI();
-// Show only Ramadan first
-document.querySelectorAll('.section').forEach((s, i) => i > 0 ? s.style.display = 'none' : null);
-
+window.onload = initMenu;
 </script>
 </body>
 </html>
