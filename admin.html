@@ -51,12 +51,12 @@
         /* ================== 1. شاشة الكاشير (POS) ================== */
         .pos-layout { display: flex; gap: 15px; height: calc(100vh - 30px); }
         
-        /* ✨ الحل الجذري لمشكلة اختفاء المنتجات ✨ */
+        /* جعل الجزء الأيمن قابل للسكرول لحل مشكلة اختفاء المنتجات */
         .menu-sec { 
             flex: 2; 
             display: flex; 
             flex-direction: column; 
-            overflow-y: auto; /* سكرول للمنطقة كلها */
+            overflow-y: auto; 
             gap: 15px; 
             padding-right: 5px; 
             padding-bottom: 40px; 
@@ -67,7 +67,7 @@
         /* --- خريطة الطاولات (المقلوبة) --- */
         .map-container {
             background: #e8e8e8; border: 4px solid #555; border-radius: 12px;
-            padding: 15px; overflow-x: auto; flex-shrink: 0; /* يمنع انكماش الخريطة */
+            padding: 15px; overflow-x: auto; flex-shrink: 0; 
             direction: ltr; display: flex; justify-content: center;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
         }
@@ -123,7 +123,7 @@
         .sub-cat-chip { padding: 6px 15px; background: #e2e8f0; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; color: #475569; white-space: nowrap; transition: 0.2s; }
         .sub-cat-chip.active { background: var(--secondary); color: white; }
 
-        /* --- المنتجات (تم إزالة flex:1 والـ overflow عشان تاخد راحتها في الطول) --- */
+        /* --- المنتجات --- */
         .products-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
@@ -186,33 +186,34 @@
             /* إخفاء واجهة النظام بالكامل أثناء الطباعة */
             .sidebar, .main-content, .modal { display: none !important; }
             
-            /* إظهار منطقة الفاتورة فقط وتنسيقها لتتوسط الورقة */
+            /* الفاتورة: تم استخدام margin auto و width 72mm لحل مشكلة القص من اليسار */
             #receipt-area, #receipt-area * { visibility: visible; }
             #receipt-area {
                 display: block !important;
                 position: absolute;
-                left: 50%; top: 0;
-                transform: translateX(-50%); /* توسيط الفاتورة بالضبط */
-                width: 76mm; /* العرض المثالي للطابعات الـ 80 ملي */
-                padding: 2mm; 
+                left: 0; top: 0; right: 0;
+                width: 72mm; /* مساحة آمنة جداً للطابعات الـ 80 ملي */
+                margin: 0 auto; /* توسيط الفاتورة في الورقة */
+                padding: 2mm 4mm; /* هوامش داخلية لتجنب القص */
                 color: #000; 
                 font-family: 'Cairo', sans-serif;
                 direction: rtl;
             }
             
             .r-header { text-align: center; margin-bottom: 10px; border-bottom: 1px dashed #000; padding-bottom: 10px; }
-            .r-header img { width: 70px; height: 70px; object-fit: contain; filter: grayscale(100%); margin-bottom: 5px; }
+            /* اللوجو: إزالة الفلتر الرمادي، تكبير الحجم ليكون أوضح */
+            .r-header img { width: 90px; height: 90px; object-fit: contain; margin-bottom: 5px; }
             .r-header h2 { font-size: 28px; margin: 0; font-weight: 900; letter-spacing: 1px; color: #000;}
-            .r-slogan { border: 1px solid #000; border-radius: 15px; padding: 4px 10px; font-size: 13px; font-weight: 900; margin: 5px auto; display: inline-block; }
+            .r-slogan { border: 1px dashed #000; border-radius: 15px; padding: 4px 10px; font-size: 13px; font-weight: 900; margin: 5px auto; display: inline-block; }
             
             .r-meta { font-size: 13px; margin-bottom: 10px; border-bottom: 1px dashed #000; padding-bottom: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-weight: 900; }
             .r-meta div { display: flex; justify-content: space-between; }
             .r-meta .full { grid-column: 1 / -1; }
             
             .r-table { width: 100%; font-size: 14px; border-collapse: collapse; margin-bottom: 10px; }
-            .r-table th { border-bottom: 1px solid #000; padding: 6px 0; font-weight: 900; text-align: center; font-size: 14px; }
+            /* عناوين الجدول: بخط عريض وواضح جداً */
+            .r-table th { border-bottom: 2px solid #000; padding: 6px 0; font-weight: 900 !important; text-align: center; font-size: 15px; color: #000; }
             .r-table th:first-child { text-align: right; }
-            /* خط المنتجات (عريض وواضح) */
             .r-table td { padding: 8px 0; border-bottom: 1px dotted #555; text-align: center; font-weight: 900; color: #000; font-size: 15px;}
             .r-table td:first-child { text-align: right; font-size: 14px; }
             
@@ -267,7 +268,7 @@
 
                     <div class="cart-footer">
                         <div class="total-row">
-                            <span>الإجمالي المطلـوب:</span>
+                            <span>الإجمالي:</span>
                             <span id="cartTotal">0.00 ج</span>
                         </div>
                         <button class="btn-checkout" onclick="checkout()">
@@ -412,7 +413,7 @@
 
     <div id="receipt-area">
         <div class="r-header">
-            <img src="assets/images/logo.png" alt="NEO">
+            <img src="assets/images/logo.png" alt="NEO" onerror="this.style.display='none'">
             <h2>NEO Café</h2>
             <div class="r-slogan">✨ رمضانك جميل في نيو ✨</div>
         </div>
@@ -438,7 +439,7 @@
         </table>
         
         <div class="r-total-sec">
-            <span>الإجمالي:</span>
+            <span>الإجمالي المطلوب:</span>
             <span><span id="p_total">0</span> ج</span>
         </div>
         
@@ -449,7 +450,6 @@
     </div>
 
 <script>
-// دالة لحماية النصوص
 function escapeHtml(s) { return String(s||'').replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
 
 /* ================== بيانات المنيو كاملة مع الأيقونات ================== */
@@ -678,7 +678,6 @@ function changeCat(key) {
     grid.innerHTML = '';
 
     const catData = MENU[key];
-    
     if(catData.isComplex) {
         subBar.classList.add('show');
         catData.subcats.forEach((sub, idx) => {
@@ -692,7 +691,7 @@ function changeCat(key) {
             };
             subBar.appendChild(subBtn);
         });
-        renderProducts(catData.subcats[0].items); // عرض أول تبويب فرعي افتراضياً
+        renderProducts(catData.subcats[0].items); 
     } else {
         renderProducts(catData.items);
     }
