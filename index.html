@@ -4,9 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>نيو كافية - منيو رمضان</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-
 <style>
 :root{
   --neo-green:#124d33;
@@ -19,8 +17,6 @@
   --card-radius:14px;
   --shadow: 0 18px 40px rgba(18,77,51,0.06);
 }
-
-/* reset */
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
@@ -28,13 +24,10 @@ body{
   font-family:"Cairo",sans-serif;
   color:#0b0b0b;
   -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
   line-height:1.4;
   -webkit-tap-highlight-color: transparent;
   background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
-
-/* RAMADAN DECORATIONS (LANTERNS) */
 .lantern-container { position: absolute; top: 0; left: 0; width: 100%; height: 100px; overflow: hidden; z-index: 1; pointer-events: none; }
 .lantern { position: absolute; top: -20px; width: 30px; height: 40px; background: var(--neo-gold); border-radius: 5px; box-shadow: 0 0 15px var(--neo-gold); animation: swing 3s infinite ease-in-out alternate; transform-origin: top center; }
 .lantern::before { content:''; position:absolute; top:-100px; left:14px; width:2px; height:100px; background:var(--neo-dark); }
@@ -42,8 +35,6 @@ body{
 .l2 { left: 85%; animation-delay: 1.5s; transform: scale(0.9); }
 .l3 { left: 20%; top: -10px; animation-delay: 0.5s; background: var(--neo-green); }
 @keyframes swing { 0% { transform: rotate(5deg); } 100% { transform: rotate(-5deg); } }
-
-/* header */
 .header{
   background: linear-gradient(180deg, var(--neo-dark), var(--neo-green));
   padding: 25px 14px 15px;
@@ -53,17 +44,8 @@ body{
   border-bottom-right-radius: 25px;
   box-shadow: 0 10px 20px rgba(18,77,51,0.2);
   color: #fff;
-  overflow: hidden;
 }
-.header h1{
-  color:var(--neo-gold);
-  font-weight:800;
-  font-size:22px;
-  margin-bottom:4px;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  padding: 0 60px;
-}
-.header p{ color:#fff; font-weight:600; font-size: 13px; opacity: 0.9; }
+.header h1{ color:var(--neo-gold); font-weight:800; font-size:22px; margin-bottom:4px; padding: 0 60px;}
 .ramadan-slogan {
   background: rgba(212, 175, 55, 0.2);
   color: var(--neo-gold);
@@ -75,125 +57,68 @@ body{
   margin-top: 5px;
   border: 1px solid var(--neo-gold);
 }
-
-/* LOGO */
 .logo-container {
   position: absolute; right: 12px; top: 10px; width: 65px; height: 65px;
   display: flex; align-items: center; justify-content: center; z-index: 10;
 }
-.logo-container::before {
-  content: ''; position: absolute; inset: -4px; border-radius: 50%;
-  border: 2px solid transparent; border-top-color: var(--neo-gold); border-right-color: var(--neo-gold);
-  box-shadow: 0 0 10px var(--neo-gold), inset 0 0 5px var(--neo-gold);
-  transform: rotate(-45deg); animation: pulseGlow 2s infinite alternate;
-}
-@keyframes pulseGlow { 0% { opacity: 0.7; box-shadow: 0 0 8px var(--neo-gold); } 100% { opacity: 1; box-shadow: 0 0 20px var(--neo-gold); } }
-.logo{ width: 100%; height: 100%; object-fit: cover; border-radius: 50%; background: #fff; padding: 2px; position: relative; z-index: 2; }
-
-/* categories */
+.logo{ width: 100%; height: 100%; object-fit: cover; border-radius: 50%; background: #fff; padding: 2px; }
 .cats-grid{ display:flex; flex-direction:column; gap:8px; padding:15px 12px; align-items:center; }
-.cats-row{ display:flex; gap:10px; overflow-x:auto; -webkit-overflow-scrolling:touch; justify-content:center; width: 100%; padding-bottom: 5px; }
+.cats-row{ display:flex; gap:10px; overflow-x:auto; width: 100%; padding-bottom: 5px; justify-content: center; }
 .cat{
   flex:0 0 auto; background:#fff; border-radius:999px; padding:10px 14px;
   border:1px solid var(--neo-gold); font-weight:800; color:var(--neo-green);
-  cursor:pointer; white-space:nowrap; box-shadow: 0 6px 20px rgba(0,0,0,0.03); transition: 0.3s;
+  cursor:pointer; white-space:nowrap; transition: 0.3s;
 }
-.cat.active{
-  background:linear-gradient(45deg,var(--neo-green),var(--neo-dark)); color:var(--neo-gold);
-  border-color: var(--neo-dark); box-shadow:0 20px 50px rgba(18,77,51,0.14);
-}
-
-/* container */
+.cat.active{ background:linear-gradient(45deg,var(--neo-green),var(--neo-dark)); color:var(--neo-gold); }
 .container{max-width:980px;margin:8px auto;padding:6px 12px 160px}
-
-/* section title */
-.section-title{
-  color:var(--neo-green); font-weight:900; font-size:20px; margin:15px 0 12px;
-  text-align:right; display: flex; align-items: center; gap: 10px;
-}
-.section-title::before { content: '🌙'; font-size: 16px; }
-
-/* product grid */
+.section-title{ color:var(--neo-green); font-weight:900; font-size:20px; margin:15px 0 12px; text-align:right; }
 .grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; }
-
-/* each card */
 .product-card{
   background:#fff; border-radius:12px; padding:8px; box-shadow:var(--shadow);
-  overflow:hidden; display:flex; flex-direction:column; border: 1px solid rgba(212, 175, 55, 0.15);
-  transition: transform .14s ease, box-shadow .14s ease;
+  display:flex; flex-direction:column; border: 1px solid rgba(212, 175, 55, 0.15);
 }
-.product-card:hover{ transform: translateY(-6px); border-color: var(--neo-gold); }
 .product-img{ width:100%; height:140px; object-fit:cover; border-radius:10px; background:#f2f2f2; }
 .product-body{padding:10px 6px;display:flex;flex-direction:column;gap:8px}
 .row-title{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.product-name{font-weight:900;color:var(--neo-dark);font-size:15px;line-height:1.1}
-.product-desc{color:var(--muted);font-size:13px;min-height:36px}
-.product-footer{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.product-name{font-weight:900;color:var(--neo-dark);font-size:15px}
 .price{color:var(--neo-green);font-weight:900}
 .add-btn{
   background:var(--neo-green); color:var(--neo-gold); padding:8px 12px;
-  border-radius:10px; border:0; font-weight:900; cursor:pointer; box-shadow:0 8px 20px rgba(18,77,51,0.12);
+  border-radius:10px; border:0; font-weight:900; cursor:pointer;
 }
-
-/* floating cart */
-.cart-float{position:fixed;right:14px;bottom:14px;z-index:9999;display:flex;align-items:center;gap:10px}
+.cart-float{position:fixed;right:14px;bottom:14px;z-index:9999;}
 .cart-btn{
   background:var(--neo-green); color:var(--neo-gold); padding:12px 14px;
   border-radius:14px; display:flex; align-items:center; gap:10px;
-  box-shadow:0 30px 80px rgba(18,77,51,0.24); cursor:pointer;
-  border: 2px solid var(--neo-gold); transform-origin:center;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2); cursor:pointer; border: 2px solid var(--neo-gold);
 }
-.cart-count{background:var(--neo-gold);color:#000;padding:6px 10px;border-radius:999px;font-weight:900;min-width:26px;text-align:center;}
-
-/* toast */
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:160px;background:var(--neo-dark);color:var(--neo-gold);padding:10px 14px;border-radius:10px;font-weight:700;z-index:99999;opacity:0;transition:opacity .2s}
-
-/* modal */
-.modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.45);display:none;align-items:flex-end;justify-content:center;padding:12px;z-index:9998; backdrop-filter: blur(2px);}
+.cart-count{background:var(--neo-gold);color:#000;padding:2px 8px;border-radius:999px;font-weight:900;}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:100px;background:var(--neo-dark);color:var(--neo-gold);padding:10px 20px;border-radius:50px;font-weight:700;z-index:99999;opacity:0;transition:opacity .3s; pointer-events:none;}
+.modal-back{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;padding:20px;z-index:9998; backdrop-filter: blur(4px);}
 .modal-back.show{display:flex}
-.modal{width:100%;max-width:760px;background:#fff;border-radius:12px;padding:12px;box-shadow:0 30px 80px rgba(0,0,0,0.25);direction:rtl}
-.modal h3{margin:0 0 8px;color:var(--neo-green);font-weight:900}
-.modal .list{max-height:60vh;overflow:auto;padding-right:6px}
-.modal .list .item{display:flex;align-items:center;justify-content:space-between;padding:10px 6px;border-bottom:1px solid #f3f3f3}
-
-/* footer */
-footer{padding:18px 12px;text-align:center;color:#fff; background: var(--neo-dark); border-top-left-radius: 20px; border-top-right-radius: 20px; margin-top: 20px;}
-.footer-socials{display:flex;gap:10px;justify-content:center;margin-bottom:10px}
-.footer-socials a{padding:10px 14px;border-radius:12px;color:var(--neo-dark); background:var(--neo-gold); font-weight:900;text-decoration:none}
-
-/* mobile */
-@media (max-width:420px){
-  .logo-container{width:55px; height:55px; top: 8px; right: 10px;}
-  .header h1 { font-size: 18px; }
-  .product-img{height:150px}
-  .cat{padding:8px 10px}
-  .grid{gap:10px; grid-template-columns: 1fr;} 
-  .container{padding-bottom:200px}
-}
-.product-name{word-break:break-word}
-.add-btn:focus,.cat:focus,.cart-btn:focus{outline:3px solid rgba(18,77,51,0.12)}
+.modal{width:100%;max-width:500px;background:#fff;border-radius:20px;padding:20px;direction:rtl}
+.modal .item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #eee}
+@media (max-width:480px){ .grid{grid-template-columns: 1fr;} }
 </style>
 </head>
 <body>
 
 <div class="lantern-container">
-  <div class="lantern l1"></div>
-  <div class="lantern l2"></div>
-  <div class="lantern l3"></div>
+  <div class="lantern l1"></div><div class="lantern l2"></div><div class="lantern l3"></div>
 </div>
 
 <header class="header">
   <div class="logo-container">
-    <img src="assets/images/logo.png" alt="NEO Cafe" class="logo" id="topLogo" onerror="this.style.display='none'">
+    <img src="assets/images/logo.png" alt="NEO Cafe" class="logo" onerror="this.style.opacity='0'">
   </div>
   <h1>نيو كافية - رمضانك جميل</h1>
   <p>Make It NEO Time</p>
   <div class="ramadan-slogan">✨ رمضانك جميل في نيو ✨</div>
 </header>
 
-<div class="cats-grid" aria-label="أقسام المنيو">
+<div class="cats-grid">
   <div class="cats-row">
-    <div class="cat active" data-cat="ramadan" style="border-color:var(--neo-gold); background:#fff9e6; color:var(--neo-dark)">🌙 رمضان في نيو</div>
+    <div class="cat active" data-cat="ramadan">🌙 رمضان في نيو</div>
     <div class="cat" data-cat="hot">مشروبات ساخنة</div>
     <div class="cat" data-cat="cold">مشروبات باردة</div>
   </div>
@@ -202,472 +127,186 @@ footer{padding:18px 12px;text-align:center;color:#fff; background: var(--neo-dar
     <div class="cat" data-cat="dessert">أطباق ديزيرت</div>
     <div class="cat" data-cat="special">مميز نيو</div>
   </div>
-  <div class="cats-row">
-    <div class="cat" data-cat="ice">ايس كريم</div>
-    <div class="cat" data-cat="extras">إضافات</div>
-    <div class="cat" data-cat="fun">ألعاب مجانية</div>
-  </div>
 </div>
 
 <main class="container" id="mainContent">
   <div id="sections"></div>
 </main>
 
-<div class="cart-float" aria-hidden="false">
-  <div id="cartBtn" class="cart-btn" role="button" aria-label="افتح السلة">
+<div class="cart-float">
+  <div id="cartBtn" class="cart-btn">
     <div class="cart-count" id="cartCount">0</div>
     <div style="font-weight:900">سلة السحور</div>
   </div>
 </div>
 
-<div id="modalBackdrop" class="modal-back" aria-hidden="true">
-  <div class="modal" role="dialog" aria-modal="true" id="modalContent">
-    <h3 id="modalTitle">قائمة</h3>
-    <div class="list" id="modalList"></div>
-    <div style="display:flex;justify-content:space-between;margin-top:8px">
-      <button id="closeModal" class="add-btn" style="background:#888; color:#fff;">إغلاق</button>
-      <button id="checkoutNow" class="add-btn" style="background:var(--neo-green)">اطلب واتساب 🟢</button>
+<div id="modalBackdrop" class="modal-back">
+  <div class="modal">
+    <h3 style="margin-bottom:15px; color:var(--neo-green)">سلتك المختارة 🌙</h3>
+    <div id="modalList" style="max-height:300px; overflow-y:auto; margin-bottom:20px"></div>
+    <div id="totalPrice" style="text-align:center; font-weight:800; margin-bottom:15px; font-size:18px"></div>
+    <div style="display:flex;gap:10px">
+      <button id="closeModal" class="add-btn" style="background:#eee; color:#333; flex:1">إغلاق</button>
+      <button id="checkoutNow" class="add-btn" style="flex:2">اطلب واتساب 🟢</button>
     </div>
   </div>
 </div>
 
-<div id="miniToast" class="toast" role="status" aria-live="polite"></div>
-
-<footer>
-  <div style="font-weight:800;margin-bottom:8px;color:var(--neo-gold)">تابعنا في رمضان</div>
-  <div class="footer-socials">
-    <a class="fb" href="https://facebook.com/neo.cafe.eg" target="_blank">Facebook</a>
-    <a class="ig" href="https://instagram.com/neocafe.eg" target="_blank">Instagram</a>
-    <a class="tt" href="https://tiktok.com/@neo.cafe.eg" target="_blank">TikTok</a>
-  </div>
-  <div style="font-weight:700;">❤️ شكراً لاختياركم نيو كافية — حب وتمييز لعملاء نيو دائماً</div>
-</footer>
+<div id="miniToast" class="toast">تم الإضافة للسلة</div>
 
 <script>
-/* =================== UTILS (THE MISSING FUNCTION) =================== */
-function escapeHtml(s) {
-  return String(s || '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
-}
+const CART_KEY = 'neo_cafe_ramadan_cart';
 
-/* =================== SETTINGS =================== */
-const CART_KEY = 'neoCafe_cart_ramadan_v5';
-try{ localStorage.removeItem(CART_KEY); } catch(e){}
-
-/* =================== MENU DATA =================== */
+// --- DATA ---
 const MENU = {
-  // 1. رمضان
-  ramadan: {
-    title: '✨ رمضان في نيو ✨',
-    items: [
-      {id:'ram_01', name:'رز بلبن مكسرات', desc:'أرز باللبن فاخر مع مكسرات مشكلة', price:40, img:'assets/images/ram_rice_nuts.png'},
-      {id:'ram_02', name:'رز بلبن مكسرات وكراميل', desc:'', price:45, img:'assets/images/ram_rice_caramel.png'},
-      {id:'ram_03', name:'رز بلبن مكسرات وشوكلاته', desc:'', price:45, img:'assets/images/ram_rice_choco.png'},
-      {id:'ram_04', name:'رز بلبن مكسرات نوتيلا', desc:'', price:55, img:'assets/images/ram_rice_nutella.png'},
-      {id:'ram_05', name:'رز بلبن مكسرات بستاشيو', desc:'', price:60, img:'assets/images/ram_rice_pistachio.png'},
-      {id:'ram_06', name:'رز بلبن مكسرات لوتس', desc:'', price:55, img:'assets/images/ram_rice_lotus.png'},
-      {id:'ram_07', name:'رز بلبن مكسرات ميكس صوص', desc:'مكسرات + تشكيلة صوصات نيو', price:75, img:'assets/images/ram_rice_mix.png'},
-      {id:'ram_08', name:'رز بلبن مكسرات + فواكه + صوص', desc:'قنبلة نيو الرمضانية', price:85, img:'assets/images/ram_rice_fruit.png'},
-      {id:'ram_09', name:'كَب كنافه لوتس', desc:'', price:85, img:'assets/images/ram_cup_lotus.png'},
-      {id:'ram_10', name:'كَب كنافه نوتيلا', desc:'', price:85, img:'assets/images/ram_cup_nutella.png'},
-      {id:'ram_11', name:'فادج كرانشي نوتيلا', desc:'', price:95, img:'assets/images/ram_fudge_crunchy.png'},
-      {id:'ram_12', name:'فادج كنافة نوتيلا بستاشيو', desc:'', price:110, img:'assets/images/ram_fudge_pistachio.png'}
-    ]
-  },
-
-  // 2. ساخن
-  hot: {
-    title: 'المشروبات الساخنة',
-    items: [
-      {id:'hot_01', name:'شاي', desc:'', price:15, img:'assets/images/hot_shai.png'},
-      {id:'hot_02', name:'شاي أحمد تي', desc:'', price:20, img:'assets/images/hot_shai_lipton.png'},
-      {id:'hot_03', name:'شاي أخضر', desc:'', price:20, img:'assets/images/hot_green_tea.png'},
-      {id:'hot_04', name:'شاي حليب', desc:'', price:20, img:'assets/images/hot_tea_milk.png'},
-      {id:'hot_05', name:'شاي نكهات', desc:'', price:20, img:'assets/images/hot_tea_flavors.png'},
-      {id:'hot_06', name:'نعناع', desc:'', price:15, img:'assets/images/hot_mint.png'},
-      {id:'hot_07', name:'ينسون', desc:'', price:15, img:'assets/images/hot_anise.png'},
-      {id:'hot_08', name:'جنزبيل', desc:'', price:15, img:'assets/images/hot_ginger.png'},
-      {id:'hot_09', name:'اسبريسو سنجل', desc:'', price:35, img:'assets/images/hot_espresso_single.png'},
-      {id:'hot_10', name:'اسبريسو دبل', desc:'', price:40, img:'assets/images/hot_espresso_double.png'},
-      {id:'hot_11', name:'قهوة تركي سنجل', desc:'', price:25, img:'assets/images/hot_turkish_single.png'},
-      {id:'hot_12', name:'قهوة تركي دبل', desc:'', price:30, img:'assets/images/hot_turkish_double.png'},
-      {id:'hot_13', name:'قهوة فرنساوي', desc:'', price:35, img:'assets/images/hot_french.png'},
-      {id:'hot_14', name:'قهوة بندق', desc:'', price:35, img:'assets/images/hot_hazelnut.png'},
-      {id:'hot_15', name:'قهوة نوتيلا', desc:'', price:40, img:'assets/images/hot_nutella.png'},
-      {id:'hot_16', name:'قهوة بستاشيو', desc:'', price:40, img:'assets/images/hot_pistachio.png'},
-      {id:'hot_17', name:'لاتيه', desc:'', price:50, img:'assets/images/hot_latte.png'},
-      {id:'hot_18', name:'لاتيه فلفر', desc:'', price:60, img:'assets/images/hot_latte_velvet.png'},
-      {id:'hot_flat_white', name:'فلات وايت', desc:'', price:60, img:'assets/images/hot_flat_white.png'},
-      {id:'hot_19', name:'اسبانش لاتيه', desc:'', price:65, img:'assets/images/hot_spanish_latte.png'},
-      {id:'hot_20', name:'كابتشينو', desc:'', price:55, img:'assets/images/hot_cappuccino.png'},
-      {id:'hot_21', name:'نسكافيه حليب', desc:'', price:45, img:'assets/images/hot_nescafe_milk.png'},
-      {id:'hot_22', name:'نسكافيه بلاك', desc:'', price:35, img:'assets/images/hot_nescafe_black.png'},
-      {id:'hot_23', name:'امريكانو كوفي', desc:'', price:50, img:'assets/images/hot_americano.png'},
-      {id:'hot_24', name:'هوت شوكليت', desc:'', price:50, img:'assets/images/hot_hot_chocolate.png'},
-      {id:'hot_25', name:'هوت سيدر', desc:'', price:45, img:'assets/images/hot_hot_cider.png'},
-      {id:'hot_26', name:'سحلب', desc:'', price:40, img:'assets/images/hot_sahlab.png'},
-      {id:'hot_27', name:'سحلب مكسرات', desc:'', price:45, img:'assets/images/hot_sahlab_nuts.png'},
-      {id:'hot_28', name:'سحلب لوتس', desc:'', price:50, img:'assets/images/hot_sahlab_lotus.png'},
-      {id:'hot_29', name:'سحلب مونيلا', desc:'', price:50, img:'assets/images/hot_sahlab_monila.png'},
-      {id:'hot_30', name:'سحلب فواكهه', desc:'', price:50, img:'assets/images/hot_sahlab_fruits.png'},
-      {id:'hot_31', name:'سحلب نيو', desc:'', price:65, img:'assets/images/hot_sahlab_neo.png'},
-      {id:'hot_mac_01', name:'ميكاتو سنجل', desc:'', price:40, img:'assets/images/hot_macchiato_single.png'},
-      {id:'hot_mac_02', name:'ميكاتو دبل', desc:'', price:45, img:'assets/images/hot_macchiato_double.png'},
-      {id:'hot_mocha_01', name:'موكا', desc:'', price:45, img:'assets/images/hot_mocha.png'},
-      {id:'hot_mocha_02', name:'موكا نعناع', desc:'', price:50, img:'assets/images/hot_mocha_mint.png'},
-      {id:'hot_esp_ic01', name:'اسبريسو بالايس كريم', desc:'', price:45, img:'assets/images/hot_espresso_with_icecream.png'}
-    ]
-  },
-
-  // 3. بارد
-  cold: {
-    title: 'المشروبات الباردة',
-    subcats: [
-      { key:'milkshake', title:'ميلك شيك', items:[
-        {id:'ms_01',name:'ميلك شيك فانيلا',desc:'',price:50,img:'assets/images/ms_vanilla.png'},
-        {id:'ms_02',name:'ميلك شيك اوريو',desc:'',price:55,img:'assets/images/ms_oreo.png'},
-        {id:'ms_03',name:'ميلك شيك هوهوز',desc:'',price:55,img:'assets/images/ms_hohoz.png'},
-        {id:'ms_04',name:'ميلك شيك كراميل',desc:'',price:55,img:'assets/images/ms_caramel.png'},
-        {id:'ms_05',name:'ميلك شيك فراولة',desc:'',price:60,img:'assets/images/ms_strawberry.png'},
-        {id:'ms_06',name:'ميلك شيك مانجو',desc:'',price:65,img:'assets/images/ms_mango.png'},
-        {id:'ms_07',name:'ميلك شيك اسنيكرز',desc:'',price:75,img:'assets/images/ms_snickers.png'},
-        {id:'ms_08',name:'ميلك شيك مورو',desc:'',price:75,img:'assets/images/ms_moro.png'},
-        {id:'ms_09',name:'ميلك شيك شوكليت',desc:'',price:55,img:'assets/images/ms_chocolate.png'},
-        {id:'ms_10',name:'ميلك شيك كندر',desc:'',price:65,img:'assets/images/ms_kinder.png'},
-        {id:'ms_11',name:'ميلك شيك نسكافيه',desc:'',price:50,img:'assets/images/ms_nescafe.png'},
-        {id:'ms_12',name:'ميلك شيك موز نوتيلا',desc:'',price:65,img:'assets/images/ms_banana_nutella.png'}
-      ]},
-      { key:'frapp', title:'فرباتشينو', items:[
-        {id:'fr_01',name:'فرباتشينو شوكليت',desc:'',price:50,img:'assets/images/fr_choclate.png'},
-        {id:'fr_02',name:'فرباتشينو كراميل',desc:'',price:55,img:'assets/images/fr_cramel.png'},
-        {id:'fr_03',name:'فرباتشينو بندق',desc:'',price:55,img:'assets/images/fr_hazelnut.png'},
-        {id:'fr_04',name:'فرباتشينو كوكيز',desc:'',price:55,img:'assets/images/fr_cookies.png'},
-        {id:'fr_05',name:'فرباتشينو نوتيلا',desc:'',price:65,img:'assets/images/fr_Nutella.png'},
-        {id:'fr_06',name:'فرباتشينو بستاشيو',desc:'',price:75,img:'assets/images/fr_Bastashio.png'},
-        {id:'fr_07',name:'أوريو',desc:'',price:65,img:'assets/images/fr_oero.png'},
-        {id:'fr_08',name:'لوتس',desc:'',price:75,img:'assets/images/fr_lotus.png'}
-      ]},
-      { key:'iced', title:'آيس', items:[
-        {id:'ice_01',name:'ايس لاتيه',desc:'',price:50,img:'assets/images/ice_latte.png'},
-        {id:'ice_02',name:'ايس كوفي',desc:'',price:45,img:'assets/images/ice_coffee.png'},
-        {id:'ice_03',name:'ايس امريكان',desc:'',price:55,img:'assets/images/ice_americano.png'},
-        {id:'ice_04',name:'ايس سبانش لاتيه',desc:'',price:65,img:'assets/images/ice_spanish_latte.png'},
-        {id:'ice_05',name:'ايس موكا',desc:'',price:55,img:'assets/images/ice_mocha.png'},
-        {id:'ice_06',name:'ايس لوتس',desc:'',price:50,img:'assets/images/ice_lotus.png'},
-        {id:'ice_07',name:'ايس كراميل',desc:'',price:50,img:'assets/images/ice_caramel.png'}
-      ]},
-      { key:'fresh', title:'فريش', items:[
-        {id:'frs_01',name:'مانجو',desc:'',price:50,img:'assets/images/fresh_mango.png'},
-        {id:'frs_02',name:'فراولة',desc:'',price:45,img:'assets/images/fresh_strawberry.png'},
-        {id:'frs_03',name:'فراولة حليب',desc:'',price:50,img:'assets/images/fresh_strawberry_milk.png'},
-        {id:'frs_04',name:'موز حليب',desc:'',price:50,img:'assets/images/fresh_banana_milk.png'},
-        {id:'frs_05',name:'بلح حليب',desc:'',price:55,img:'assets/images/fresh_date_milk.png'},
-        {id:'frs_06',name:'ليمون فريش',desc:'',price:30,img:'assets/images/fresh_lemon.png'},
-        {id:'frs_07',name:'ليمون نعناع فريش',desc:'',price:35,img:'assets/images/fresh_lemon_mint.png'},
-        {id:'frs_08',name:'بطيخ (موسمي)',desc:'',price:40,img:'assets/images/fresh_watermelon.png'},
-        {id:'frs_09',name:'برتقال (موسمي)',desc:'',price:40,img:'assets/images/fresh_orange.png'},
-        {id:'frs_10',name:'كيوي (موسمي)',desc:'',price:60,img:'assets/images/fresh_kiwi.png'},
-        {id:'frs_11',name:'كيوي حليب (موسمي)',desc:'',price:70,img:'assets/images/fresh_kiwi_milk.png'},
-        {id:'frs_12',name:'افوجاتو عسل',desc:'',price:100,img:'assets/images/fresh_affogato_honey.png'},
-        {id:'frs_13',name:'افوجاتو مكسرات',desc:'',price:120,img:'assets/images/fresh_affogato_nuts.png'},
-        {id:'frs_14',name:'جوافة',desc:'',price:45,img:'assets/images/fresh_guava.png'},
-        {id:'frs_15',name:'كوكتيل',desc:'',price:55,img:'assets/images/fresh_cocktail.png'},
-        {id:'frs_16',name:'كوكتيل قطع',desc:'',price:65,img:'assets/images/fresh_cocktail_chunks.png'},
-        {id:'frs_17',name:'نيو افوجاتو (عسل، مكسرات، مانجو، موز)',desc:'',price:105,img:'assets/images/fresh_neo_affogato.png'}
-      ]},
-      { key:'smoothie', title:'سموزي', items:[
-        {id:'smz_01',name:'سموزي فراولة',desc:'',price:45,img:'assets/images/smz_strawberry.png'},
-        {id:'smz_02',name:'سموزي مانجو',desc:'',price:45,img:'assets/images/smz_mango.png'},
-        {id:'smz_03',name:'سموزي أناناس',desc:'',price:45,img:'assets/images/smz_pineapple.png'},
-        {id:'smz_04',name:'سموزي خوخ',desc:'',price:45,img:'assets/images/smz_peach.png'},
-        {id:'smz_05',name:'سموزي كيوي',desc:'',price:45,img:'assets/images/smz_kiwi.png'},
-        {id:'smz_06',name:'سموزي بطيخ',desc:'',price:45,img:'assets/images/smz_watermelon.png'},
-        {id:'smz_07',name:'سموزي بلوبيري',desc:'',price:45,img:'assets/images/smz_blueberry.png'}
-      ]},
-      { key:'soda', title:'صودا', items:[
-        {id:'sod_01',name:'بلوبيري صودا',desc:'',price:50,img:'assets/images/soda_blueberry.png'},
-        {id:'sod_02',name:'بلو صودا',desc:'',price:50,img:'assets/images/soda_blue.png'},
-        {id:'sod_03',name:'برانديت',desc:'',price:50,img:'assets/images/soda_brandit.png'},
-        {id:'sod_04',name:'فراولة',desc:'',price:50,img:'assets/images/soda_strawberry.png'},
-        {id:'sod_05',name:'أناناس',desc:'',price:50,img:'assets/images/soda_pineapple.png'},
-        {id:'sod_06',name:'خوخ',desc:'',price:50,img:'assets/images/soda_peach.png'},
-        {id:'sod_07',name:'موهيتو',desc:'',price:55,img:'assets/images/soda_mojito.png'}
-      ]},
-      { key:'soft', title:'مشروبات غازية', items:[ /* Fixed: Key is soft to match button */
-        {id:'softc_01',name:'V-Cola كلاسيك',desc:'',price:20,img:'assets/images/soft_vcola.png'},
-        {id:'softc_02',name:'V-Cola نكهات',desc:'',price:25,img:'assets/images/soft_vcola_flavor.png'},
-        {id:'softc_03',name:' ريد بول كلاسيك',desc:'',price:65,img:'assets/images/soft_redbull.png'},
-        {id:'softc_05',name:' ريد بول نكهات',desc:'',price:75,img:'assets/images/soft_redbull_flavor.png'},
-        {id:'softc_06',name:'تويست',desc:'',price:25,img:'assets/images/soft_twist.png'},
-        {id:'softc_07',name:'شويبس',desc:'',price:30,img:'assets/images/soft_schweppes.png'},
-        {id:'softc_08',name:'فيروز',desc:'',price:30,img:'assets/images/soft_fayrouz.png'},
-        {id:'softc_09',name:'جهينة عصير طبيعي (مانجو، تفاح، برتقال)',desc:'',price:15,img:'assets/images/soft_juhayna_natural.png'},
-        {id:'softc_10',name:'جهينة ميكس فراولة حليب',desc:'',price:20,img:'assets/images/soft_juhayna_mix.png'}
-      ]}
-    ]
-  },
-
-  // 4. ديزيرت
-  dessert: {
-    title: 'حلويات / أطباق ديزيرت',
-    items: [
-      {id:'dess_waffle_choc',name:'وافل شوكليت',desc:'',price:65,img:'assets/images/waffle_chocolate.png'},
-      {id:'dess_waffle_caramel',name:'وافل كراميل',desc:'',price:65,img:'assets/images/waffle_caramel.png'},
-      {id:'dess_02',name:'وافل نوتيلا',desc:'',price:75,img:'assets/images/dess_waffle_nutella.png'},
-      {id:'dess_03',name:'وافل أوريو',desc:'',price:75,img:'assets/images/dess_waffle_oreo.png'},
-      {id:'dess_04',name:'وافل لوتس',desc:'',price:75,img:'assets/images/dess_waffle_lotus.png'},
-      {id:'dess_05',name:'وافل بستاشيو',desc:'',price:85,img:'assets/images/dess_waffle_pistachio.png'},
-      {id:'dess_06',name:'وافل فواكه',desc:'',price:90,img:'assets/images/dess_waffle_fruits.png'},
-      {id:'dess_07',name:'مولتن كيك',desc:'',price:75,img:'assets/images/dess_molten.png'},
-      {id:'dess_08',name:'تشيز كيك',desc:'',price:85,img:'assets/images/dess_cheesecake.png'},
-      {id:'dess_09',name:'شوكليت كيك',desc:'',price:70,img:'assets/images/dess_chocolate_cake.png'},
-      {id:'dess_10',name:'سينابون',desc:'',price:65,img:'assets/images/dess_Cinnabon.png'},
-      {id:'dess_11',name:'دوناتس',desc:'',price:50,img:'assets/images/dess_Donuts.png'},
-      {id:'dess_12',name:'براونيز',desc:'',price:60,img:'assets/images/dess_Brownies.png'},
-      {id:'dess_13',name:'ميني كوكيز',desc:'',price:30,img:'assets/images/dess_Cookies.png'},
-      {id:'dess_14',name:'بروفيترول',desc:'',price:35,img:'assets/images/dess_Profiterole.png'},
-      {id:'dess_15',name:'بامبوليني',desc:'',price:55,img:'assets/images/dess_Bomboloni.png'},
-      {id:'dess_volcano', name:'فولكانو', desc:'', price:75, img:'assets/images/dess_volcano.png'},
-      {id:'dess_Croissant', name:'كرواسون فطار', desc:'', price:45, img:'assets/images/dess_Croissant.png'},
-      {id:'dess_donuts', name:'تيراميسو', desc:'', price:65, img:'assets/images/dess_Tiramisu.png'},
-      {id:'dess_cheese_madness', name:'تشيز مادنس', desc:'', price:95, img:'assets/images/dess_cheese_madness.png'}
-    ]
-  },
-
-  // 5. مميز
-  special: {
-    title: 'مميز نيو',
-    items: [
-      {id:'sp_01',name:'بطاطا عسل + فواكه + مكسرات',desc:'',price:50,img:'assets/images/sp_potato_fruit_nuts.png'},
-      {id:'sp_02',name:'اندومي',desc:'',price:20,img:'assets/images/sp_noodles.png'},
-      {id:'sp_03',name:'اندومي فراخ قطع طبيعية بتتبيلة نيو المميزة',desc:'',price:40,img:'assets/images/sp_noodles_chicken.png'},
-      {id:'sp_04',name:'كوكتيل نيو المميز',desc:'فاكهة فاخرة + سموزي + عسل + مكسرات + هوهوز + مورو',price:100,img:'assets/images/sp_cocktail_neo.png'}
-    ]
-  },
-
-  // 6. ايس كريم
-  ice: {
-    title: 'ايس كريم',
-    items: [
-      {id:'ic_01',name:'كوب وسط',desc:'',price:25,img:'assets/images/ic_medium.png'},
-      {id:'ic_02',name:'كوب كبير',desc:'',price:35,img:'assets/images/ic_large.png'}
-    ]
-  },
-
-  // 7. إضافات
-  extras: {
-    title: 'إضافات',
-    items: [
-      {id:'ext_01',name:'تغليف تيكاواي',desc:'',price:10,img:'assets/images/ext_packaging.png'},
-      {id:'ext_02',name:'مياه معدنية',desc:'',price:10,img:'assets/images/ext_water.png'},
-      {id:'ext_03',name:'إضافة',desc:'',price:10,img:'assets/images/ext_add.png'}
-    ]
-  },
-
-  // 8. ألعاب
-  fun: {
-    title: 'دلع نفسك في نيو — (مجانًا)',
-    items: [
-      {id:'fun_02',name:'كوتشينة',desc:'',price:0,img:'assets/images/fun_cards.png'},
-      {id:'fun_03',name:'شطرنج',desc:'',price:0,img:'assets/images/fun_chess.png'},
-      {id:'fun_04',name:'قول أميم',desc:'',price:0,img:'assets/images/fun_charades.png'},
-      {id:'fun_05',name:'افتح توبيك',desc:'',price:0,img:'assets/images/fun_open_topic.png'}
-    ]
-  }
+  ramadan: { title: '✨ حلويات رمضان ✨', items: [
+    {id:'r1', name:'رز بلبن مكسرات', price:40, img:'assets/images/ram_rice_nuts.png'},
+    {id:'r2', name:'كَب كنافه نوتيلا', price:85, img:'assets/images/ram_cup_nutella.png'},
+    {id:'r3', name:'فادج كرانشي نوتيلا', price:95, img:'assets/images/ram_fudge_crunchy.png'}
+  ]},
+  hot: { title: '☕ مشروبات ساخنة', items: [
+    {id:'h1', name:'شاي نيو', price:15, img:'assets/images/hot_shai.png'},
+    {id:'h2', name:'قهوة تركي', price:25, img:'assets/images/hot_turkish_single.png'},
+    {id:'h3', name:'سحلب مكسرات', price:45, img:'assets/images/hot_sahlab_nuts.png'}
+  ]},
+  cold: { title: '🍹 مشروبات باردة', items: [
+    {id:'c1', name:'ميلك شيك اوريو', price:55, img:'assets/images/ms_oreo.png'},
+    {id:'c2', name:'ايس سبانش لاتيه', price:65, img:'assets/images/ice_spanish_latte.png'}
+  ]}
 };
 
-/* =================== LOGIC & FUNCTIONS =================== */
+// --- CORE FUNCTIONS ---
 
-function createTitle(text){ const d = document.createElement('div'); d.className='section-title'; d.textContent = text; return d; }
+function getCart() {
+  return JSON.parse(localStorage.getItem(CART_KEY)) || [];
+}
 
-function createGrid(items){
-  const grid = document.createElement('div'); grid.className='grid';
-  if(!items || items.length === 0) return grid;
+function setCart(cart) {
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  updateCartUI();
+}
+
+function addToCart(id, name, price) {
+  let cart = getCart();
+  const existing = cart.find(item => item.id === id);
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    cart.push({ id, name, price, qty: 1 });
+  }
+  setCart(cart);
+  showToast(name + " انضاف للسلة");
+}
+
+function removeFromCart(id) {
+  let cart = getCart().filter(item => item.id !== id);
+  setCart(cart);
+  renderModal();
+}
+
+function updateCartUI() {
+  const cart = getCart();
+  const count = cart.reduce((sum, item) => sum + item.qty, 0);
+  document.getElementById('cartCount').textContent = count;
+}
+
+function showToast(msg) {
+  const t = document.getElementById('miniToast');
+  t.textContent = msg;
+  t.style.opacity = 1;
+  setTimeout(() => t.style.opacity = 0, 2000);
+}
+
+// --- RENDERING ---
+
+function renderMenu() {
+  const container = document.getElementById('sections');
+  container.innerHTML = '';
   
-  items.forEach(it=>{
-    const card = document.createElement('div'); card.className='product-card';
-    card.innerHTML = `
-      <img class="product-img" src="${it.img}" alt="${escapeHtml(it.name)}" onerror="this.src='https://via.placeholder.com/800x600?text=NEO'">
-      <div class="product-body">
-        <div class="row-title">
-          <div class="product-name">${escapeHtml(it.name)}</div>
-          <div class="price">${it.price===0 ? 'مجانًا' : it.price + ' ج'}</div>
+  for (const key in MENU) {
+    const section = MENU[key];
+    const sectionEl = document.createElement('div');
+    sectionEl.className = 'section';
+    sectionEl.id = 'sec_' + key;
+    sectionEl.innerHTML = `<h2 class="section-title">${section.title}</h2>`;
+    
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+    
+    section.items.forEach(item => {
+      grid.innerHTML += `
+        <div class="product-card">
+          <img src="${item.img}" class="product-img" onerror="this.src='https://via.placeholder.com/150'">
+          <div class="product-body">
+            <div class="row-title">
+              <span class="product-name">${item.name}</span>
+              <span class="price">${item.price} ج</span>
+            </div>
+            <button class="add-btn" onclick="addToCart('${item.id}', '${item.name}', ${item.price})">أضف للسلة</button>
+          </div>
         </div>
-        <div class="product-desc">${escapeHtml(it.desc || '')}</div>
-        <div class="product-footer">
-          <div></div>
-          <button class="add-btn" data-id="${it.id}" data-name="${escapeHtml(it.name)}" data-price="${it.price}">أضف</button>
+      `;
+    });
+    sectionEl.appendChild(grid);
+    container.appendChild(sectionEl);
+  }
+}
+
+function renderModal() {
+  const cart = getCart();
+  const list = document.getElementById('modalList');
+  const totalEl = document.getElementById('totalPrice');
+  
+  if (cart.length === 0) {
+    list.innerHTML = '<p style="text-align:center; padding:20px;">السلة فارغة يا بطل 🌙</p>';
+    totalEl.textContent = "";
+  } else {
+    list.innerHTML = cart.map(item => `
+      <div class="item">
+        <div><b>${item.name}</b> (x${item.qty})</div>
+        <div>
+          <span>${item.price * item.qty} ج</span>
+          <button onclick="removeFromCart('${item.id}')" style="margin-right:10px; color:red; border:none; background:none; cursor:pointer">حذف</button>
         </div>
       </div>
-    `;
-    grid.appendChild(card);
-  });
-  return grid;
+    `).join('');
+    const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    totalEl.textContent = `الإجمالي: ${total} جنيه`;
+  }
+  document.getElementById('modalBackdrop').classList.add('show');
 }
 
-function renderSections(){
-  const sectionsEl = document.getElementById('sections');
-  sectionsEl.innerHTML = '';
+// --- EVENTS ---
 
-  const renderSimpleSection = (key, id) => {
-    const data = MENU[key];
-    if(data){
-      const el = document.createElement('div'); el.className='section'; el.id=id;
-      el.appendChild(createTitle(data.title));
-      el.appendChild(createGrid(data.items));
-      sectionsEl.appendChild(el);
-    }
-  };
+document.getElementById('cartBtn').onclick = renderModal;
+document.getElementById('closeModal').onclick = () => document.getElementById('modalBackdrop').classList.remove('show');
 
-  renderSimpleSection('ramadan', 'sec_ramadan');
-  renderSimpleSection('hot', 'sec_hot');
-
-  // COLD (Custom Logic)
-  const coldData = MENU.cold;
-  if(coldData){
-    const cold = document.createElement('div'); cold.className='section'; cold.id='sec_cold';
-    cold.appendChild(createTitle(coldData.title));
-    
-    const preview = document.createElement('div'); 
-    preview.style.cssText='display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:10px';
-    
-    coldData.subcats.forEach((sc, idx)=>{
-      const btn = document.createElement('div'); 
-      btn.className='cat'; 
-      btn.textContent = sc.title; 
-      if(idx===0) btn.style.background='#eee'; 
-
-      btn.onclick = (e)=>{
-        const existing = cold.querySelector('.grid');
-        if(existing) existing.remove();
-        cold.appendChild(createGrid(sc.items));
-        cold.querySelectorAll('.cat').forEach(c=>c.style.background='#fff');
-        e.target.style.background='#eee';
-      };
-      preview.appendChild(btn);
-    });
-    cold.appendChild(preview);
-    if(coldData.subcats.length > 0){
-      cold.appendChild(createGrid(coldData.subcats[0].items));
-    }
-    sectionsEl.appendChild(cold);
-  }
-
-  renderSimpleSection('soft', 'sec_soft'); 
-  renderSimpleSection('dessert', 'sec_dessert');
-  renderSimpleSection('special', 'sec_special');
-  renderSimpleSection('ice', 'sec_ice');
-  renderSimpleSection('extras', 'sec_extras');
-  renderSimpleSection('fun', 'sec_fun');
-}
-
-function filterCategory(cat){
-  document.querySelectorAll('.section').forEach(s=> s.style.display='none');
-  
-  const map = { 
-    ramadan:'sec_ramadan', 
-    hot:'sec_hot', 
-    cold:'sec_cold', 
-    soft:'sec_soft', 
-    dessert:'sec_dessert', 
-    special:'sec_special', 
-    ice:'sec_ice', 
-    extras:'sec_extras', 
-    fun:'sec_fun' 
-  };
-  
-  const targetId = map[cat];
-  if(targetId){
-    const el = document.getElementById(targetId);
-    if(el) el.style.display='block';
-  } else {
-    document.querySelectorAll('.section').forEach(s=> s.style.display='block');
-  }
-  window.scrollTo({ top:180, behavior:'smooth' });
-}
-
-/* =================== INIT =================== */
-document.querySelectorAll('.cat[data-cat]').forEach(b=>{
-  b.onclick = ()=>{
-    document.querySelectorAll('.cats-grid .cat').forEach(c=>c.classList.remove('active'));
-    b.classList.add('active');
-    filterCategory(b.dataset.cat);
-  }
-});
-
-const modal = document.getElementById('modalBackdrop');
-const modalList = document.getElementById('modalList');
-document.getElementById('cartBtn').onclick = updateModal;
-document.getElementById('closeModal').onclick = ()=> modal.classList.remove('show');
-document.getElementById('checkoutNow').onclick = ()=>{
+document.getElementById('checkoutNow').onclick = () => {
   const cart = getCart();
-  if(!cart.length) return;
-  let msg = "أوردر رمضان من نيو:%0a";
-  let total = 0;
-  cart.forEach(i=>{ msg+=`▪️ ${i.name} (${i.qty})%0a`; total+=i.price*i.qty; });
-  msg+=`%0a💰 الإجمالي: ${total} جنيه%0a🌙 رمضان كريم!`;
+  if (cart.length === 0) return;
+  let msg = "طلب جديد من نيو كافيه 🌙%0a%0a";
+  cart.forEach(item => msg += `• ${item.name} (عدد ${item.qty})%0a`);
+  const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+  msg += `%0a💰 الإجمالي: ${total} ج`;
   window.open(`https://wa.me/20103431119?text=${msg}`, '_blank');
 };
 
-function updateModal(){
-  const cart = getCart();
-  modalList.innerHTML = cart.length ? cart.map(i=>`
-    <div class="item">
-      <div><b>${escapeHtml(i.name)}</b> <small>${i.price}x${i.qty}</small></div>
-      <button onclick="removeFromCart('${i.id}')" style="color:red;background:none;border:none;font-weight:bold">حذف</button>
-    </div>`).join('') + `<div style="padding:10px;font-weight:bold;text-align:center;color:var(--neo-green)">الإجمالي: ${calcCartTotals(cart).total} ج</div>` 
-    : '<div style="padding:20px;text-align:center">السلة فارغة</div>';
-  modal.classList.add('show');
-}
-
-function removeFromCart(id){
-  const cart = getCart().filter(x=>x.id!==id);
-  setCart(cart);
-  updateModal();
-}
-
-const __neo_last_clicks = {}; 
-const __NEO_GUARD_MS = 500;
-document.addEventListener('click', function(e){
-  const addBtn = e.target.closest('.add-btn');
-  if(addBtn && addBtn.dataset && addBtn.dataset.id){
-    e.preventDefault(); e.stopPropagation();
-    const id = String(addBtn.dataset.id);
-    const name = addBtn.dataset.name;
-    const price = Number(addBtn.dataset.price || 0);
-    const now = Date.now();
-    if(__neo_last_clicks[id] && (now - __neo_last_clicks[id] < __NEO_GUARD_MS)) return;
-    __neo_last_clicks[id] = now;
-    setTimeout(()=> { __neo_last_clicks[id] = 0; }, __NEO_GUARD_MS + 50);
-    addToCart(id, name, price);
-    showToast(`${name} انضاف للسلة`);
-    const cb = document.querySelector('.cart-btn');
-    cb.style.transform = 'scale(1.2)';
-    setTimeout(()=> cb.style.transform='scale(1)', 200);
-  }
+// Tabs
+document.querySelectorAll('.cat').forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll('.cat').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    const cat = tab.dataset.cat;
+    document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+    document.getElementById('sec_' + cat).style.display = 'block';
+  };
 });
 
-function showToast(txt){
-  const t = document.getElementById('miniToast');
-  t.textContent = txt; t.style.opacity=1;
-  setTimeout(()=>t.style.opacity=0, 2000);
-}
-
-// STORAGE HELPERS
-function getCart(){ try{ return JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch(e){ return []; } }
-function setCart(cart){ localStorage.setItem(CART_KEY, JSON.stringify(cart)); renderCartCount(); }
-function calcCartTotals(cart){
-  let qty=0, total=0;
-  (cart||[]).forEach(i=>{ qty += Number(i.qty||0); total += Number(i.qty||0) * Number(i.price||0); });
-  return {qty, total};
-}
-function renderCartCount(){
-  const t = calcCartTotals(getCart());
-  document.getElementById('cartCount').textContent = t.qty;
-}
-
-renderSections();
-renderCartCount();
-filterCategory('ramadan');
+// Init
+renderMenu();
+updateCartUI();
+// Show only Ramadan first
+document.querySelectorAll('.section').forEach((s, i) => i > 0 ? s.style.display = 'none' : null);
 
 </script>
 </body>
