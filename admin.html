@@ -116,7 +116,7 @@
         .sub-cat-chip.active { background: var(--secondary); color: white; }
 
         /* --- المنتجات --- */
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; align-content: start; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; overflow-y: auto; padding: 5px; align-content: start; flex: 1; }
         .prod-card { background: var(--white); border-radius: 12px; padding: 12px 10px; text-align: center; cursor: pointer; border: 1px solid var(--border); transition: 0.2s; display: flex; flex-direction: column; justify-content: space-between; min-height: 90px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .prod-card:hover { border-color: var(--secondary); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
         .prod-name { font-weight: 800; font-size: 13px; line-height: 1.4; color: var(--text); margin-bottom: 5px; }
@@ -162,7 +162,7 @@
         .modal-content { background: white; width: 450px; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .modal h3 { margin-top: 0; margin-bottom: 20px; color: var(--primary); border-bottom: 2px solid var(--bg); padding-bottom: 10px; }
 
-        /* ================== تصميم الفاتورة للطباعة (THERMAL 80mm) ================== */
+        /* ================== تصميم الفاتورة للطباعة ================== */
         #receipt-area { display: none; }
         
         @media print {
@@ -170,31 +170,43 @@
             body * { visibility: hidden; }
             body { background: #fff; margin: 0; padding: 0; }
             
+            /* إخفاء واجهة النظام بالكامل أثناء الطباعة */
+            .sidebar, .main-content, .modal { display: none !important; }
+            
+            /* إظهار منطقة الفاتورة فقط وتنسيقها لتتوسط الورقة الـ 80mm */
             #receipt-area, #receipt-area * { visibility: visible; }
             #receipt-area {
-                position: absolute; left: 0; top: 0; width: 78mm;
-                padding: 3mm; color: #000; font-family: 'Cairo', sans-serif;
                 display: block !important;
+                position: relative;
+                width: 74mm; /* عرض آمن للطابعات 80mm */
+                margin: 0 auto;
+                padding: 5mm 2mm; 
+                color: #000; 
+                font-family: 'Cairo', sans-serif;
+                direction: rtl;
             }
             
             .r-header { text-align: center; margin-bottom: 10px; border-bottom: 1px dashed #000; padding-bottom: 10px; }
-            .r-header img { width: 60px; height: 60px; object-fit: contain; filter: grayscale(100%); margin-bottom: 5px; }
-            .r-header h2 { font-size: 24px; margin: 0; font-weight: 900; letter-spacing: 1px; }
-            .r-slogan { border: 1px dashed #000; border-radius: 15px; padding: 4px 10px; font-size: 11px; font-weight: bold; margin: 5px auto; display: inline-block; }
+            .r-header img { width: 65px; height: 65px; object-fit: contain; filter: grayscale(100%); margin-bottom: 5px; }
+            .r-header h2 { font-size: 26px; margin: 0; font-weight: 900; letter-spacing: 1px; }
+            .r-slogan { border: 1px dashed #000; border-radius: 15px; padding: 4px 10px; font-size: 11px; font-weight: 900; margin: 5px auto; display: inline-block; }
             
-            .r-meta { font-size: 12px; margin-bottom: 10px; border-bottom: 1px dashed #000; padding-bottom: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-weight: bold; }
+            .r-meta { font-size: 12px; margin-bottom: 10px; border-bottom: 1px dashed #000; padding-bottom: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-weight: 900; }
             .r-meta div { display: flex; justify-content: space-between; }
             .r-meta .full { grid-column: 1 / -1; }
             
-            .r-table { width: 100%; font-size: 12px; border-collapse: collapse; margin-bottom: 10px; }
-            .r-table th { border-bottom: 1px solid #000; padding: 4px 0; font-weight: 900; text-align: center; }
+            .r-table { width: 100%; font-size: 14px; border-collapse: collapse; margin-bottom: 10px; }
+            .r-table th { border-bottom: 1px solid #000; padding: 5px 0; font-weight: 900; text-align: center; font-size: 13px; }
             .r-table th:first-child { text-align: right; }
-            .r-table td { padding: 5px 0; border-bottom: 1px dotted #aaa; text-align: center; font-weight: bold; }
+            /* خط المنتجات (عريض وواضح) */
+            .r-table td { padding: 6px 0; border-bottom: 1px dotted #888; text-align: center; font-weight: 900; color: #000; }
             .r-table td:first-child { text-align: right; }
             
-            .r-total-sec { border-top: 1px dashed #000; border-bottom: 2px solid #000; padding: 8px 0; margin-top: 5px; display: flex; justify-content: space-between; font-size: 18px; font-weight: 900; }
+            .r-total-sec { border-top: 1px dashed #000; border-bottom: 2px solid #000; padding: 10px 0; margin-top: 5px; display: flex; justify-content: space-between; font-size: 18px; font-weight: 900; }
             
-            .r-footer { text-align: center; font-size: 11px; margin-top: 15px; font-weight: bold; line-height: 1.6; }
+            .r-footer { text-align: center; margin-top: 15px; line-height: 1.6; font-weight: 900; }
+            .r-footer .welcome-text { font-size: 14px; }
+            .r-footer .powered-by { font-size: 11px; font-weight: bold; margin-top: 8px; display: block; border-top: 1px dashed #ccc; padding-top: 5px;}
         }
     </style>
 </head>
@@ -241,7 +253,7 @@
 
                     <div class="cart-footer">
                         <div class="total-row">
-                            <span>الإجمالي:</span>
+                            <span>الإجمالي المطلـوب:</span>
                             <span id="cartTotal">0.00 ج</span>
                         </div>
                         <button class="btn-checkout" onclick="checkout()">
@@ -254,7 +266,9 @@
 
         <div id="dashboard" class="page">
             <div class="data-panel">
-                <div class="panel-title"><h2><i class="fas fa-chart-pie"></i> ملخص اليوم</h2></div>
+                <div class="panel-title">
+                    <h2><i class="fas fa-chart-pie"></i> ملخص اليوم</h2>
+                </div>
                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:20px;">
                     <div style="background:var(--bg); padding:20px; border-radius:12px; border-right:4px solid var(--primary)">
                         <h3 style="color:#7f8c8d; font-size:14px; margin-bottom:5px">إجمالي المبيعات</h3> 
@@ -320,7 +334,9 @@
 
         <div id="reports" class="page">
             <div class="data-panel">
-                <div class="panel-title"><h2><i class="fas fa-file-invoice-dollar"></i> التقرير المالي</h2></div>
+                <div class="panel-title">
+                    <h2><i class="fas fa-file-invoice-dollar"></i> التقرير المالي الشامل</h2>
+                </div>
                 <div style="display:flex; gap:15px; align-items:center; margin-bottom:20px">
                     <input type="date" id="repStart" class="form-control" style="margin:0">
                     <span style="font-weight:bold">إلى</span>
@@ -329,11 +345,11 @@
                 </div>
                 <div id="repResult" style="display:none; padding:20px; background:var(--bg); border-radius:12px; border:1px solid var(--border)">
                     <table style="font-size:16px">
-                        <tr><td style="width:70%">إجمالي الإيرادات:</td><td id="val_sales" style="font-weight:900; color:var(--primary)"></td></tr>
+                        <tr><td style="width:70%">إجمالي الإيرادات (المبيعات):</td><td id="val_sales" style="font-weight:900; color:var(--primary)"></td></tr>
                         <tr><td>تكلفة البضاعة المباعة (COGS):</td><td id="val_cost" style="font-weight:900; color:#e67e22"></td></tr>
                         <tr><td>إجمالي المصروفات التشغيلية:</td><td id="val_exp" style="font-weight:900; color:var(--danger)"></td></tr>
                         <tr style="background:#e2e8f0; font-size:20px">
-                            <td style="font-weight:900">صافي الربح:</td>
+                            <td style="font-weight:900">صافي الربح النهائي:</td>
                             <td id="val_profit" style="font-weight:900; color:var(--success)"></td>
                         </tr>
                     </table>
@@ -347,14 +363,20 @@
         <div class="modal-content">
             <h3><i class="fas fa-box"></i> صنف جديد للمخزن</h3>
             <input type="text" id="new_inv_name" placeholder="اسم الخـامة (مثال: بن برازيلي)" class="form-control">
-            <select id="new_inv_type" class="form-control"><option value="raw">خامة تصنيع</option><option value="ready">منتج جاهز</option></select>
+            <select id="new_inv_type" class="form-control">
+                <option value="raw">خامة تصنيع (تدخل في المشروبات)</option>
+                <option value="ready">منتج جاهز (يباع مباشرة)</option>
+            </select>
             <div style="display:flex; gap:10px">
-                <input type="number" id="new_inv_qty" placeholder="الكمية" class="form-control">
+                <input type="number" id="new_inv_qty" placeholder="الكمية المتاحة" class="form-control">
                 <select id="new_inv_unit" class="form-control">
-                    <option value="gram">جرام</option><option value="ml">ملّي</option><option value="piece">قطعة</option><option value="kg">كيلو</option>
+                    <option value="gram">جرام</option>
+                    <option value="ml">ملّي</option>
+                    <option value="piece">قطعة/علبة</option>
+                    <option value="kg">كيلو</option>
                 </select>
             </div>
-            <input type="number" id="new_inv_cost" placeholder="التكلفة الإجمالية" class="form-control">
+            <input type="number" id="new_inv_cost" placeholder="التكلفة الإجمالية لهذه الكمية" class="form-control">
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px">
                 <button class="btn-action" style="background:#94a3b8" onclick="closeModal()">إلغاء</button>
                 <button class="btn-action" onclick="saveInventory()">حفظ الصنف</button>
@@ -376,13 +398,13 @@
 
     <div id="receipt-area">
         <div class="r-header">
-            <img src="assets/images/logo.png" alt="NEO Logo" onerror="this.style.display='none'">
+            <img src="assets/images/logo.png" alt="NEO">
             <h2>NEO Café</h2>
             <div class="r-slogan">✨ رمضانك جميل في نيو ✨</div>
         </div>
         
         <div class="r-meta">
-            <div><span>فاتورة #:</span> <span id="p_id"></span></div>
+            <div><span>رقم الفاتورة:</span> <span id="p_id"></span></div>
             <div><span>التاريخ:</span> <span id="p_date"></span></div>
             <div><span>الطاولة:</span> <span id="p_table"></span></div>
             <div><span>الوقت:</span> <span id="p_time"></span></div>
@@ -402,27 +424,19 @@
         </table>
         
         <div class="r-total-sec">
-            <span>الإجمالي:</span>
+            <span>الإجمالي المطلوب:</span>
             <span><span id="p_total">0</span> ج</span>
         </div>
         
         <div class="r-footer">
-            شرفتنا يا بوب ❤️<br>
-            WiFi: 12345678<br>
-            <span style="font-size:9px; font-weight:normal;">Powered by NEO ERP</span>
+            <span class="welcome-text">نورتنا يا رايق ❤️</span>
+            <span class="powered-by">Powered by: Neo Cafe</span>
         </div>
     </div>
 
 <script>
-// دالة لتنظيف النصوص لتفادي أي أعطال برمجية بسبب الأقواس أو الرموز
-function escapeHtml(text) {
-  return String(text || '')
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-}
+// دالة لحماية النصوص
+function escapeHtml(s) { return String(s||'').replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
 
 /* ================== بيانات المنيو كاملة مع الأيقونات ================== */
 const MENU = {
@@ -557,13 +571,13 @@ const MENU = {
 
 /* ================== تخزين البيانات (LocalStorage) ================== */
 const DB = {
-    keys: { inv:'neo_inv_v2', exp:'neo_exp_v2', sales:'neo_sales_v2', recipes:'neo_recipes_v2', tables:'neo_tables_v5' },
+    keys: { inv:'neo_inv_v2', exp:'neo_exp_v2', sales:'neo_sales_v2', recipes:'neo_recipes_v2', tables:'neo_tables_v6' },
     getData: (key) => JSON.parse(localStorage.getItem(key)) || [],
     saveData: (key, data) => localStorage.setItem(key, JSON.stringify(data)),
-    getTable: () => JSON.parse(localStorage.getItem('neo_tables_v5')) || {}
+    getTable: () => JSON.parse(localStorage.getItem('neo_tables_v6')) || {}
 };
 
-// تخطيط المحل (مقلوب، بدون 9 و 10)
+// تخطيط المحل (بدون 9 و 10)
 const LAYOUT = [
     {id:14, label:'شارع شمال', area:'out_l'}, {id:13, label:'شارع يمين', area:'out_r'},
     {id:12, label:'البار الكبير', area:'bar_b'}, {id:'door', label:'باب المحل', area:'door', type:'static'},
@@ -638,7 +652,6 @@ function renderCategories() {
 }
 
 function changeCat(key) {
-    // تحديث التبويب النشط
     document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
     const btn = document.getElementById(`btn_${key}`);
     if(btn) btn.classList.add('active');
@@ -650,7 +663,6 @@ function changeCat(key) {
     grid.innerHTML = '';
 
     const catData = MENU[key];
-    
     if(catData.isComplex) {
         subBar.classList.add('show');
         catData.subcats.forEach((sub, idx) => {
@@ -664,7 +676,7 @@ function changeCat(key) {
             };
             subBar.appendChild(subBtn);
         });
-        renderProducts(catData.subcats[0].items); // عرض أول تبويب فرعي افتراضياً
+        renderProducts(catData.subcats[0].items); 
     } else {
         renderProducts(catData.items);
     }
@@ -734,7 +746,7 @@ function clearCart() {
 
 function saveTables() { localStorage.setItem(DB.keys.tables, JSON.stringify(tablesOrder)); }
 
-/* ================== نظام الدفع والطباعة ================== */
+/* ================== نظام الدفع والطباعة المتقدم ================== */
 function checkout() {
     if(!currentTable || !tablesOrder[currentTable]?.length) {
         alert('لا يوجد طلبات لدفعها!');
@@ -746,7 +758,7 @@ function checkout() {
     const now = new Date();
     const id = Date.now();
     
-    // 1. خصم الخامات من المخزن بناءً على الريسيبي
+    // خصم الخامات من المخزن بناءً على الريسيبي
     const recipes = DB.getData(DB.keys.recipes) || {};
     const inv = DB.getData(DB.keys.inv) || [];
     let cost = 0;
@@ -766,13 +778,13 @@ function checkout() {
     });
     DB.saveData(DB.keys.inv, inv);
 
-    // 2. تسجيل البيعة في التقارير
+    // تسجيل البيعة في التقارير
     const sale = { id, date: now.toISOString(), items: cart, total, cost, profit: total - cost };
     const sales = DB.getData(DB.keys.sales);
     sales.push(sale);
     DB.saveData(DB.keys.sales, sales);
     
-    // 3. تجهيز بيانات الفاتورة
+    // تجهيز بيانات الفاتورة
     const tObj = LAYOUT.find(t => t.id === currentTable);
     const tableName = tObj ? tObj.label : currentTable;
     
@@ -792,7 +804,7 @@ function checkout() {
     
     document.getElementById('p_total').textContent = total.toFixed(2);
     
-    // 4. إعطاء مهلة للمتصفح لتجهيز الفاتورة ثم الطباعة
+    // الانتظار قليلاً حتى يتم تحديث واجهة الفاتورة ثم الطباعة
     setTimeout(() => {
         window.print();
         
@@ -802,7 +814,7 @@ function checkout() {
         renderCart(); 
         renderMap(); 
         updateDashboard();
-    }, 150);
+    }, 250);
 }
 
 /* ================== لوحة التحكم والمخازن ================== */
