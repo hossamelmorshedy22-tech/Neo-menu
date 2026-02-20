@@ -69,6 +69,13 @@ body{
 }
 .cat.active{ background:linear-gradient(45deg,var(--neo-green),var(--neo-dark)); color:var(--neo-gold); border-color: var(--neo-dark); box-shadow:0 15px 30px rgba(18,77,51,0.2); transform: translateY(-2px);}
 
+/* SUBCATEGORIES NAV (For Cold Drinks) */
+.subcats-nav { display:flex; gap:8px; overflow-x:auto; padding-bottom:10px; margin-bottom:15px; }
+.subcats-nav::-webkit-scrollbar { height: 4px; }
+.subcats-nav::-webkit-scrollbar-thumb { background: var(--neo-gold); border-radius: 4px; }
+.subcat-btn { background:#fff; border:1px solid var(--neo-gold); color:var(--neo-green); padding:8px 16px; border-radius:20px; font-weight:800; font-family:inherit; cursor:pointer; white-space:nowrap; transition:0.2s; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);}
+.subcat-btn.active { background:var(--neo-green); color:var(--neo-gold); border-color:var(--neo-dark); }
+
 /* GRID & CARDS */
 .container { max-width: 1000px; margin: auto; padding: 10px 15px 150px; }
 .section-container { display: none; animation: fadeIn 0.4s ease; }
@@ -76,7 +83,7 @@ body{
 .section-title { color: var(--neo-green); font-weight: 900; font-size: 22px; margin: 15px 0 20px; text-align: right; display: flex; align-items: center; gap: 8px; }
 .section-title::before { content: '🌙'; font-size: 18px; }
 
-/* تم التعديل هنا لضمان وجود عنصرين في كل الأوقات */
+/* 2 Items Per Row Guaranteed */
 .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
 
 .card { background: #fff; border-radius: 15px; padding: 10px; box-shadow: var(--shadow); border: 1px solid rgba(212,175,55,0.2); display: flex; flex-direction: column; transition: transform 0.2s; }
@@ -101,7 +108,7 @@ footer { padding: 25px 15px; text-align: center; color: #fff; background: var(--
 .footer-socials a { padding: 10px 20px; border-radius: 12px; color: var(--neo-dark); background: var(--neo-gold); font-weight: 900; text-decoration: none; transition: 0.2s; }
 .footer-socials a:hover { transform: scale(1.05); }
 
-/* تضبيط مقاسات الموبايل للحفاظ على العنصرين جنب بعض */
+/* MOBILE ADJUSTMENTS (Maintains 2 columns) */
 @media (max-width: 480px) {
   .cats-row { justify-content: flex-start; } 
   .card { padding: 8px; }
@@ -232,66 +239,81 @@ const MENU_DATA = {
     {id:'hot_mo2', name:'موكا نعناع', price:50, img:'assets/images/hot_mocha_mint.png'},
     {id:'hot_esp_ic', name:'اسبريسو بالايس كريم', price:45, img:'assets/images/hot_espresso_with_icecream.png'}
   ]},
-  cold: { title: "المشروبات الباردة", items: [
-    {id:'ms_01',name:'ميلك شيك فانيلا',price:50,img:'assets/images/ms_vanilla.png'},
-    {id:'ms_02',name:'ميلك شيك اوريو',price:55,img:'assets/images/ms_oreo.png'},
-    {id:'ms_03',name:'ميلك شيك هوهوز',price:55,img:'assets/images/ms_hohoz.png'},
-    {id:'ms_04',name:'ميلك شيك كراميل',price:55,img:'assets/images/ms_caramel.png'},
-    {id:'ms_05',name:'ميلك شيك فراولة',price:60,img:'assets/images/ms_strawberry.png'},
-    {id:'ms_06',name:'ميلك شيك مانجو',price:65,img:'assets/images/ms_mango.png'},
-    {id:'ms_07',name:'ميلك شيك اسنيكرز',price:75,img:'assets/images/ms_snickers.png'},
-    {id:'ms_08',name:'ميلك شيك مورو',price:75,img:'assets/images/ms_moro.png'},
-    {id:'ms_09',name:'ميلك شيك شوكليت',price:55,img:'assets/images/ms_chocolate.png'},
-    {id:'ms_10',name:'ميلك شيك كندر',price:65,img:'assets/images/ms_kinder.png'},
-    {id:'ms_11',name:'ميلك شيك نسكافيه',price:50,img:'assets/images/ms_nescafe.png'},
-    {id:'ms_12',name:'ميلك شيك موز نوتيلا',price:65,img:'assets/images/ms_banana_nutella.png'},
-    {id:'fr_01',name:'فرباتشينو شوكليت',price:50,img:'assets/images/fr_choclate.png'},
-    {id:'fr_02',name:'فرباتشينو كراميل',price:55,img:'assets/images/fr_cramel.png'},
-    {id:'fr_03',name:'فرباتشينو بندق',price:55,img:'assets/images/fr_hazelnut.png'},
-    {id:'fr_04',name:'فرباتشينو كوكيز',price:55,img:'assets/images/fr_cookies.png'},
-    {id:'fr_05',name:'فرباتشينو نوتيلا',price:65,img:'assets/images/fr_Nutella.png'},
-    {id:'fr_06',name:'فرباتشينو بستاشيو',price:75,img:'assets/images/fr_Bastashio.png'},
-    {id:'fr_07',name:'أوريو',price:65,img:'assets/images/fr_oero.png'},
-    {id:'fr_08',name:'لوتس',price:75,img:'assets/images/fr_lotus.png'},
-    {id:'ice_01',name:'ايس لاتيه',price:50,img:'assets/images/ice_latte.png'},
-    {id:'ice_02',name:'ايس كوفي',price:45,img:'assets/images/ice_coffee.png'},
-    {id:'ice_03',name:'ايس امريكان',price:55,img:'assets/images/ice_americano.png'},
-    {id:'ice_04',name:'ايس سبانش لاتيه',price:65,img:'assets/images/ice_spanish_latte.png'},
-    {id:'ice_05',name:'ايس موكا',price:55,img:'assets/images/ice_mocha.png'},
-    {id:'ice_06',name:'ايس لوتس',price:50,img:'assets/images/ice_lotus.png'},
-    {id:'ice_07',name:'ايس كراميل',price:50,img:'assets/images/ice_caramel.png'},
-    {id:'frs_01',name:'مانجو فريش',price:50,img:'assets/images/fresh_mango.png'},
-    {id:'frs_02',name:'فراولة فريش',price:45,img:'assets/images/fresh_strawberry.png'},
-    {id:'frs_03',name:'فراولة حليب',price:50,img:'assets/images/fresh_strawberry_milk.png'},
-    {id:'frs_04',name:'موز حليب',price:50,img:'assets/images/fresh_banana_milk.png'},
-    {id:'frs_05',name:'بلح حليب',price:55,img:'assets/images/fresh_date_milk.png'},
-    {id:'frs_06',name:'ليمون فريش',price:30,img:'assets/images/fresh_lemon.png'},
-    {id:'frs_07',name:'ليمون نعناع فريش',price:35,img:'assets/images/fresh_lemon_mint.png'},
-    {id:'frs_08',name:'بطيخ (موسمي)',price:40,img:'assets/images/fresh_watermelon.png'},
-    {id:'frs_09',name:'برتقال (موسمي)',price:40,img:'assets/images/fresh_orange.png'},
-    {id:'frs_10',name:'كيوي (موسمي)',price:60,img:'assets/images/fresh_kiwi.png'},
-    {id:'frs_11',name:'كيوي حليب (موسمي)',price:70,img:'assets/images/fresh_kiwi_milk.png'},
-    {id:'frs_12',name:'افوجاتو عسل',price:100,img:'assets/images/fresh_affogato_honey.png'},
-    {id:'frs_13',name:'افوجاتو مكسرات',price:120,img:'assets/images/fresh_affogato_nuts.png'},
-    {id:'frs_14',name:'جوافة',price:45,img:'assets/images/fresh_guava.png'},
-    {id:'frs_15',name:'كوكتيل',price:55,img:'assets/images/fresh_cocktail.png'},
-    {id:'frs_16',name:'كوكتيل قطع',price:65,img:'assets/images/fresh_cocktail_chunks.png'},
-    {id:'frs_17',name:'نيو افوجاتو',price:105,img:'assets/images/fresh_neo_affogato.png'},
-    {id:'smz_01',name:'سموزي فراولة',price:45,img:'assets/images/smz_strawberry.png'},
-    {id:'smz_02',name:'سموزي مانجو',price:45,img:'assets/images/smz_mango.png'},
-    {id:'smz_03',name:'سموزي أناناس',price:45,img:'assets/images/smz_pineapple.png'},
-    {id:'smz_04',name:'سموزي خوخ',price:45,img:'assets/images/smz_peach.png'},
-    {id:'smz_05',name:'سموزي كيوي',price:45,img:'assets/images/smz_kiwi.png'},
-    {id:'smz_06',name:'سموزي بطيخ',price:45,img:'assets/images/smz_watermelon.png'},
-    {id:'smz_07',name:'سموزي بلوبيري',price:45,img:'assets/images/smz_blueberry.png'},
-    {id:'sod_01',name:'بلوبيري صودا',price:50,img:'assets/images/soda_blueberry.png'},
-    {id:'sod_02',name:'بلو صودا',price:50,img:'assets/images/soda_blue.png'},
-    {id:'sod_03',name:'برانديت صودا',price:50,img:'assets/images/soda_brandit.png'},
-    {id:'sod_04',name:'فراولة صودا',price:50,img:'assets/images/soda_strawberry.png'},
-    {id:'sod_05',name:'أناناس صودا',price:50,img:'assets/images/soda_pineapple.png'},
-    {id:'sod_06',name:'خوخ صودا',price:50,img:'assets/images/soda_peach.png'},
-    {id:'sod_07',name:'موهيتو',price:55,img:'assets/images/soda_mojito.png'}
+  
+  // -- COLD DRINKS WITH SUBCATEGORIES --
+  cold: { title: "المشروبات الباردة", subcats: [
+    { title: "ميلك شيك", items: [
+      {id:'ms_01',name:'ميلك شيك فانيلا',price:50,img:'assets/images/ms_vanilla.png'},
+      {id:'ms_02',name:'ميلك شيك اوريو',price:55,img:'assets/images/ms_oreo.png'},
+      {id:'ms_03',name:'ميلك شيك هوهوز',price:55,img:'assets/images/ms_hohoz.png'},
+      {id:'ms_04',name:'ميلك شيك كراميل',price:55,img:'assets/images/ms_caramel.png'},
+      {id:'ms_05',name:'ميلك شيك فراولة',price:60,img:'assets/images/ms_strawberry.png'},
+      {id:'ms_06',name:'ميلك شيك مانجو',price:65,img:'assets/images/ms_mango.png'},
+      {id:'ms_07',name:'ميلك شيك اسنيكرز',price:75,img:'assets/images/ms_snickers.png'},
+      {id:'ms_08',name:'ميلك شيك مورو',price:75,img:'assets/images/ms_moro.png'},
+      {id:'ms_09',name:'ميلك شيك شوكليت',price:55,img:'assets/images/ms_chocolate.png'},
+      {id:'ms_10',name:'ميلك شيك كندر',price:65,img:'assets/images/ms_kinder.png'},
+      {id:'ms_11',name:'ميلك شيك نسكافيه',price:50,img:'assets/images/ms_nescafe.png'},
+      {id:'ms_12',name:'ميلك شيك موز نوتيلا',price:65,img:'assets/images/ms_banana_nutella.png'}
+    ]},
+    { title: "فرباتشينو", items: [
+      {id:'fr_01',name:'فرباتشينو شوكليت',price:50,img:'assets/images/fr_choclate.png'},
+      {id:'fr_02',name:'فرباتشينو كراميل',price:55,img:'assets/images/fr_cramel.png'},
+      {id:'fr_03',name:'فرباتشينو بندق',price:55,img:'assets/images/fr_hazelnut.png'},
+      {id:'fr_04',name:'فرباتشينو كوكيز',price:55,img:'assets/images/fr_cookies.png'},
+      {id:'fr_05',name:'فرباتشينو نوتيلا',price:65,img:'assets/images/fr_Nutella.png'},
+      {id:'fr_06',name:'فرباتشينو بستاشيو',price:75,img:'assets/images/fr_Bastashio.png'},
+      {id:'fr_07',name:'أوريو',price:65,img:'assets/images/fr_oero.png'},
+      {id:'fr_08',name:'لوتس',price:75,img:'assets/images/fr_lotus.png'}
+    ]},
+    { title: "آيس", items: [
+      {id:'ice_01',name:'ايس لاتيه',price:50,img:'assets/images/ice_latte.png'},
+      {id:'ice_02',name:'ايس كوفي',price:45,img:'assets/images/ice_coffee.png'},
+      {id:'ice_03',name:'ايس امريكان',price:55,img:'assets/images/ice_americano.png'},
+      {id:'ice_04',name:'ايس سبانش لاتيه',price:65,img:'assets/images/ice_spanish_latte.png'},
+      {id:'ice_05',name:'ايس موكا',price:55,img:'assets/images/ice_mocha.png'},
+      {id:'ice_06',name:'ايس لوتس',price:50,img:'assets/images/ice_lotus.png'},
+      {id:'ice_07',name:'ايس كراميل',price:50,img:'assets/images/ice_caramel.png'}
+    ]},
+    { title: "فريش", items: [
+      {id:'frs_01',name:'مانجو فريش',price:50,img:'assets/images/fresh_mango.png'},
+      {id:'frs_02',name:'فراولة فريش',price:45,img:'assets/images/fresh_strawberry.png'},
+      {id:'frs_03',name:'فراولة حليب',price:50,img:'assets/images/fresh_strawberry_milk.png'},
+      {id:'frs_04',name:'موز حليب',price:50,img:'assets/images/fresh_banana_milk.png'},
+      {id:'frs_05',name:'بلح حليب',price:55,img:'assets/images/fresh_date_milk.png'},
+      {id:'frs_06',name:'ليمون فريش',price:30,img:'assets/images/fresh_lemon.png'},
+      {id:'frs_07',name:'ليمون نعناع فريش',price:35,img:'assets/images/fresh_lemon_mint.png'},
+      {id:'frs_08',name:'بطيخ (موسمي)',price:40,img:'assets/images/fresh_watermelon.png'},
+      {id:'frs_09',name:'برتقال (موسمي)',price:40,img:'assets/images/fresh_orange.png'},
+      {id:'frs_10',name:'كيوي (موسمي)',price:60,img:'assets/images/fresh_kiwi.png'},
+      {id:'frs_11',name:'كيوي حليب (موسمي)',price:70,img:'assets/images/fresh_kiwi_milk.png'},
+      {id:'frs_12',name:'افوجاتو عسل',price:100,img:'assets/images/fresh_affogato_honey.png'},
+      {id:'frs_13',name:'افوجاتو مكسرات',price:120,img:'assets/images/fresh_affogato_nuts.png'},
+      {id:'frs_14',name:'جوافة',price:45,img:'assets/images/fresh_guava.png'},
+      {id:'frs_15',name:'كوكتيل',price:55,img:'assets/images/fresh_cocktail.png'},
+      {id:'frs_16',name:'كوكتيل قطع',price:65,img:'assets/images/fresh_cocktail_chunks.png'},
+      {id:'frs_17',name:'نيو افوجاتو',price:105,img:'assets/images/fresh_neo_affogato.png'}
+    ]},
+    { title: "سموزي", items: [
+      {id:'smz_01',name:'سموزي فراولة',price:45,img:'assets/images/smz_strawberry.png'},
+      {id:'smz_02',name:'سموزي مانجو',price:45,img:'assets/images/smz_mango.png'},
+      {id:'smz_03',name:'سموزي أناناس',price:45,img:'assets/images/smz_pineapple.png'},
+      {id:'smz_04',name:'سموزي خوخ',price:45,img:'assets/images/smz_peach.png'},
+      {id:'smz_05',name:'سموزي كيوي',price:45,img:'assets/images/smz_kiwi.png'},
+      {id:'smz_06',name:'سموزي بطيخ',price:45,img:'assets/images/smz_watermelon.png'},
+      {id:'smz_07',name:'سموزي بلوبيري',price:45,img:'assets/images/smz_blueberry.png'}
+    ]},
+    { title: "صودا", items: [
+      {id:'sod_01',name:'بلوبيري صودا',price:50,img:'assets/images/soda_blueberry.png'},
+      {id:'sod_02',name:'بلو صودا',price:50,img:'assets/images/soda_blue.png'},
+      {id:'sod_03',name:'برانديت صودا',price:50,img:'assets/images/soda_brandit.png'},
+      {id:'sod_04',name:'فراولة صودا',price:50,img:'assets/images/soda_strawberry.png'},
+      {id:'sod_05',name:'أناناس صودا',price:50,img:'assets/images/soda_pineapple.png'},
+      {id:'sod_06',name:'خوخ صودا',price:50,img:'assets/images/soda_peach.png'},
+      {id:'sod_07',name:'موهيتو',price:55,img:'assets/images/soda_mojito.png'}
+    ]}
   ]},
+  
   soft: { title: "مشروبات غازية", items: [
     {id:'soft_01',name:'V-Cola كلاسيك',price:20,img:'assets/images/soft_vcola.png'},
     {id:'soft_02',name:'V-Cola نكهات',price:25,img:'assets/images/soft_vcola_flavor.png'},
@@ -350,6 +372,23 @@ const MENU_DATA = {
 
 const CART_KEY = 'neo_cafe_cart_v_final';
 
+// --- Helper func for generating grids ---
+function createGridHTML(items) {
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  items.forEach(item => {
+    grid.innerHTML += `
+      <div class="card">
+        <img src="${item.img}" onerror="this.src='https://via.placeholder.com/300?text=NEO+CAFE'">
+        <div class="card-name">${item.name}</div>
+        <div class="card-price">${item.price === 0 ? 'مجانًا' : item.price + ' ج'}</div>
+        <button class="add-btn" onclick="addToCart('${item.id}', '${item.name}', ${item.price})">أضف للسلة</button>
+      </div>
+    `;
+  });
+  return grid;
+}
+
 // --- Initialization & Render ---
 function initMenu() {
   const content = document.getElementById('menuContent');
@@ -360,20 +399,40 @@ function initMenu() {
     sec.id = 'sec_' + key;
     
     sec.innerHTML = `<h2 class="section-title">${MENU_DATA[key].title}</h2>`;
-    const grid = document.createElement('div');
-    grid.className = 'grid';
     
-    MENU_DATA[key].items.forEach(item => {
-      grid.innerHTML += `
-        <div class="card">
-          <img src="${item.img}" onerror="this.src='https://via.placeholder.com/300?text=NEO+CAFE'">
-          <div class="card-name">${item.name}</div>
-          <div class="card-price">${item.price === 0 ? 'مجانًا' : item.price + ' ج'}</div>
-          <button class="add-btn" onclick="addToCart('${item.id}', '${item.name}', ${item.price})">أضف للسلة</button>
-        </div>
-      `;
-    });
-    sec.appendChild(grid);
+    // Check if category has subcategories (like "Cold")
+    if (MENU_DATA[key].subcats) {
+      const subNav = document.createElement('div');
+      subNav.className = 'subcats-nav';
+      const gridContainer = document.createElement('div');
+      gridContainer.className = 'subcat-grid-container';
+
+      MENU_DATA[key].subcats.forEach((sub, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'subcat-btn' + (index === 0 ? ' active' : '');
+        btn.textContent = sub.title;
+        btn.onclick = (e) => {
+          // Change active tab
+          subNav.querySelectorAll('.subcat-btn').forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          // Update Grid
+          gridContainer.innerHTML = '';
+          gridContainer.appendChild(createGridHTML(sub.items));
+        };
+        subNav.appendChild(btn);
+      });
+
+      // Load first subcategory by default
+      gridContainer.appendChild(createGridHTML(MENU_DATA[key].subcats[0].items));
+      
+      sec.appendChild(subNav);
+      sec.appendChild(gridContainer);
+    } 
+    // Otherwise standard category
+    else if (MENU_DATA[key].items) {
+      sec.appendChild(createGridHTML(MENU_DATA[key].items));
+    }
+    
     content.appendChild(sec);
   }
 }
