@@ -75,13 +75,16 @@ body{
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .section-title { color: var(--neo-green); font-weight: 900; font-size: 22px; margin: 15px 0 20px; text-align: right; display: flex; align-items: center; gap: 8px; }
 .section-title::before { content: '🌙'; font-size: 18px; }
-.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+
+/* تم التعديل هنا لضمان وجود عنصرين في كل الأوقات */
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
 .card { background: #fff; border-radius: 15px; padding: 10px; box-shadow: var(--shadow); border: 1px solid rgba(212,175,55,0.2); display: flex; flex-direction: column; transition: transform 0.2s; }
 .card:hover { transform: translateY(-5px); border-color: var(--neo-gold); }
-.card img { width: 100%; height: 150px; object-fit: cover; border-radius: 12px; margin-bottom: 10px; background: #f9f9f9; }
-.card-name { font-weight: 800; font-size: 15px; color: var(--neo-dark); line-height: 1.2; flex-grow: 1; }
-.card-price { color: var(--neo-green); font-weight: 900; font-size: 16px; margin: 8px 0; }
-.add-btn { background: var(--neo-green); color: var(--neo-gold); border: none; padding: 10px; border-radius: 10px; font-weight: 800; cursor: pointer; width: 100%; font-size: 14px; box-shadow: 0 5px 15px rgba(18,77,51,0.1); }
+.card img { width: 100%; height: 140px; object-fit: cover; border-radius: 12px; margin-bottom: 10px; background: #f9f9f9; }
+.card-name { font-weight: 800; font-size: 14px; color: var(--neo-dark); line-height: 1.3; flex-grow: 1; }
+.card-price { color: var(--neo-green); font-weight: 900; font-size: 15px; margin: 8px 0; }
+.add-btn { background: var(--neo-green); color: var(--neo-gold); border: none; padding: 10px; border-radius: 10px; font-weight: 800; cursor: pointer; width: 100%; font-size: 13px; box-shadow: 0 5px 15px rgba(18,77,51,0.1); }
 
 /* CART */
 .cart-float { position: fixed; right: 15px; bottom: 15px; z-index: 1000; }
@@ -98,10 +101,14 @@ footer { padding: 25px 15px; text-align: center; color: #fff; background: var(--
 .footer-socials a { padding: 10px 20px; border-radius: 12px; color: var(--neo-dark); background: var(--neo-gold); font-weight: 900; text-decoration: none; transition: 0.2s; }
 .footer-socials a:hover { transform: scale(1.05); }
 
+/* تضبيط مقاسات الموبايل للحفاظ على العنصرين جنب بعض */
 @media (max-width: 480px) {
-  .grid { grid-template-columns: 1fr; }
   .cats-row { justify-content: flex-start; } 
-  .card img { height: 180px; }
+  .card { padding: 8px; }
+  .card img { height: 110px; margin-bottom: 8px; }
+  .card-name { font-size: 12px; }
+  .card-price { font-size: 14px; margin: 5px 0; }
+  .add-btn { font-size: 12px; padding: 8px; }
 }
 </style>
 </head>
@@ -468,7 +475,6 @@ function sendOrder() {
   const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
   text += `%0a💰 الإجمالي: ${total} جنيه%0aشكراً لاختيارك نيو كافية!`;
   
-  // Number is set here as requested
   window.open(`https://wa.me/201034311119?text=${text}`, '_blank');
 }
 
