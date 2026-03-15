@@ -280,16 +280,25 @@
             <h3 class="drink-modal-title"><i class="fas fa-mug-hot"></i> تظبيط المشروب</h3>
             <h4 id="ds_itemName" class="drink-item-name"></h4>
 
-            <div id="ds_blendSection" style="display:none;">
-                <label class="drink-select-label">التحويجة:</label>
-                <select id="ds_blendInput" class="drink-select">
-                    <option value="سادة">سادة</option>
-                    <option value="محوج">محوج</option>
-                    <option value="فاتح">فاتح</option>
-                    <option value="غامق">غامق</option>
-                    <option value="وسط">وسط</option>
-                </select>
-            </div>
+        <div id="ds_blendSection" style="display:none; margin-bottom: 20px;">
+    <div style="display:flex; gap:10px;">
+        <div style="flex:1;">
+            <label class="drink-select-label">التحويجة:</label>
+            <select id="ds_blendInput" class="drink-select" style="margin-bottom:0;">
+                <option value="سادة">سادة</option>
+                <option value="محوج">محوج</option>
+            </select>
+        </div>
+        <div style="flex:1;">
+            <label class="drink-select-label">التحميص:</label>
+            <select id="ds_roastInput" class="drink-select" style="margin-bottom:0;">
+                <option value="فاتح">فاتح</option>
+                <option value="وسط" selected>وسط</option>
+                <option value="غامق">غامق</option>
+            </select>
+        </div>
+    </div>
+</div>
 
             <div id="ds_sugarSection">
                 <label class="drink-select-label">السكر:</label>
@@ -681,8 +690,12 @@ function addToCart(id, name, price) {
 function openDrinkModal(itemName, showBlend) {
     document.getElementById('ds_itemName').innerText = itemName;
     document.getElementById('ds_blendSection').style.display = showBlend ? 'block' : 'none';
+    
+    // تصفير الخانات للوضع الافتراضي
     document.getElementById('ds_blendInput').value = 'سادة';
+    if(showBlend) document.getElementById('ds_roastInput').value = 'وسط'; 
     document.getElementById('ds_sugarInput').value = 'مظبوط';
+    
     document.getElementById('drinkSettingsModal').style.display = 'flex';
 }
 
@@ -693,16 +706,18 @@ function closeDrinkModal() {
 
 function confirmDrinkOptions() {
     if(!pendingItemForModal) return;
+    
     let blend = document.getElementById('ds_blendInput').value;
+    let roast = document.getElementById('ds_roastInput').value;
     let sugar = document.getElementById('ds_sugarInput').value;
     
-    let extraText = (pendingItemForModal.type === 'turkish') ? ` (${blend}-سكر ${sugar})` : ` (سكر ${sugar})`;
+    // لو قهوة تركي هيحط (التحويجة + التحميص + السكر)، لو مشروب تاني هيحط (السكر) بس
+    let extraText = (pendingItemForModal.type === 'turkish') ? ` (${blend}-${roast}-سكر ${sugar})` : ` (سكر ${sugar})`;
     let newName = pendingItemForModal.name + extraText;
     
     closeDrinkModal();
     executeAddToCart(pendingItemForModal.id, newName, pendingItemForModal.price);
 }
-
 function executeAddToCart(id, name, price) {
     let cart = getCart();
     const existing = cart.find(i => i.name === name);
