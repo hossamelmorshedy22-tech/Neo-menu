@@ -636,18 +636,18 @@ function sendOrderLive() {
 
 updateCartUI();
 
-    /* ================== مودال القهوة الذكي للمنيو الإلكتروني (نسخة العميل) ================== */
-(function injectCustomerCoffeeModal() {
-    if(document.getElementById('customer_coffee_modal')) return;
+   /* ================== مودال المشروبات الذكي للمنيو الإلكتروني (نسخة العميل المحدثة) ================== */
+(function injectCustomerDrinkModal() {
+    if(document.getElementById('customer_drink_modal')) return;
     document.body.insertAdjacentHTML('beforeend', `
-    <div id="customer_coffee_modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999999; justify-content:center; align-items:center; backdrop-filter: blur(3px);">
+    <div id="customer_drink_modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999999; justify-content:center; align-items:center; backdrop-filter: blur(3px);">
         <div style="background:#fff; width:90%; max-width:380px; padding:25px 20px; border-radius:20px; text-align:center; box-shadow:0 15px 30px rgba(0,0,0,0.3);">
-            <h3 style="color:var(--primary, #27ae60); margin-bottom:10px; font-size:22px;"><i class="fas fa-mug-hot"></i> قهوتك على مزاجك</h3>
-            <h4 id="cust_coffee_name" style="color:#e74c3c; margin-bottom:20px; font-weight:bold; font-size:18px; background:#fdf2f2; padding:10px; border-radius:10px;"></h4>
+            <h3 style="color:var(--primary, #27ae60); margin-bottom:10px; font-size:22px;"><i class="fas fa-mug-hot"></i> تظبيط المشروب</h3>
+            <h4 id="cust_drink_name" style="color:#e74c3c; margin-bottom:20px; font-weight:bold; font-size:18px; background:#fdf2f2; padding:10px; border-radius:10px;"></h4>
 
-            <div id="cust_blend_sec" style="margin-bottom:20px; text-align:right;">
+            <div id="cust_blend_sec" style="margin-bottom:20px; text-align:right; display:none;">
                 <label style="font-weight:bold; display:block; margin-bottom:8px; color:#333; font-size:16px;">التحويجة:</label>
-                <select id="cust_coffee_blend" style="width:100%; font-size:16px; border:2px solid #ddd; padding:12px; border-radius:10px; outline:none; background:#f9f9f9;">
+                <select id="cust_drink_blend" style="width:100%; font-size:16px; border:2px solid #ddd; padding:12px; border-radius:10px; outline:none; background:#f9f9f9;">
                     <option value="سادة">سادة</option>
                     <option value="محوج">محوج</option>
                     <option value="فاتح">فاتح</option>
@@ -656,27 +656,28 @@ updateCartUI();
                 </select>
             </div>
 
-            <div style="margin-bottom:25px; text-align:right;">
+            <div id="cust_sugar_sec" style="margin-bottom:25px; text-align:right;">
                 <label style="font-weight:bold; display:block; margin-bottom:8px; color:#333; font-size:16px;">السكر:</label>
-                <select id="cust_coffee_sugar" style="width:100%; font-size:16px; border:2px solid #ddd; padding:12px; border-radius:10px; outline:none; background:#f9f9f9;">
+                <select id="cust_drink_sugar" style="width:100%; font-size:16px; border:2px solid #ddd; padding:12px; border-radius:10px; outline:none; background:#f9f9f9;">
                     <option value="مظبوط" selected>مظبوط</option>
                     <option value="زيادة">زيادة</option>
                     <option value="ع الريحة">ع الريحة</option>
                     <option value="سادة">سادة</option>
                     <option value="مانو">مانو</option>
+                    <option value="بره">سكر بره</option>
                 </select>
             </div>
 
             <div style="display:flex; gap:10px;">
-                <button onclick="custConfirmCoffee()" style="flex:1; background:var(--primary, #27ae60); color:#fff; border:none; padding:15px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; box-shadow:0 4px 10px rgba(39,174,96,0.3);"><i class="fas fa-cart-plus"></i> إضافة للسلة</button>
-                <button onclick="document.getElementById('customer_coffee_modal').style.display='none'" style="flex:1; background:#95a5a6; color:#fff; border:none; padding:15px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer;"><i class="fas fa-times"></i> إلغاء</button>
+                <button onclick="custConfirmDrink()" style="flex:1; background:var(--primary, #27ae60); color:#fff; border:none; padding:15px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; box-shadow:0 4px 10px rgba(39,174,96,0.3);"><i class="fas fa-cart-plus"></i> إضافة للسلة</button>
+                <button onclick="document.getElementById('customer_drink_modal').style.display='none'" style="flex:1; background:#95a5a6; color:#fff; border:none; padding:15px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer;"><i class="fas fa-times"></i> إلغاء</button>
             </div>
         </div>
     </div>
     `);
 })();
 
-let custPendingItem = null;
+let custPendingDrink = null;
 setTimeout(() => {
     if(typeof window.addToCart === 'function') {
         let custOriginalAddToCart = window.addToCart;
@@ -685,55 +686,78 @@ setTimeout(() => {
             let itemName = "";
             let nameIndex = -1;
 
-            // تدوير ذكي على اسم الصنف جوه الدالة
+            // تحديد اسم الصنف
             for(let i=0; i<args.length; i++) {
-                if(typeof args[i] === 'string' && (args[i].includes('قهوة') || args[i].includes('اسبريسو') || args[i].includes('بندق') || args[i].includes('فرنساوي') || args[i].includes('تركي'))) {
+                if(typeof args[i] === 'string' && isNaN(args[i])) {
                     itemName = args[i]; nameIndex = i; break;
-                } else if (typeof args[i] === 'object' && args[i] !== null && args[i].name && (args[i].name.includes('قهوة') || args[i].name.includes('اسبريسو') || args[i].name.includes('بندق') || args[i].name.includes('فرنساوي') || args[i].name.includes('تركي'))) {
+                } else if (typeof args[i] === 'object' && args[i] !== null && args[i].name) {
                     itemName = args[i].name; nameIndex = i; break;
                 }
             }
 
-            // لو العميل اختار قهوة، نطلعله الشاشة
             if(itemName !== "") {
-                custPendingItem = { args: args, index: nameIndex, originalName: itemName };
-                let isFrench = itemName.includes('فرنساوي') || itemName.includes('بندق');
+                // فلتر الذكاء الاصطناعي للمشروبات
+                let isEspresso = itemName.includes('اسبريسو') || itemName.includes('إسبريسو');
+                let isTurkish = itemName.includes('تركي');
                 
-                document.getElementById('cust_coffee_name').innerText = itemName;
-                document.getElementById('cust_blend_sec').style.display = isFrench ? 'none' : 'block';
-                document.getElementById('cust_coffee_blend').value = 'سادة';
-                document.getElementById('cust_coffee_sugar').value = 'مظبوط';
-                
-                document.getElementById('customer_coffee_modal').style.display = 'flex';
+                // قائمة المشروبات اللي هنسأل فيها على السكر بس
+                let sugarDrinks = ['فرنساوي', 'بندق', 'شاي', 'ينسون', 'نعناع', 'سحلب', 'كاكاو', 'نسكافيه', 'كابتشينو', 'لاتيه', 'موكا', 'قرفة', 'جنزبيل', 'حلبة', 'هوت شوكليت', 'قهوة', 'مشروب'];
+                let needsSugar = sugarDrinks.some(drink => itemName.includes(drink));
+
+                if (isEspresso) {
+                    // 1. الاسبريسو: مبيسألش في حاجة وبينزل السلة فوراً
+                    custOriginalAddToCart.apply(this, args);
+                } else if (isTurkish) {
+                    // 2. القهوة التركي: بيسأل على التحويجة والسكر
+                    custPendingDrink = { args: args, index: nameIndex, originalName: itemName, type: 'turkish' };
+                    document.getElementById('cust_drink_name').innerText = itemName;
+                    document.getElementById('cust_blend_sec').style.display = 'block';
+                    document.getElementById('cust_drink_blend').value = 'سادة';
+                    document.getElementById('cust_drink_sugar').value = 'مظبوط';
+                    document.getElementById('customer_drink_modal').style.display = 'flex';
+                } else if (needsSugar) {
+                    // 3. باقي المشروبات السخنة: بيسأل على السكر بس
+                    custPendingDrink = { args: args, index: nameIndex, originalName: itemName, type: 'sugar_only' };
+                    document.getElementById('cust_drink_name').innerText = itemName;
+                    document.getElementById('cust_blend_sec').style.display = 'none';
+                    document.getElementById('cust_drink_sugar').value = 'مظبوط';
+                    document.getElementById('customer_drink_modal').style.display = 'flex';
+                } else {
+                    // 4. أي صنف تاني (أكل، عصير، بيبسي): بينزل السلة فوراً
+                    custOriginalAddToCart.apply(this, args);
+                }
             } else {
-                // لو صنف تاني (عصير مثلاً)، ينزل السلة علطول
                 custOriginalAddToCart.apply(this, args);
             }
         };
 
-        // دالة تأكيد الاختيار من العميل
-        window.custConfirmCoffee = function() {
-            if(!custPendingItem) return;
-            let blend = document.getElementById('cust_coffee_blend').value;
-            let sugar = document.getElementById('cust_coffee_sugar').value;
-            let isFrench = custPendingItem.originalName.includes('فرنساوي') || custPendingItem.originalName.includes('بندق');
+        window.custConfirmDrink = function() {
+            if(!custPendingDrink) return;
+            let blend = document.getElementById('cust_drink_blend').value;
+            let sugar = document.getElementById('cust_drink_sugar').value;
             
-            let extraText = isFrench ? ` (سكر ${sugar})` : ` (${blend}-سكر ${sugar})`;
-            let newName = custPendingItem.originalName + extraText;
-            
-            if(typeof custPendingItem.args[custPendingItem.index] === 'object') {
-                custPendingItem.args[custPendingItem.index].name = newName;
+            let extraText = "";
+            if (custPendingDrink.type === 'turkish') {
+                extraText = ` (${blend}-سكر ${sugar})`;
             } else {
-                custPendingItem.args[custPendingItem.index] = newName;
+                extraText = ` (سكر ${sugar})`;
             }
             
-            document.getElementById('customer_coffee_modal').style.display = 'none';
-            custOriginalAddToCart.apply(window, custPendingItem.args);
-            custPendingItem = null;
+            let newName = custPendingDrink.originalName + extraText;
             
-            // رسالة دلع للزبون
+            if(typeof custPendingDrink.args[custPendingDrink.index] === 'object') {
+                custPendingDrink.args[custPendingDrink.index].name = newName;
+            } else {
+                custPendingDrink.args[custPendingDrink.index] = newName;
+            }
+            
+            document.getElementById('customer_drink_modal').style.display = 'none';
+            custOriginalAddToCart.apply(window, custPendingDrink.args);
+            custPendingDrink = null;
+            
+            // رسالة للزبون
             let toast = document.createElement('div');
-            toast.innerText = "تمت إضافة قهوتك للسلة ✅☕";
+            toast.innerText = "تمت إضافة المشروب للسلة ✅";
             toast.style.cssText = "position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#27ae60; color:#fff; padding:10px 20px; border-radius:30px; font-weight:bold; z-index:9999999; box-shadow:0 5px 15px rgba(0,0,0,0.2); transition:0.5s;";
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 2500);
