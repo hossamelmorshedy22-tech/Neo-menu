@@ -636,7 +636,46 @@ function sendOrderLive() {
 
 updateCartUI();
 
-   /* ================== مودال المشروبات الذكي للمنيو الإلكتروني (نسخة العميل المحدثة) ================== */
+  /* ================== مودال المشروبات + شريط البحث للمنيو الإلكتروني ================== */
+
+// 1. حقن خانة البحث الذكية
+(function injectCustomerSearch() {
+    if(document.getElementById('cust_search_container')) return;
+    setTimeout(() => {
+        // هندور على شريط الأقسام عشان نحط البحث تحته
+        let catsBar = document.querySelector('.cats-bar') || document.querySelector('.menu-sec');
+        if(catsBar) {
+            let searchDiv = document.createElement('div');
+            searchDiv.id = 'cust_search_container';
+            searchDiv.style.cssText = 'padding: 10px 15px; text-align: center; background: #fff; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #eee; margin-bottom: 10px;';
+            searchDiv.innerHTML = `<input type="text" id="cust_search_input" placeholder="🔍 ابحث عن مشروبك أو طلبك بسرعة..." style="width: 100%; max-width: 400px; padding: 12px 20px; border-radius: 25px; border: 2px solid var(--primary, #27ae60); font-size: 16px; outline: none; text-align: right; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">`;
+            
+            if(catsBar.classList.contains('cats-bar')) {
+                catsBar.insertAdjacentElement('afterend', searchDiv);
+            } else {
+                catsBar.insertAdjacentElement('afterbegin', searchDiv);
+            }
+
+            // تفعيل البحث المباشر
+            document.getElementById('cust_search_input').addEventListener('input', function(e) {
+                let term = e.target.value.toLowerCase();
+                let products = document.querySelectorAll('.product-card, .item-card, [onclick*="addToCart"]');
+                products.forEach(card => {
+                    let text = card.innerText.toLowerCase();
+                    if(text.includes(term)) {
+                        card.style.display = ''; 
+                    } else {
+                        if(!card.classList.contains('cat-chip')) {
+                            card.style.display = 'none'; 
+                        }
+                    }
+                });
+            });
+        }
+    }, 1500);
+})();
+
+// 2. المودال الذكي لتظبيط المشروبات
 (function injectCustomerDrinkModal() {
     if(document.getElementById('customer_drink_modal')) return;
     document.body.insertAdjacentHTML('beforeend', `
@@ -686,7 +725,7 @@ setTimeout(() => {
             let itemName = "";
             let nameIndex = -1;
 
-            // تحديد اسم الصنف
+            // تحديد اسم المشروب
             for(let i=0; i<args.length; i++) {
                 if(typeof args[i] === 'string' && isNaN(args[i])) {
                     itemName = args[i]; nameIndex = i; break;
@@ -696,19 +735,16 @@ setTimeout(() => {
             }
 
             if(itemName !== "") {
-                // فلتر الذكاء الاصطناعي للمشروبات
                 let isEspresso = itemName.includes('اسبريسو') || itemName.includes('إسبريسو');
-                let isTurkish = itemName.includes('تركي');
+                let isTurkish = itemName.includes('تركي') || itemName.includes('قهوة سادة') || itemName.includes('قهوة محوج');
                 
-                // قائمة المشروبات اللي هنسأل فيها على السكر بس
-                let sugarDrinks = ['فرنساوي', 'بندق', 'شاي', 'ينسون', 'نعناع', 'سحلب', 'كاكاو', 'نسكافيه', 'كابتشينو', 'لاتيه', 'موكا', 'قرفة', 'جنزبيل', 'حلبة', 'هوت شوكليت', 'قهوة', 'مشروب'];
-                let needsSugar = sugarDrinks.some(drink => itemName.includes(drink));
+                // لستة المشروبات اللي بتطلب سكر بس (ذكاء اصطناعي)
+                let hotDrinks = ['فرنساوي', 'بندق', 'شاي', 'ينسون', 'نعناع', 'سحلب', 'كاكاو', 'نسكافيه', 'كابتشينو', 'لاتيه', 'موكا', 'قرفة', 'جنزبيل', 'حلبة', 'هوت شوكليت', 'قهوة', 'مشروب'];
+                let needsSugar = hotDrinks.some(drink => itemName.includes(drink)) && !isTurkish && !isEspresso;
 
                 if (isEspresso) {
-                    // 1. الاسبريسو: مبيسألش في حاجة وبينزل السلة فوراً
-                    custOriginalAddToCart.apply(this, args);
+                    custOriginalAddToCart.apply(window, args);
                 } else if (isTurkish) {
-                    // 2. القهوة التركي: بيسأل على التحويجة والسكر
                     custPendingDrink = { args: args, index: nameIndex, originalName: itemName, type: 'turkish' };
                     document.getElementById('cust_drink_name').innerText = itemName;
                     document.getElementById('cust_blend_sec').style.display = 'block';
@@ -716,18 +752,16 @@ setTimeout(() => {
                     document.getElementById('cust_drink_sugar').value = 'مظبوط';
                     document.getElementById('customer_drink_modal').style.display = 'flex';
                 } else if (needsSugar) {
-                    // 3. باقي المشروبات السخنة: بيسأل على السكر بس
                     custPendingDrink = { args: args, index: nameIndex, originalName: itemName, type: 'sugar_only' };
                     document.getElementById('cust_drink_name').innerText = itemName;
                     document.getElementById('cust_blend_sec').style.display = 'none';
                     document.getElementById('cust_drink_sugar').value = 'مظبوط';
                     document.getElementById('customer_drink_modal').style.display = 'flex';
                 } else {
-                    // 4. أي صنف تاني (أكل، عصير، بيبسي): بينزل السلة فوراً
-                    custOriginalAddToCart.apply(this, args);
+                    custOriginalAddToCart.apply(window, args);
                 }
             } else {
-                custOriginalAddToCart.apply(this, args);
+                custOriginalAddToCart.apply(window, args);
             }
         };
 
@@ -736,13 +770,7 @@ setTimeout(() => {
             let blend = document.getElementById('cust_drink_blend').value;
             let sugar = document.getElementById('cust_drink_sugar').value;
             
-            let extraText = "";
-            if (custPendingDrink.type === 'turkish') {
-                extraText = ` (${blend}-سكر ${sugar})`;
-            } else {
-                extraText = ` (سكر ${sugar})`;
-            }
-            
+            let extraText = (custPendingDrink.type === 'turkish') ? ` (${blend}-سكر ${sugar})` : ` (سكر ${sugar})`;
             let newName = custPendingDrink.originalName + extraText;
             
             if(typeof custPendingDrink.args[custPendingDrink.index] === 'object') {
@@ -757,13 +785,13 @@ setTimeout(() => {
             
             // رسالة للزبون
             let toast = document.createElement('div');
-            toast.innerText = "تمت إضافة المشروب للسلة ✅";
-            toast.style.cssText = "position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#27ae60; color:#fff; padding:10px 20px; border-radius:30px; font-weight:bold; z-index:9999999; box-shadow:0 5px 15px rgba(0,0,0,0.2); transition:0.5s;";
+            toast.innerHTML = "<i class='fas fa-check-circle'></i> تمت الإضافة للسلة بنجاح ✅";
+            toast.style.cssText = "position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--primary, #27ae60); color:#fff; padding:12px 20px; border-radius:30px; font-weight:bold; z-index:9999999; box-shadow:0 5px 15px rgba(0,0,0,0.2); transition:0.5s;";
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 2500);
         };
     }
-}, 1000);
+}, 1500);
 </script>
 </body>
 </html>
