@@ -75,7 +75,7 @@
         @keyframes rotateRing { 100% { transform: rotate(315deg); } }
         .logo { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; background: #fff; padding: 3px; position: relative; z-index: 2; box-shadow: 0 5px 15px rgba(0,0,0,0.3);}
 
-        /* ===== الأقسام (موزعة على سطرين بشكل متناسق) ===== */
+        /* ===== الأقسام ===== */
         .cats-grid {
             padding: 20px 10px 10px;
         }
@@ -103,6 +103,7 @@
             text-align: center;
             transition: 0.2s;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            background: #fff;
         }
         .cat.active {
             background: linear-gradient(45deg,var(--neo-green),var(--neo-dark));
@@ -110,6 +111,29 @@
             border-color: var(--neo-dark);
             box-shadow: 0 10px 20px rgba(18,77,51,0.2);
             transform: translateY(-2px);
+        }
+
+        /* ===== شريط البحث ===== */
+        .search-container {
+            padding: 10px 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--neo-beige);
+            margin-bottom: 5px;
+        }
+        .search-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 2px solid var(--neo-green);
+            font-size: 15px;
+            font-family: 'Cairo', sans-serif;
+            outline: none;
+            text-align: right;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
         /* ===== الأقسام الفرعية ===== */
@@ -120,7 +144,7 @@
         .subcat-btn.active { background:var(--neo-green); color:var(--neo-gold); border-color:var(--neo-dark); }
 
         /* ===== الكروت والمنتجات ===== */
-        .container { max-width: 1000px; margin: auto; padding: 10px 15px 150px; min-height: 50vh; }
+        .container { max-width: 1000px; margin: auto; padding: 5px 15px 150px; min-height: 50vh; }
         .section-container { display: none; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
@@ -144,13 +168,22 @@
         .modal { background: #fff; width: 100%; max-width: 500px; border-radius: 20px; padding: 20px; max-height: 85vh; overflow-y: auto; direction: rtl; }
         .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
         
-        .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: var(--neo-dark); color: var(--neo-gold); padding: 12px 25px; border-radius: 50px; font-weight: 800; opacity: 0; transition: 0.3s; z-index: 3000; pointer-events: none; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%); background: var(--neo-dark); color: var(--neo-gold); padding: 12px 25px; border-radius: 50px; font-weight: 800; opacity: 0; transition: 0.3s; z-index: 3000; pointer-events: none; box-shadow: 0 10px 20px rgba(0,0,0,0.2); text-align: center; width:max-content;}
 
         .loader-container { text-align: center; padding: 50px 20px; color: var(--neo-green); font-weight: bold; }
         .loader-spinner { font-size: 40px; color: var(--neo-gold); animation: spin 1s linear infinite; margin-bottom: 15px; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
         input.checkout-input, select.checkout-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 10px; font-family: 'Cairo'; font-size: 14px; font-weight: bold;}
+
+        /* ===== مودال تظبيط المشروبات ===== */
+        .drink-modal-content { background:#fff; width:90%; max-width:380px; padding:25px 20px; border-radius:20px; text-align:center; box-shadow:0 15px 30px rgba(0,0,0,0.3); font-family: 'Cairo', sans-serif;}
+        .drink-modal-title { color:var(--neo-green); margin-bottom:10px; font-size:22px; font-weight:900;}
+        .drink-item-name { color:#e74c3c; margin-bottom:20px; font-weight:bold; font-size:18px; background:#fdf2f2; padding:10px; border-radius:10px;}
+        .drink-select-label { font-weight:bold; display:block; margin-bottom:8px; color:#333; font-size:16px; text-align: right;}
+        .drink-select { width:100%; font-family: 'Cairo', sans-serif; font-size:16px; font-weight:bold; border:2px solid #ddd; padding:12px; border-radius:10px; outline:none; background:#f9f9f9; margin-bottom:20px;}
+        .drink-btn-confirm { flex:1; background:var(--neo-green); color:var(--neo-gold); border:none; padding:12px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer;}
+        .drink-btn-cancel { flex:1; background:#95a5a6; color:#fff; border:none; padding:12px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer;}
 
         /* ===== الفوتر ===== */
         footer { padding: 25px 15px; text-align: center; color: #fff; background: var(--neo-dark); border-top-left-radius: 25px; border-top-right-radius: 25px; margin-top: 30px; box-shadow: 0 -10px 20px rgba(0,0,0,0.1); }
@@ -185,6 +218,10 @@
         <h1>نيو كافية - NEO CAFE</h1>
         <div class="ramadan-slogan">✨ رمضانك جميل في نيو ✨</div>
     </header>
+
+    <div class="search-container" id="searchContainer" style="display:none;">
+        <input type="text" id="searchInput" class="search-input" placeholder="🔍 ابحث عن مشروبك أو طلبك بسرعة...">
+    </div>
 
     <div class="cats-grid" id="catsNavContainer" style="display:none;"></div>
 
@@ -234,6 +271,41 @@
             <div style="display:flex; gap:10px">
                 <button onclick="closeCart()" style="flex:1; padding:12px; border-radius:12px; border:none; background: #eee; color:#333; font-weight:800; cursor:pointer;">إغلاق</button>
                 <button onclick="sendOrderLive()" style="flex:2; padding:12px; border-radius:12px; background:var(--neo-green); color:var(--neo-gold); font-weight:900; border:none; cursor:pointer;">إرسال الطلب للكاشير 🚀</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="drinkSettingsModal" class="modal-back">
+        <div class="drink-modal-content">
+            <h3 class="drink-modal-title"><i class="fas fa-mug-hot"></i> تظبيط المشروب</h3>
+            <h4 id="ds_itemName" class="drink-item-name"></h4>
+
+            <div id="ds_blendSection" style="display:none;">
+                <label class="drink-select-label">التحويجة:</label>
+                <select id="ds_blendInput" class="drink-select">
+                    <option value="سادة">سادة</option>
+                    <option value="محوج">محوج</option>
+                    <option value="فاتح">فاتح</option>
+                    <option value="غامق">غامق</option>
+                    <option value="وسط">وسط</option>
+                </select>
+            </div>
+
+            <div id="ds_sugarSection">
+                <label class="drink-select-label">السكر:</label>
+                <select id="ds_sugarInput" class="drink-select">
+                    <option value="مظبوط" selected>مظبوط</option>
+                    <option value="زيادة">زيادة</option>
+                    <option value="ع الريحة">ع الريحة</option>
+                    <option value="سادة">سادة</option>
+                    <option value="مانو">مانو</option>
+                    <option value="بره">سكر بره</option>
+                </select>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+                <button onclick="confirmDrinkOptions()" class="drink-btn-confirm"><i class="fas fa-cart-plus"></i> إضافة للسلة</button>
+                <button onclick="closeDrinkModal()" class="drink-btn-cancel"><i class="fas fa-times"></i> إلغاء</button>
             </div>
         </div>
     </div>
@@ -431,12 +503,14 @@ const CART_KEY = 'neo_cafe_cart_live';
 // الترتيب المطلوب للأقسام
 const CATEGORY_ORDER = ['ramadan', 'hot', 'cold', 'soft', 'dessert', 'ice', 'special', 'extras', 'fun'];
 
-// --- استدعاء البيانات لايف من السيستم (Smart Merge) ---
+// --- استدعاء البيانات لايف من السيستم ---
 database.ref('NeoCafe/live_menu').on('value', (snapshot) => {
     if(snapshot.exists()) {
         MENU_DATA = snapshot.val();
         renderDynamicNav();
         renderEntireMenu();
+        // إظهار شريط البحث بعد تحميل المنيو
+        document.getElementById('searchContainer').style.display = 'block';
     } else {
         document.getElementById('menuContent').innerHTML = '<div class="loader-container"><p style="color:red;">المنيو يتم تحديثه الآن، برجاء الانتظار...</p></div>';
     }
@@ -462,6 +536,10 @@ function renderDynamicNav() {
 
     document.querySelectorAll('.cat').forEach(tab => {
         tab.onclick = () => {
+            // لو كان العميل بيبحث، نلغي البحث ونرجع الوضع الطبيعي
+            document.getElementById('searchInput').value = '';
+            document.querySelectorAll('.card').forEach(c => c.style.display = 'flex');
+
             document.querySelectorAll('.cat').forEach(c => c.classList.remove('active'));
             tab.classList.add('active');
             const cat = tab.dataset.cat;
@@ -546,16 +624,97 @@ function renderEntireMenu() {
     });
 }
 
-// --- دوال السلة ---
-function getCart() { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
-function setCart(cart) { localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartUI(); }
+// ================== محرك البحث الذكي المدمج ==================
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    let term = e.target.value.toLowerCase();
+    let cards = document.querySelectorAll('.card');
+    let sections = document.querySelectorAll('.section-container');
+    let navContainer = document.getElementById('catsNavContainer');
+
+    if (term === '') {
+        // لو البحث فاضي، رجع المنيو لطبيعته المترتبة
+        navContainer.style.display = 'block';
+        let activeTab = document.querySelector('.cat.active');
+        if(activeTab) activeTab.click(); 
+        cards.forEach(c => c.style.display = 'flex');
+    } else {
+        // لو العميل بيبحث، اخفي الأقسام واظهر كل المنتجات اللي بتطابق الكلمة
+        navContainer.style.display = 'none';
+        sections.forEach(s => s.style.display = 'block');
+        
+        cards.forEach(card => {
+            let text = card.querySelector('.card-name').innerText.toLowerCase();
+            if(text.includes(term)) {
+                card.style.display = 'flex'; 
+            } else {
+                card.style.display = 'none'; 
+            }
+        });
+    }
+});
+
+
+// ================== محرك الإضافة للسلة الذكي (قهوة ومشروبات) ==================
+let pendingItemForModal = null; // بيحفظ بيانات المشروب لو محتاجين نسأل على تفاصيل
 
 function addToCart(id, name, price) {
+    // 1. فلتر الذكاء الاصطناعي لتحديد نوع المشروب
+    let isEspresso = name.includes('اسبريسو') || name.includes('إسبريسو');
+    let isTurkish = name.includes('تركي') || name.includes('قهوة سادة') || name.includes('قهوة محوج');
+    let hotDrinks = ['فرنساوي', 'بندق', 'شاي', 'ينسون', 'نعناع', 'سحلب', 'كاكاو', 'نسكافيه', 'كابتشينو', 'لاتيه', 'موكا', 'قرفة', 'جنزبيل', 'حلبة', 'هوت شوكليت', 'قهوة', 'مشروب'];
+    let needsSugar = hotDrinks.some(drink => name.includes(drink)) && !isTurkish && !isEspresso;
+
+    if (isTurkish) {
+        // تركي: بيسأل على تحويجة وسكر
+        pendingItemForModal = { id, name, price, type: 'turkish' };
+        openDrinkModal(name, true);
+    } else if (needsSugar) {
+        // سواخن تانية: بتسأل على سكر بس
+        pendingItemForModal = { id, name, price, type: 'sugar_only' };
+        openDrinkModal(name, false);
+    } else {
+        // اسبريسو أو أي حاجة تانية (كيك، عصاير): تنزل السلة علطول
+        executeAddToCart(id, name, price);
+    }
+}
+
+function openDrinkModal(itemName, showBlend) {
+    document.getElementById('ds_itemName').innerText = itemName;
+    document.getElementById('ds_blendSection').style.display = showBlend ? 'block' : 'none';
+    document.getElementById('ds_blendInput').value = 'سادة';
+    document.getElementById('ds_sugarInput').value = 'مظبوط';
+    document.getElementById('drinkSettingsModal').style.display = 'flex';
+}
+
+function closeDrinkModal() {
+    document.getElementById('drinkSettingsModal').style.display = 'none';
+    pendingItemForModal = null;
+}
+
+function confirmDrinkOptions() {
+    if(!pendingItemForModal) return;
+    let blend = document.getElementById('ds_blendInput').value;
+    let sugar = document.getElementById('ds_sugarInput').value;
+    
+    let extraText = (pendingItemForModal.type === 'turkish') ? ` (${blend}-سكر ${sugar})` : ` (سكر ${sugar})`;
+    let newName = pendingItemForModal.name + extraText;
+    
+    closeDrinkModal();
+    executeAddToCart(pendingItemForModal.id, newName, pendingItemForModal.price);
+}
+
+function executeAddToCart(id, name, price) {
     let cart = getCart();
     const existing = cart.find(i => i.name === name);
     if (existing) { existing.qty += 1; } else { cart.push({ id, name, price, qty: 1 }); }
-    setCart(cart); showToast(name);
+    setCart(cart); 
+    showToast(name);
 }
+
+
+// --- باقي دوال السلة ---
+function getCart() { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
+function setCart(cart) { localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartUI(); }
 
 function removeItem(name) {
     let cart = getCart().filter(i => i.name !== name); setCart(cart); openCart(); 
@@ -574,7 +733,7 @@ function openCart() {
     const checkoutForm = document.getElementById('checkoutForm');
     
     if (cart.length === 0) {
-        list.innerHTML = '<p style="text-align:center; font-weight:700; padding:20px;">السلة فارغة حالياً</p>';
+        list.innerHTML = '<p style="text-align:center; font-weight:700; padding:20px;">السلة فاضيه حالياً</p>';
         totalEl.textContent = "";
         checkoutForm.style.display = 'none';
     } else {
@@ -599,7 +758,8 @@ function closeCart() { document.getElementById('cartModal').style.display = 'non
 
 function showToast(name) {
     const t = document.getElementById('toast');
-    t.textContent = `تم إضافة ${name} للسلة`; t.style.opacity = 1; t.style.transform = "translate(-50%, -10px)";
+    t.innerHTML = `<i class='fas fa-check-circle'></i> تمت الإضافة للسلة بنجاح ✅`; 
+    t.style.opacity = 1; t.style.transform = "translate(-50%, -10px)";
     const cb = document.querySelector('.cart-trigger'); cb.style.transform = 'scale(1.1)'; 
     setTimeout(() => cb.style.transform = 'scale(1)', 200);
     setTimeout(() => { t.style.opacity = 0; t.style.transform = "translateX(-50%)"; }, 2000);
@@ -614,7 +774,7 @@ function sendOrderLive() {
     const cName = document.getElementById('orderName').value;
     const cPhone = document.getElementById('orderPhone').value;
     
-    if(!table) return alert('برجاء اختيار رقم الترابيزة لكي نتمكن من توصيل طلبك!');
+    if(!table) return alert(' برجاء اختيار رقم الترابيزة عشان نقدر نوصل طلبك يا رايق!');
     if(!cPhone) return alert('برجاء كتابة رقم الموبايل عشان نقدر نضيفلك نقاط الولاء يا رايق!');
 
     const orderData = {
@@ -635,163 +795,6 @@ function sendOrderLive() {
 }
 
 updateCartUI();
-
-  /* ================== مودال المشروبات + شريط البحث للمنيو الإلكتروني ================== */
-
-// 1. حقن خانة البحث الذكية
-(function injectCustomerSearch() {
-    if(document.getElementById('cust_search_container')) return;
-    setTimeout(() => {
-        // هندور على شريط الأقسام عشان نحط البحث تحته
-        let catsBar = document.querySelector('.cats-bar') || document.querySelector('.menu-sec');
-        if(catsBar) {
-            let searchDiv = document.createElement('div');
-            searchDiv.id = 'cust_search_container';
-            searchDiv.style.cssText = 'padding: 10px 15px; text-align: center; background: #fff; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #eee; margin-bottom: 10px;';
-            searchDiv.innerHTML = `<input type="text" id="cust_search_input" placeholder="🔍 ابحث عن مشروبك أو طلبك بسرعة..." style="width: 100%; max-width: 400px; padding: 12px 20px; border-radius: 25px; border: 2px solid var(--primary, #27ae60); font-size: 16px; outline: none; text-align: right; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">`;
-            
-            if(catsBar.classList.contains('cats-bar')) {
-                catsBar.insertAdjacentElement('afterend', searchDiv);
-            } else {
-                catsBar.insertAdjacentElement('afterbegin', searchDiv);
-            }
-
-            // تفعيل البحث المباشر
-            document.getElementById('cust_search_input').addEventListener('input', function(e) {
-                let term = e.target.value.toLowerCase();
-                let products = document.querySelectorAll('.product-card, .item-card, [onclick*="addToCart"]');
-                products.forEach(card => {
-                    let text = card.innerText.toLowerCase();
-                    if(text.includes(term)) {
-                        card.style.display = ''; 
-                    } else {
-                        if(!card.classList.contains('cat-chip')) {
-                            card.style.display = 'none'; 
-                        }
-                    }
-                });
-            });
-        }
-    }, 1500);
-})();
-
-// 2. المودال الذكي لتظبيط المشروبات
-(function injectCustomerDrinkModal() {
-    if(document.getElementById('customer_drink_modal')) return;
-    document.body.insertAdjacentHTML('beforeend', `
-    <div id="customer_drink_modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999999; justify-content:center; align-items:center; backdrop-filter: blur(3px);">
-        <div style="background:#fff; width:90%; max-width:380px; padding:25px 20px; border-radius:20px; text-align:center; box-shadow:0 15px 30px rgba(0,0,0,0.3);">
-            <h3 style="color:var(--primary, #27ae60); margin-bottom:10px; font-size:22px;"><i class="fas fa-mug-hot"></i> تظبيط المشروب</h3>
-            <h4 id="cust_drink_name" style="color:#e74c3c; margin-bottom:20px; font-weight:bold; font-size:18px; background:#fdf2f2; padding:10px; border-radius:10px;"></h4>
-
-            <div id="cust_blend_sec" style="margin-bottom:20px; text-align:right; display:none;">
-                <label style="font-weight:bold; display:block; margin-bottom:8px; color:#333; font-size:16px;">التحويجة:</label>
-                <select id="cust_drink_blend" style="width:100%; font-size:16px; border:2px solid #ddd; padding:12px; border-radius:10px; outline:none; background:#f9f9f9;">
-                    <option value="سادة">سادة</option>
-                    <option value="محوج">محوج</option>
-                    <option value="فاتح">فاتح</option>
-                    <option value="غامق">غامق</option>
-                    <option value="وسط">وسط</option>
-                </select>
-            </div>
-
-            <div id="cust_sugar_sec" style="margin-bottom:25px; text-align:right;">
-                <label style="font-weight:bold; display:block; margin-bottom:8px; color:#333; font-size:16px;">السكر:</label>
-                <select id="cust_drink_sugar" style="width:100%; font-size:16px; border:2px solid #ddd; padding:12px; border-radius:10px; outline:none; background:#f9f9f9;">
-                    <option value="مظبوط" selected>مظبوط</option>
-                    <option value="زيادة">زيادة</option>
-                    <option value="ع الريحة">ع الريحة</option>
-                    <option value="سادة">سادة</option>
-                    <option value="مانو">مانو</option>
-                    <option value="بره">سكر بره</option>
-                </select>
-            </div>
-
-            <div style="display:flex; gap:10px;">
-                <button onclick="custConfirmDrink()" style="flex:1; background:var(--primary, #27ae60); color:#fff; border:none; padding:15px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer; box-shadow:0 4px 10px rgba(39,174,96,0.3);"><i class="fas fa-cart-plus"></i> إضافة للسلة</button>
-                <button onclick="document.getElementById('customer_drink_modal').style.display='none'" style="flex:1; background:#95a5a6; color:#fff; border:none; padding:15px; border-radius:12px; font-size:16px; font-weight:bold; cursor:pointer;"><i class="fas fa-times"></i> إلغاء</button>
-            </div>
-        </div>
-    </div>
-    `);
-})();
-
-let custPendingDrink = null;
-setTimeout(() => {
-    if(typeof window.addToCart === 'function') {
-        let custOriginalAddToCart = window.addToCart;
-        window.addToCart = function() {
-            let args = Array.from(arguments);
-            let itemName = "";
-            let nameIndex = -1;
-
-            // تحديد اسم المشروب
-            for(let i=0; i<args.length; i++) {
-                if(typeof args[i] === 'string' && isNaN(args[i])) {
-                    itemName = args[i]; nameIndex = i; break;
-                } else if (typeof args[i] === 'object' && args[i] !== null && args[i].name) {
-                    itemName = args[i].name; nameIndex = i; break;
-                }
-            }
-
-            if(itemName !== "") {
-                let isEspresso = itemName.includes('اسبريسو') || itemName.includes('إسبريسو');
-                let isTurkish = itemName.includes('تركي') || itemName.includes('قهوة سادة') || itemName.includes('قهوة محوج');
-                
-                // لستة المشروبات اللي بتطلب سكر بس (ذكاء اصطناعي)
-                let hotDrinks = ['فرنساوي', 'بندق', 'شاي', 'ينسون', 'نعناع', 'سحلب', 'كاكاو', 'نسكافيه', 'كابتشينو', 'لاتيه', 'موكا', 'قرفة', 'جنزبيل', 'حلبة', 'هوت شوكليت', 'قهوة', 'مشروب'];
-                let needsSugar = hotDrinks.some(drink => itemName.includes(drink)) && !isTurkish && !isEspresso;
-
-                if (isEspresso) {
-                    custOriginalAddToCart.apply(window, args);
-                } else if (isTurkish) {
-                    custPendingDrink = { args: args, index: nameIndex, originalName: itemName, type: 'turkish' };
-                    document.getElementById('cust_drink_name').innerText = itemName;
-                    document.getElementById('cust_blend_sec').style.display = 'block';
-                    document.getElementById('cust_drink_blend').value = 'سادة';
-                    document.getElementById('cust_drink_sugar').value = 'مظبوط';
-                    document.getElementById('customer_drink_modal').style.display = 'flex';
-                } else if (needsSugar) {
-                    custPendingDrink = { args: args, index: nameIndex, originalName: itemName, type: 'sugar_only' };
-                    document.getElementById('cust_drink_name').innerText = itemName;
-                    document.getElementById('cust_blend_sec').style.display = 'none';
-                    document.getElementById('cust_drink_sugar').value = 'مظبوط';
-                    document.getElementById('customer_drink_modal').style.display = 'flex';
-                } else {
-                    custOriginalAddToCart.apply(window, args);
-                }
-            } else {
-                custOriginalAddToCart.apply(window, args);
-            }
-        };
-
-        window.custConfirmDrink = function() {
-            if(!custPendingDrink) return;
-            let blend = document.getElementById('cust_drink_blend').value;
-            let sugar = document.getElementById('cust_drink_sugar').value;
-            
-            let extraText = (custPendingDrink.type === 'turkish') ? ` (${blend}-سكر ${sugar})` : ` (سكر ${sugar})`;
-            let newName = custPendingDrink.originalName + extraText;
-            
-            if(typeof custPendingDrink.args[custPendingDrink.index] === 'object') {
-                custPendingDrink.args[custPendingDrink.index].name = newName;
-            } else {
-                custPendingDrink.args[custPendingDrink.index] = newName;
-            }
-            
-            document.getElementById('customer_drink_modal').style.display = 'none';
-            custOriginalAddToCart.apply(window, custPendingDrink.args);
-            custPendingDrink = null;
-            
-            // رسالة للزبون
-            let toast = document.createElement('div');
-            toast.innerHTML = "<i class='fas fa-check-circle'></i> تمت الإضافة للسلة بنجاح ✅";
-            toast.style.cssText = "position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--primary, #27ae60); color:#fff; padding:12px 20px; border-radius:30px; font-weight:bold; z-index:9999999; box-shadow:0 5px 15px rgba(0,0,0,0.2); transition:0.5s;";
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2500);
-        };
-    }
-}, 1500);
 </script>
 </body>
 </html>
