@@ -715,8 +715,11 @@ function confirmDrinkOptions() {
     let extraText = (pendingItemForModal.type === 'turkish') ? ` (${blend}-${roast}-سكر ${sugar})` : ` (سكر ${sugar})`;
     let newName = pendingItemForModal.name + extraText;
     
-    closeDrinkModal();
+    // التعديل هنا: بنبعت الأوردر للسلة "الأول" قبل ما نقفل الشاشة وتتمسح البيانات
     executeAddToCart(pendingItemForModal.id, newName, pendingItemForModal.price);
+    
+    // وبعدين نقفل الشاشة براحتنا
+    closeDrinkModal();
 }
 function executeAddToCart(id, name, price) {
     let cart = getCart();
