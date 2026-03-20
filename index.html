@@ -36,22 +36,11 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* ===== زينة رمضان ===== */
-        .lantern-container { position: absolute; top: 0; left: 0; width: 100%; height: 120px; overflow: hidden; z-index: 1; pointer-events: none; }
-        .lantern { position: absolute; width: 28px; height: 38px; background: var(--neo-gold); border-radius: 6px; box-shadow: 0 0 18px var(--neo-gold); animation: swing 3s infinite ease-in-out alternate, pulseGlow 2s infinite alternate; transform-origin: top center; z-index: 1; border: 1px solid rgba(255,255,255,0.4);}
-        .lantern::before { content:''; position:absolute; top:-120px; left:13px; width:2px; height:120px; background: rgba(255,255,255,0.3); }
-        .l1 { left: 8%; top: 10px; animation-duration: 3.2s; }
-        .l2 { left: 28%; top: -15px; animation-duration: 2.7s; transform: scale(0.85); background: var(--neo-green); box-shadow: 0 0 15px var(--neo-green); border-color: var(--neo-gold);}
-        .l3 { left: 50%; top: 5px; animation-duration: 3.5s; }
-        .l4 { left: 72%; top: -10px; animation-duration: 2.9s; transform: scale(0.9); }
-        .l5 { left: 90%; top: 15px; animation-duration: 3.1s; transform: scale(0.8); background: var(--neo-green); box-shadow: 0 0 15px var(--neo-green); border-color: var(--neo-gold);}
-
-        @keyframes swing { 0% { transform: rotate(8deg); } 100% { transform: rotate(-8deg); } }
-        @keyframes pulseGlow { 0% { opacity: 0.8; } 100% { opacity: 1; box-shadow: 0 0 25px var(--neo-gold); } }
-
         /* ===== رأس الصفحة ===== */
         .header {
-            background: linear-gradient(180deg, var(--neo-dark), var(--neo-green));
+            .header {
+            background: linear-gradient(180deg, #111111, #000000);
+            border-bottom: 2px solid var(--neo-gold);
             padding: 25px 14px 20px;
             text-align: center;
             color: #fff;
@@ -61,7 +50,6 @@
             box-shadow: 0 10px 20px rgba(18,77,51,0.2);
         }
         .header h1 { color:var(--neo-gold); font-weight:900; font-size:24px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); position: relative; z-index: 2; margin-bottom: 5px;}
-        .ramadan-slogan { background: rgba(212, 175, 55, 0.2); color: var(--neo-gold); display: inline-block; padding: 4px 15px; border-radius: 20px; font-size: 13px; font-weight: 700; border: 1px solid var(--neo-gold); position: relative; z-index: 2;}
 
         .logo-container {
             position: relative; margin: 0 auto 10px; width: 80px; height: 80px;
@@ -202,22 +190,13 @@
     </style>
 </head>
 <body>
-
-    <div class="lantern-container">
-        <div class="lantern l1"></div>
-        <div class="lantern l2"></div>
-        <div class="lantern l3"></div>
-        <div class="lantern l4"></div>
-        <div class="lantern l5"></div>
-    </div>
-
+    
     <header class="header">
         <div class="logo-container">
             <img src="assets/images/logo.png" alt="NEO Cafe" class="logo" onerror="this.src='https://via.placeholder.com/80?text=NEO'">
         </div>
         <h1>نيو كافية - NEO CAFE</h1>
-        <div class="ramadan-slogan">✨ رمضانك جميل في نيو ✨</div>
-    </header>
+    <div class="ramadan-slogan">✨ NEO CAFE ✨</div>    </header>
 
     <div class="search-container" id="searchContainer" style="display:none;">
         <input type="text" id="searchInput" class="search-input" placeholder="🔍 ابحث عن مشروبك أو طلبك بسرعة...">
@@ -510,7 +489,7 @@ let MENU_DATA = {};
 const CART_KEY = 'neo_cafe_cart_live';
 
 // الترتيب المطلوب للأقسام
-const CATEGORY_ORDER = ['ramadan', 'hot', 'cold', 'soft', 'dessert', 'ice', 'special', 'extras', 'fun'];
+const CATEGORY_ORDER = ['hot', 'cold', 'soft', 'dessert', 'ice', 'special', 'extras', 'fun'];
 
 // --- استدعاء البيانات لايف من السيستم ---
 database.ref('NeoCafe/live_menu').on('value', (snapshot) => {
