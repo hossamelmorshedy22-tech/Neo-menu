@@ -38,13 +38,10 @@
 
         /* ===== رأس الصفحة بالألوان الملكية (زيتي في بيج) ===== */
         .header {
-            /* خلفية مدرجة من الزيتي الغامق للفاتح */
             background: linear-gradient(180deg, var(--neo-dark), var(--neo-green));
-            /* خط سفلي بيج */
             border-bottom: 3px solid var(--neo-beige); 
             padding: 25px 14px 20px;
             text-align: center;
-            /* اللون الأساسي للكتابة بيج */
             color: var(--neo-beige);
             border-bottom-left-radius: 25px;
             border-bottom-right-radius: 25px;
@@ -52,7 +49,6 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.15);
         }
         
-        /* اسم الكافيه بالبيج الواضح */
         .header h1 { 
             color: var(--neo-beige); 
             font-weight: 900; 
@@ -63,9 +59,8 @@
             margin-bottom: 5px;
         }
         
-        /* الشعار بخلفية بيج شفافة وكتابة زيتية */
         .brand-slogan { 
-            background: rgba(253, 251, 247, 0.15); /* استخدام اللون البيج بشفافية */
+            background: rgba(253, 251, 247, 0.15);
             color: var(--neo-beige); 
             display: inline-block; 
             padding: 4px 15px; 
@@ -82,7 +77,6 @@
             display: flex; align-items: center; justify-content: center; z-index: 10;
         }
         
-        /* الحلقة الدوارة حول اللوجو باللون البيج */
         .logo-container::before {
             content: ''; position: absolute; inset: -4px; border-radius: 50%;
             border: 2px solid transparent; 
@@ -95,7 +89,7 @@
         .logo { 
             width: 100%; height: 100%; object-fit: cover; 
             border-radius: 50%; 
-            background: #fff; /* خلفية بيضاء سادة تحت اللوجو عشان يبان */
+            background: #fff; 
             padding: 3px; 
             position: relative; 
             z-index: 2; 
@@ -495,31 +489,59 @@ const database = firebase.database();
 
 let MENU_DATA = {};
 const CART_KEY = 'neo_cafe_cart_live';
-
-// إزالة رمضان من ترتيب الأقسام
 const CATEGORY_ORDER = ['hot', 'cold', 'soft', 'dessert', 'ice', 'special', 'extras', 'fun'];
 
-// --- استدعاء البيانات لايف من السيستم ---
-database.ref('NeoCafe/live_menu').on('value', (snapshot) => {
-    if(snapshot.exists()) {
-        MENU_DATA = snapshot.val();
-        renderDynamicNav();
-        renderEntireMenu();
-        document.getElementById('searchContainer').style.display = 'block';
-    } else {
-        document.getElementById('menuContent').innerHTML = '<div class="loader-container"><p style="color:red;">المنيو يتم تحديثه الآن، برجاء الانتظار...</p></div>';
+// --- دوال حماية السلة من أي داتا بايظة ---
+function getCart() { 
+    try { 
+        let data = JSON.parse(localStorage.getItem(CART_KEY)); 
+        return Array.isArray(data) ? data : []; 
+    } catch(e) { 
+        return []; 
+    } 
+}
+function setCart(cart) { localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartUI(); }
+
+// --- مؤقت التأكد من الاتصال ---
+let isDataLoaded = false;
+setTimeout(() => {
+    if(!isDataLoaded) {
+        document.getElementById('menuContent').innerHTML = '<div class="loader-container"><i class="fas fa-wifi" style="font-size:40px; color:#e74c3c; margin-bottom:15px;"></i><p style="color:#e74c3c; font-weight:bold;">⚠️ تأخر الاتصال! يرجى تحديث الصفحة أو التأكد من جودة الإنترنت.</p></div>';
     }
+}, 8000);
+
+// --- استدعاء البيانات لايف مع حماية ضد الأخطاء ---
+database.ref('NeoCafe/live_menu').on('value', (snapshot) => {
+    isDataLoaded = true;
+    try {
+        if(snapshot.exists()) {
+            MENU_DATA = snapshot.val();
+            renderDynamicNav();
+            renderEntireMenu();
+            document.getElementById('searchContainer').style.display = 'block';
+        } else {
+            document.getElementById('menuContent').innerHTML = '<div class="loader-container"><p style="color:#e74c3c; font-weight:bold;">المنيو يتم تحديثه الآن، برجاء الانتظار...</p></div>';
+        }
+    } catch (error) {
+        document.getElementById('menuContent').innerHTML = '<div class="loader-container"><p style="color:#e74c3c; font-weight:bold;">❌ حدث خطأ داخلي أثناء رسم المنيو: <br>' + error.message + '</p></div>';
+    }
+}, (error) => {
+    isDataLoaded = true;
+    document.getElementById('menuContent').innerHTML = '<div class="loader-container"><p style="color:#e74c3c; font-weight:bold;">❌ تم رفض الاتصال بالسيرفر! يرجى مراجعة الصلاحيات.<br>' + error.message + '</p></div>';
 });
+
 
 function renderDynamicNav() {
     const navContainer = document.getElementById('catsNavContainer');
     let html = '<div class="cats-row">';
     
+    if (!MENU_DATA || typeof MENU_DATA !== 'object') return;
+
     const availableCats = CATEGORY_ORDER.filter(k => MENU_DATA[k]);
     
     availableCats.forEach((key, index) => {
         let activeClass = index === 0 ? 'active' : '';
-        let title = MENU_DATA[key].title;
+        let title = MENU_DATA[key].title || 'قسم جديد';
         html += `<div class="cat ${activeClass}" data-cat="${key}">${title}</div>`;
     });
     
@@ -546,21 +568,24 @@ function createGridHTML(items) {
     const grid = document.createElement('div');
     grid.className = 'grid';
     
-    // حماية سحرية: لو القسم فاضي ارجع فاضي
     if (!items) return grid;
 
-    // فلتر فايربيز: تحويل الأوبجيكت لمصفوفة ومسح الفراغات
     let validItems = Array.isArray(items) ? items : Object.values(items);
-    validItems = validItems.filter(Boolean); // بيشيل الـ null
+    validItems = validItems.filter(Boolean);
 
     validItems.forEach(item => {
-        const imgSrc = IMAGE_DICTIONARY[item.name] || 'assets/images/logo.png';
+        if(!item || typeof item !== 'object') return;
+        
+        const itemName = item.name || 'بدون اسم';
+        const itemPrice = item.price || 0;
+        const imgSrc = IMAGE_DICTIONARY[itemName] || 'assets/images/logo.png';
+        
         grid.innerHTML += `
             <div class="card">
                 <img src="${imgSrc}" onerror="this.src='assets/images/logo.png'">
-                <div class="card-name">${item.name}</div>
-                <div class="card-price">${item.price === 0 ? 'مجانًا' : item.price + ' ج'}</div>
-                <button class="add-btn" onclick="addToCart('${item.id}', '${escapeHtml(item.name)}', ${item.price})">أضف للسلة</button>
+                <div class="card-name">${itemName}</div>
+                <div class="card-price">${itemPrice === 0 ? 'مجانًا' : itemPrice + ' ج'}</div>
+                <button class="add-btn" onclick="addToCart('${item.id || Date.now()}', '${escapeHtml(itemName)}', ${itemPrice})">أضف للسلة</button>
             </div>
         `;
     });
@@ -573,7 +598,11 @@ function renderEntireMenu() {
     const content = document.getElementById('menuContent');
     content.innerHTML = ''; 
     
-    // حماية إضافية للأقسام
+    if (!MENU_DATA || typeof MENU_DATA !== 'object') {
+        content.innerHTML = '<p style="text-align:center; padding:20px; font-weight:bold;">لا يوجد بيانات للمنيو</p>';
+        return;
+    }
+    
     const availableCats = CATEGORY_ORDER.filter(k => MENU_DATA[k] && MENU_DATA[k].title);
     
     availableCats.forEach(key => {
@@ -581,7 +610,7 @@ function renderEntireMenu() {
         sec.className = 'section-container';
         sec.id = 'sec_' + key;
         
-        let title = MENU_DATA[key].title;
+        let title = MENU_DATA[key].title || 'قسم جديد';
         sec.innerHTML = `<h2 class="section-title"><i class="fas fa-coffee" style="font-size:16px;"></i> ${title}</h2>`;
         
         if (MENU_DATA[key].isComplex && MENU_DATA[key].subcats) {
@@ -590,14 +619,15 @@ function renderEntireMenu() {
             const gridContainer = document.createElement('div');
             gridContainer.className = 'subcat-grid-container';
 
-            // حماية الأقسام الفرعية (تصفية فايربيز)
             let validSubcats = Array.isArray(MENU_DATA[key].subcats) ? MENU_DATA[key].subcats : Object.values(MENU_DATA[key].subcats);
             validSubcats = validSubcats.filter(Boolean);
 
             validSubcats.forEach((sub, index) => {
+                if(!sub || typeof sub !== 'object') return;
+                
                 const btn = document.createElement('button');
                 btn.className = 'subcat-btn' + (index === 0 ? ' active' : '');
-                btn.textContent = sub.title || 'قسم';
+                btn.textContent = sub.title || 'تصنيف';
                 btn.onclick = (e) => {
                     subNav.querySelectorAll('.subcat-btn').forEach(b => b.classList.remove('active'));
                     e.target.classList.add('active');
@@ -621,7 +651,7 @@ function renderEntireMenu() {
     });
 
     const activeTabEl = document.querySelector('.cat.active');
-    const activeCat = activeTabEl ? activeTabEl.dataset.cat : availableCats[0];
+    const activeCat = activeTabEl ? activeTabEl.dataset.cat : (availableCats[0] || '');
     
     document.querySelectorAll('.section-container').forEach(s => {
         s.style.display = s.id === 'sec_' + activeCat ? 'block' : 'none';
@@ -716,9 +746,6 @@ function executeAddToCart(id, name, price) {
 
 
 // --- باقي دوال السلة ---
-function getCart() { return JSON.parse(localStorage.getItem(CART_KEY)) || []; }
-function setCart(cart) { localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartUI(); }
-
 function removeItem(name) {
     let cart = getCart().filter(i => i.name !== name); setCart(cart); openCart(); 
 }
