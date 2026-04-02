@@ -546,10 +546,14 @@ function createGridHTML(items) {
     const grid = document.createElement('div');
     grid.className = 'grid';
     
-    // سطر الحماية السحري: لو القسم فاضي أو مفيهوش منتجات، متعملش إيرور وارجع فاضي
-    if (!items || !Array.isArray(items)) return grid; 
+    // حماية سحرية: لو القسم فاضي ارجع فاضي
+    if (!items) return grid;
 
-    items.forEach(item => {
+    // فلتر فايربيز: تحويل الأوبجيكت لمصفوفة ومسح الفراغات
+    let validItems = Array.isArray(items) ? items : Object.values(items);
+    validItems = validItems.filter(Boolean); // بيشيل الـ null
+
+    validItems.forEach(item => {
         const imgSrc = IMAGE_DICTIONARY[item.name] || 'assets/images/logo.png';
         grid.innerHTML += `
             <div class="card">
@@ -569,7 +573,8 @@ function renderEntireMenu() {
     const content = document.getElementById('menuContent');
     content.innerHTML = ''; 
     
-    const availableCats = CATEGORY_ORDER.filter(k => MENU_DATA[k]);
+    // حماية إضافية للأقسام
+    const availableCats = CATEGORY_ORDER.filter(k => MENU_DATA[k] && MENU_DATA[k].title);
     
     availableCats.forEach(key => {
         const sec = document.createElement('div');
@@ -585,10 +590,14 @@ function renderEntireMenu() {
             const gridContainer = document.createElement('div');
             gridContainer.className = 'subcat-grid-container';
 
-            MENU_DATA[key].subcats.forEach((sub, index) => {
+            // حماية الأقسام الفرعية (تصفية فايربيز)
+            let validSubcats = Array.isArray(MENU_DATA[key].subcats) ? MENU_DATA[key].subcats : Object.values(MENU_DATA[key].subcats);
+            validSubcats = validSubcats.filter(Boolean);
+
+            validSubcats.forEach((sub, index) => {
                 const btn = document.createElement('button');
                 btn.className = 'subcat-btn' + (index === 0 ? ' active' : '');
-                btn.textContent = sub.title;
+                btn.textContent = sub.title || 'قسم';
                 btn.onclick = (e) => {
                     subNav.querySelectorAll('.subcat-btn').forEach(b => b.classList.remove('active'));
                     e.target.classList.add('active');
@@ -598,8 +607,8 @@ function renderEntireMenu() {
                 subNav.appendChild(btn);
             });
 
-            if(MENU_DATA[key].subcats.length > 0) {
-                gridContainer.appendChild(createGridHTML(MENU_DATA[key].subcats[0].items));
+            if(validSubcats.length > 0) {
+                gridContainer.appendChild(createGridHTML(validSubcats[0].items));
             }
             sec.appendChild(subNav);
             sec.appendChild(gridContainer);
