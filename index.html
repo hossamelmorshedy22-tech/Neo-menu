@@ -342,28 +342,6 @@
 <script>
 // ================== قاموس الصور ==================
 const IMAGE_DICTIONARY = {
-    "قطعة كنافه نابولسية": "assets/images/Kunafa_nabolsia1.png",
-    "رز بلبن مكسرات": "assets/images/ram_rice_nuts.png",
-    "رز بلبن مكسرات وكراميل": "assets/images/ram_rice_caramel.png",
-    "رز بلبن كراميل": "assets/images/ram_rice_caramel.png",
-    "رز بلبن مكسرات وشوكلاته": "assets/images/ram_rice_choco.png",
-    "رز بلبن شوكليت": "assets/images/ram_rice_choco.png",
-    "رز بلبن مكسرات نوتيلا": "assets/images/ram_rice_nutella.png",
-    "رز بلبن نوتيلا": "assets/images/ram_rice_nutella.png",
-    "رز بلبن مكسرات بستاشيو": "assets/images/ram_rice_pistachio.png",
-    "رز بلبن بستاشيو": "assets/images/ram_rice_pistachio.png",
-    "رز بلبن مكسرات لوتس": "assets/images/ram_rice_lotus.png",
-    "رز بلبن لوتس": "assets/images/ram_rice_lotus.png",
-    "رز بلبن مكسرات ميكس صوص": "assets/images/ram_rice_mix.png",
-    "رز بلبن ميكس صوص": "assets/images/ram_rice_mix.png",
-    "رز بلبن قنبلة": "assets/images/ram_rice_fruit.png",
-    "كب كنافة لوتس": "assets/images/ram_cup_lotus.png",
-    "كَب كنافه لوتس": "assets/images/ram_cup_lotus.png",
-    "كب كنافة نوتيلا": "assets/images/ram_cup_nutella.png",
-    "كَب كنافه نوتيلا": "assets/images/ram_cup_nutella.png",
-    "فادج كرانشي": "assets/images/ram_fudge_crunchy.png",
-    "فادج بستاشيو": "assets/images/ram_fudge_pistachio.png",
-    "قنبلة كنافة بسبوسه كريمه": "assets/images/ram_rice_mix.png",
     "شاي": "assets/images/hot_shai.png",
     "شاي نعناع": "assets/images/hot_mint.png",
     "شاي أحمد تي": "assets/images/hot_shai_lipton.png",
@@ -564,9 +542,13 @@ function renderDynamicNav() {
     });
 }
 
-function createGridHTML(items) {
+ffunction createGridHTML(items) {
     const grid = document.createElement('div');
     grid.className = 'grid';
+    
+    // سطر الحماية السحري: لو القسم فاضي أو مفيهوش منتجات، متعملش إيرور وارجع فاضي
+    if (!items || !Array.isArray(items)) return grid; 
+
     items.forEach(item => {
         const imgSrc = IMAGE_DICTIONARY[item.name] || 'assets/images/logo.png';
         grid.innerHTML += `
