@@ -595,7 +595,9 @@ function createGridHTML(items) {
         
         const itemName = item.name || 'بدون اسم';
         const itemPrice = item.price || 0;
-        const imgSrc = IMAGE_DICTIONARY[itemName] || 'assets/images/logo.png';
+        
+        // السر هنا: لو الكاشير باعت رابط صورة استخدمه، لو مفيش دور في القاموس القديم، لو مفيش حط اللوجو
+        const imgSrc = item.image || IMAGE_DICTIONARY[itemName] || 'assets/images/logo.png';
         
         grid.innerHTML += `
             <div class="card">
