@@ -531,13 +531,29 @@ database.ref('NeoCafe/live_menu').on('value', (snapshot) => {
 });
 
 
+// --- دالة سحرية جديدة بتجيب كل الأقسام (القديمة والجديدة) وترتبهم ---
+function getAvailableCats() {
+    if (!MENU_DATA || typeof MENU_DATA !== 'object') return [];
+    let keys = Object.keys(MENU_DATA).filter(k => MENU_DATA[k] && MENU_DATA[k].title);
+    
+    // الترتيب: الأقسام الأساسية تنزل الأول زي ما هي، وأي قسم جديد ينزل وراهم أوتوماتيك
+    keys.sort((a, b) => {
+        let indexA = CATEGORY_ORDER.indexOf(a);
+        let indexB = CATEGORY_ORDER.indexOf(b);
+        if (indexA === -1) indexA = 999;
+        if (indexB === -1) indexB = 999;
+        return indexA - indexB;
+    });
+    return keys;
+}
+
+// --- رسم زراير الأقسام فوق ---
 function renderDynamicNav() {
     const navContainer = document.getElementById('catsNavContainer');
     let html = '<div class="cats-row">';
     
-    if (!MENU_DATA || typeof MENU_DATA !== 'object') return;
-
-    const availableCats = CATEGORY_ORDER.filter(k => MENU_DATA[k]);
+    const availableCats = getAvailableCats();
+    if (availableCats.length === 0) return;
     
     availableCats.forEach((key, index) => {
         let activeClass = index === 0 ? 'active' : '';
@@ -564,6 +580,7 @@ function renderDynamicNav() {
     });
 }
 
+// --- رسم المنتجات جوه الكروت ---
 function createGridHTML(items) {
     const grid = document.createElement('div');
     grid.className = 'grid';
@@ -594,16 +611,17 @@ function createGridHTML(items) {
 
 function escapeHtml(s){return String(s||'').replace(/&/g,"&amp;").replace(/</g,"&lt;");}
 
+// --- رسم كل أقسام المنيو وتجهيزها ---
 function renderEntireMenu() {
     const content = document.getElementById('menuContent');
     content.innerHTML = ''; 
     
-    if (!MENU_DATA || typeof MENU_DATA !== 'object') {
+    const availableCats = getAvailableCats(); // بننادي على الدالة السحرية
+    
+    if (availableCats.length === 0) {
         content.innerHTML = '<p style="text-align:center; padding:20px; font-weight:bold;">لا يوجد بيانات للمنيو</p>';
         return;
     }
-    
-    const availableCats = CATEGORY_ORDER.filter(k => MENU_DATA[k] && MENU_DATA[k].title);
     
     availableCats.forEach(key => {
         const sec = document.createElement('div');
