@@ -756,6 +756,33 @@ function updateCartUI() {
     document.getElementById('cartCount').textContent = count;
 }
 
+// دالة بتحسب الأرقام لايف حسب اختيار الترابيزة (بتقرب لأقرب 5 جنيه)
+function updateCartTotalLive() {
+    const cart = getCart();
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    const tableSelect = document.getElementById('orderTable');
+    let isTakeaway = tableSelect && tableSelect.value === 'takeaway';
+
+    let serviceCharge = 0;
+    let finalTotal = subtotal;
+
+    if (!isTakeaway && subtotal > 0) {
+        let rawTotal = subtotal + (subtotal * 0.10);
+        let roundedTotal = Math.round(rawTotal / 5) * 5;
+        // حماية عشان التوتال ميقلش أبداً عن السعر الأساسي
+        if (roundedTotal < subtotal) roundedTotal += 5; 
+        serviceCharge = roundedTotal - subtotal;
+        finalTotal = roundedTotal;
+    }
+
+    let html = `الإجمالي: ${finalTotal} جنيه`;
+    if (serviceCharge > 0) {
+        html += `<br><span style="font-size:14px; color:var(--muted);">(شامل ${serviceCharge} ج رسوم خدمة)</span>`;
+    }
+    document.getElementById('finalTotal').innerHTML = html;
+}
+
+// دالة فتح السلة
 function openCart() {
     const cart = getCart();
     const list = document.getElementById('cartList');
@@ -777,9 +804,8 @@ function openCart() {
             </div>
         `).join('');
         
-        const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-        totalEl.textContent = `الإجمالي: ${total} جنيه`;
         checkoutForm.style.display = 'block';
+        updateCartTotalLive(); // بننادي عليها هنا عشان تحسب التوتال أول ما يفتح السلة
     }
     document.getElementById('cartModal').style.display = 'flex';
 }
