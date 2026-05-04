@@ -252,7 +252,7 @@
             
             <div id="checkoutForm" style="display:none; background:#f9f9f9; padding:15px; border-radius:15px; border:1px solid #eee; margin-bottom:15px;">
                 <h4 style="margin-bottom:10px; color:var(--neo-green);">مكانك فين يا رايق ؟</h4>
-                <select id="orderTable" class="checkout-input">
+                <select id="orderTable" class="checkout-input" onchange="updateCartTotalLive()">
                     <option value="">-- اختر رقم الترابيزة أو تيك أواي --</option>
                     <option value="takeaway">تيك أواي (هاخده وأمشي) 🛍️</option>
                     <option value="1">ترابيزة 1</option>
